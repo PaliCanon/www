@@ -10,7 +10,17 @@ The user writes the content by hand; the orchestrator's side: structure, SEO, th
 ## Requirements
 (answers written here as they come, before anything is drawn — prompts/requirements/product.md)
 
+Round 1 (user, 2026-10-13):
+- Languages: en, fr, vi; `/`, `/fr/`, `/vi/`.
+- Structure: a home page presenting each service briefly, a page per service, and a blog (news, guides).
+- v1 content: the search, learning Pāli, the Tipiṭaka iPhone app, the project and support (who, why, free and non-commercial, Ko-fi, Instagram, the legal pages).
+- Writing: Markdown in the repository, one file per page and language; the site rebuilds on push.
+
+Research (researcher, discussion #5942–#5944): a content-first page, a bento of three tiles (Search, Learn, Tipiṭaka) with real screenshots light and dark, a phone frame for the iOS app only, short motion under reduced-motion, no testimonials or counters; SEO checklist (hreflang both ways + x-default in the sitemap, self-canonicals, OG per page, JSON-LD Organization/WebSite/MobileApplication without a fabricated rating, no SearchAction effect since 2024-11, `/?q=` needs a zone Redirect Rule, 301 per old URL, Search Console domain property + Bing); stack recommendation Zola + Tailwind 4 standalone on Cloudflare Workers static assets (alternatives Astro, Leptos SSG); targets LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1, Lighthouse 100, WCAG 2.2 AA (gold on parchment contrast, focus not hidden, 24 px targets, lang per page, Pāli and Vietnamese diacritics in the font).
+
 ## Log
 | Step | Result | Output |
 | --- | --- | --- |
 | Ground | done | orchestrator, 2026-10-13: decisions 2026-10-08, repos.md; no `www` repository yet (local folder holds this task file only, no remote) |
+| Research | done | researcher: discussion #5942–#5944 |
+| Questions round 1 | done | languages, structure (with a blog), v1 content, Markdown |
