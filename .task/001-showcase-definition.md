@@ -87,3 +87,4 @@ flowchart TB
 | Repo init | done | 2026-10-14: PaliCanon/www created (private), CLAUDE.md, README (content layout), LICENSE, the 21 empty pages pushed (848d449); docs 36de594 (repos.md, task-check REPOS); viewer workspace www existed. CI and main protection come with 002 (the crate). |
 | Requirements draft | done | this file; design v1 to consensus |
 | Content drafts | done | user, 2026-10-14: "commence les md, un truc basic pour avoir un rendu"; dev host: dev.palicanon.app. 21 pages + blog/welcome.md in en/fr/vi, first drafts by the orchestrator for the user to rewrite. |
+| Design v4 answer | revised | user, 2026-10-14: "Je ne pense pas qu'on ait besoin de Leptos pour le site vitrine", then Astro chosen over Zola; raw HTML in Markdown forbidden ("pas besoin de vidéo"). Stack reopened by the user: Astro static, ui-lib's tokens and lotus copied at a tag; consensus revises to v5. |
