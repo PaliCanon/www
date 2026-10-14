@@ -12,10 +12,12 @@ Request (user, 2026-10-14): "https://phamilypharma.com/ — inspire-toi plus de 
 - the nav shrinks into a floating rounded bar while scrolling;
 - numbered cards stacking over each other as the page scrolls (sticky), and large rounded colour cards for the calls to action.
 Palette (user, 2026-10-14: "On garde la palette de couleurs du reste de PaliCanon"): the parchment and gold of ui-lib v0.1.1, light and dark, as copied by 002; the reference's deep block and highlighter are drawn from it (a deep brown or the gold for the hero card, the gold as the highlighter), no new colour.
-To settle in Define (questions to the user, then a live trial on :3004): the display font (condensed, with every Pāli and Vietnamese diacritic: ā ī ū ṃ ṅ ñ ṭ ḍ ṇ ḷ and the Vietnamese stacked marks — Anton's coverage to verify, alternatives), illustrations or none (lotus line drawings?), how the four home sections (teaching, search, viz, learn) map to the reference's blocks, dark mode.
+Illustrations (user, 2026-10-14: "Dessins au trait"): line drawings in the reference's spirit, gold on parchment, as SVG: a lotus, a hand in mudrā, written palm leaves, a magnifying glass (one per home section at least).
+To settle in Define (questions to the user, then a live trial on :3004): the display font (condensed, with every Pāli and Vietnamese diacritic: ā ī ū ṃ ṅ ñ ṭ ḍ ṇ ḷ and the Vietnamese stacked marks — Anton's coverage to verify, alternatives), how the four home sections (teaching, search, viz, learn) map to the reference's blocks, dark mode.
 
 ## Log
 | Step | Result | Output |
 | --- | --- | --- |
 | Define | doing | reference captured; questions next |
 | Palette | done | user: keep PaliCanon's palette |
+| Illustrations | done | user: line drawings |
