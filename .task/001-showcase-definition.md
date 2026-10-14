@@ -22,6 +22,8 @@ Round 2 (user, 2026-10-13):
 - AI crawlers: search and answer bots allowed (they cite), training bots blocked (GPTBot, CCBot, Google-Extended, ClaudeBot's training use…) in robots.txt.
 - Links between services: "le site vitrine avec un lien vers les sous-domaines, le site du sous-domaine lui a dans le site lui-même les autres liens vers les sous-domaines" — the showcase links to each service; each service links to the others from inside (ui-lib's rail entries, memory nav-rail-services), and back to the showcase. The old URLs of today's palicanon.app: not answered (the 2026-10-08 decision stands: `/?q=` redirects to the search; the rest asked again at the cutover).
 
+Scope (user, 2026-10-14: "la recherche et le site vitrine sont différentes choses. La vitrine présentera et renverra vers le site web"): the showcase and the search are two separate sites. The showcase presents each service and links to its site; the SEO work of this task is the showcase's only. The search's own SEO is out of scope.
+
 Research (researcher, discussion #5942–#5944): a content-first page, a bento of three tiles (Search, Learn, Tipiṭaka) with real screenshots light and dark, a phone frame for the iOS app only, short motion under reduced-motion, no testimonials or counters; SEO checklist (hreflang both ways + x-default in the sitemap, self-canonicals, OG per page, JSON-LD Organization/WebSite/MobileApplication without a fabricated rating, no SearchAction effect since 2024-11, `/?q=` needs a zone Redirect Rule, 301 per old URL, Search Console domain property + Bing); stack recommendation Zola + Tailwind 4 standalone on Cloudflare Workers static assets (alternatives Astro, Leptos SSG); targets LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1, Lighthouse 100, WCAG 2.2 AA (gold on parchment contrast, focus not hidden, 24 px targets, lang per page, Pāli and Vietnamese diacritics in the font).
 
 ## Log
@@ -31,3 +33,4 @@ Research (researcher, discussion #5942–#5944): a content-first page, a bento o
 | Research | done | researcher: discussion #5942–#5944 |
 | Questions round 1 | done | languages, structure (with a blog), v1 content, Markdown |
 | Questions round 2 | done | stack Leptos (Astro-like), design from the user's examples (pending), AI: search yes training no, links between services |
+| Scope | done | user, 2026-10-14: showcase and search are separate; SEO here is the showcase's |
