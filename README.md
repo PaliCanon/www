@@ -14,8 +14,13 @@ per page. A page's path is its address:
 
 | Page | English | French | Vietnamese |
 | --- | --- | --- | --- |
-| Home | `content/en/index.md` → `/` | `content/fr/index.md` → `/fr/` | `content/vi/index.md` → `/vi/` |
+| Home, its opening | `content/en/index.md` → `/` | `content/fr/index.md` → `/fr/` | `content/vi/index.md` → `/vi/` |
+| Home, section 1: the Tipiṭaka and its teaching | `content/en/home/teaching.md` | `content/fr/home/teaching.md` | `content/vi/home/teaching.md` |
+| Home, section 2: the search | `content/en/home/search.md` | `content/fr/home/search.md` | `content/vi/home/search.md` |
+| Home, section 3: the map (viz) | `content/en/home/viz.md` | `content/fr/home/viz.md` | `content/vi/home/viz.md` |
+| Home, section 4: learning Pāli | `content/en/home/learn.md` | `content/fr/home/learn.md` | `content/vi/home/learn.md` |
 | The search | `content/en/search.md` → `/search/` | `content/fr/search.md` → `/fr/search/` | `content/vi/search.md` → `/vi/search/` |
+| The map of the Canon | `content/en/viz.md` → `/viz/` | `content/fr/viz.md` | `content/vi/viz.md` |
 | Learning Pāli | `content/en/learn.md` | `content/fr/learn.md` | `content/vi/learn.md` |
 | The Tipiṭaka app | `content/en/tipitaka.md` | `content/fr/tipitaka.md` | `content/vi/tipitaka.md` |
 | The project | `content/en/about.md` | `content/fr/about.md` | `content/vi/about.md` |
@@ -36,6 +41,20 @@ description: One or two sentences, at most 160 characters, shown under the title
 ---
 
 The page's text, in Markdown.
+```
+
+A home section has no description; it takes a small line above its title
+(`eyebrow`), its title, and the part of the title shown highlighted
+(`highlight`, copied exactly from the title, optional):
+
+```markdown
+---
+eyebrow: The teaching
+title: What the Tipiṭaka is
+highlight: Tipiṭaka
+---
+
+The section's text, in Markdown.
 ```
 
 A blog post adds its date, and may add an image for link previews:
