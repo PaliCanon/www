@@ -111,3 +111,4 @@ flowchart TB
 | Design v4 answer | revised | user, 2026-10-14: "Je ne pense pas qu'on ait besoin de Leptos pour le site vitrine", then Astro chosen over Zola; raw HTML in Markdown forbidden ("pas besoin de vidéo"). Stack reopened by the user: Astro static, ui-lib's tokens and lotus copied at a tag; consensus revises to v5. |
 | Design consensus | done | consensus agent: v6, lenses contract, cache, seam, simplify, coupling, test; gemini and deep answered every round (#6024–#6097); summary #6100 |
 | Validation | done | user, 2026-10-14: "Validé" (v6) |
+| Repo init (end) | done | CI green on GitHub at the 002 merge (run 38564692412). Main protection (repo-init step 2) skipped: no PaliCanon repository protects main (search-front, learn-pali, ui-lib checked 2026-10-14), the orchestrator pushes its squash merges to main; to settle for all repositories at once, not here. |
