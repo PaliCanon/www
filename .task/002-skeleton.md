@@ -1,6 +1,6 @@
 # 002 Skeleton: Astro static site, the content rules, plain pages, CI
 
-status: merge · rank: 5 · level: hard · type: feature · request: 001 · after: [] · session: www-002-skeleton · process: ../../docs/workflows/development-process.mmd
+status: merged · rank: 5 · level: hard · type: feature · request: 001 · after: [] · session: www-002-skeleton · process: ../../docs/workflows/development-process.mmd
 
 ## Summary
 Rank: difficulty 5 (a new toolchain in the organisation, Node and Astro; the content rules with their failure tests; the CSP hash; a complete CI), impact 4 (every later task builds on its files and its astro.config.mjs) → 5. Level hard: a new repository's foundations; the main orchestrator orchestrates, one Sonnet lane builds.
@@ -63,3 +63,6 @@ flowchart TB
 | Review round 2 | clean | review entry v2; sage #6391: Δ = the eight fixes as ruled, no departure from the design. T ruled out: an existing content folder with no Markdown is tested at src/lib/content-check.test.ts:242 (content-empty), through checkContent, the same function the build's integration calls (src/integrations/content-rules.ts:17), whose build path the e2e suite already proves with a missing folder. |
 | User check | accepted | user, 2026-10-14, after seeing http://127.0.0.1:3002 (branch 0bc56d5, then the home sections at 2587680): moved on to the design ("inspire-toi plus de ce genre de design") and the content order; the look itself is 004's. |
 | Merge | done | d939179 on main (squash). |
+
+## Retro
+retro-discussion dfc27317ae7dc43: retro #6392, gemini #6395 (generic; its file names invented). Lessons (docs 9a98326): a preview outlived its worktree; a lane stalled on its checks; the voices read sixty thousand characters. Validated 2026-10-14.
