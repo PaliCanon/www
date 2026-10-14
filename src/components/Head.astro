@@ -1,0 +1,27 @@
+---
+// The head of every page. Owned by task 003 (SEO): 002 puts what a page
+// cannot do without, in the order the CSP needs. The CSP meta comes first
+// (it only governs what follows it; production builds only, `astro dev` needs
+// its HMR script), then the one inline script, before any
+// stylesheet; the script's sha256 is computed from the very text inlined.
+import { pageCsp } from '../lib/csp';
+import { themeScript } from '../lib/theme-script';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const csp = pageCsp(import.meta.env.PROD, themeScript);
+---
+
+<head>
+  <meta charset="utf-8" />
+  {csp && <meta http-equiv="Content-Security-Policy" content={csp} />}
+  <script is:inline set:html={themeScript}></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+</head>

@@ -1,0 +1,14 @@
+# Owned by task 003: hreflang reciprocity over dist/, the sitemap and the
+# JSON-LD parsed, Lighthouse CI and axe. Not yet: manual only.
+name: SEO
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "The SEO checks arrive with task 003."

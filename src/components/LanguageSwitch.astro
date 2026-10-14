@@ -1,0 +1,41 @@
+---
+// Links to the page's existing translations, each marked with hreflang: the
+// theme script writes pc_lang when one is followed. The current language is
+// not a link.
+import { LANGS, type Lang } from '../lib/languages';
+import { LANGUAGE_NAMES, STRINGS } from '../lib/strings';
+import { pagePath } from '../lib/url';
+
+interface Props {
+  lang: Lang;
+  /** The translation key of the page (`about`, `blog/welcome`, `index`). */
+  pageKey: string;
+  /** The languages the page exists in. */
+  available: Lang[];
+}
+
+const { lang, pageKey, available } = Astro.props;
+const others = LANGS.filter((l) => l !== lang && available.includes(l));
+---
+
+<nav aria-label={STRINGS[lang].language}>
+  <ul class="flex items-center gap-3 text-sm">
+    <li>
+      <span aria-current="true" lang={lang} class="font-semibold text-heading">
+        {LANGUAGE_NAMES[lang]}
+      </span>
+    </li>
+    {others.map((l) => (
+      <li>
+        <a
+          href={pagePath(l, pageKey)}
+          hreflang={l}
+          lang={l}
+          class="text-muted hover:text-gold-hover"
+        >
+          {LANGUAGE_NAMES[l]}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

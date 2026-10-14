@@ -1,0 +1,13 @@
+# The author's copy is never reformatted.
+content/
+dist/
+.astro/
+coverage/
+node_modules/
+package-lock.json
+test/fixtures/
+.task/
+LICENSE
+README.md
+CLAUDE.md
+src/assets/

@@ -1,0 +1,14 @@
+# Owned by task 005: push to main builds with SITE_URL https://dev.palicanon.app
+# and deploys dist/ to Cloudflare Workers static assets. Not yet: manual only.
+name: Deploy
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "The deploy arrives with task 005."

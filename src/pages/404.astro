@@ -1,0 +1,23 @@
+---
+// dist/404.html: served for any unknown path. English, with the three home pages.
+import Base from '../layouts/Base.astro';
+import { LANGS } from '../lib/languages';
+import { STRINGS } from '../lib/strings';
+import { pagePath } from '../lib/url';
+
+const t = STRINGS.en;
+---
+
+<Base
+  lang="en"
+  title={t.notFoundTitle}
+  description={t.notFoundText}
+  pageKey="index"
+  available={[...LANGS]}
+>
+  <h1>{t.notFoundTitle}</h1>
+  <p>{t.notFoundText}</p>
+  <p>
+    <a href={pagePath('en', 'index')}>PaliCanon</a>
+  </p>
+</Base>

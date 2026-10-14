@@ -1,0 +1,49 @@
+{
+  "name": "www",
+  "version": "0.0.0",
+  "private": true,
+  "license": "CC-BY-NC-4.0",
+  "type": "module",
+  "engines": {
+    "node": "^24.21.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "test": "vitest run --coverage",
+    "test:dist": "vitest run --config vitest.dist.config.ts",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts"
+  },
+  "dependencies": {
+    "astro": "7.3.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@astrojs/markdown-remark": "7.3.2",
+    "@eslint/js": "10.0.1",
+    "@tailwindcss/vite": "4.3.3",
+    "@types/mdast": "4.0.4",
+    "@types/node": "24.19.2",
+    "@vitest/coverage-v8": "5.0.4",
+    "eslint": "10.12.0",
+    "eslint-plugin-astro": "3.2.1",
+    "mdast-util-to-string": "4.0.0",
+    "prettier": "3.9.10",
+    "prettier-plugin-astro": "1.1.1",
+    "remark": "15.0.1",
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.2",
+    "unified": "11.0.5",
+    "unist-util-visit": "5.1.0",
+    "vitest": "5.0.4",
+    "yaml": "2.9.1"
+  }
+}

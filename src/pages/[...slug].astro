@@ -1,0 +1,88 @@
+---
+// Every page of the site, from the two collections: the pages, the blog
+// posts that exist, and the blog index of each language (src/lib/routes.ts).
+import { getCollection, getEntry, render } from 'astro:content';
+import HomeSections from '../components/HomeSections.astro';
+import Base from '../layouts/Base.astro';
+import { requireEntry } from '../lib/entries';
+import { buildRoutes, type Route } from '../lib/routes';
+import { STRINGS } from '../lib/strings';
+import { pagePath } from '../lib/url';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  const posts = await getCollection('blog');
+  const routes = buildRoutes(
+    pages.map((p) => p.id),
+    posts.map((p) => p.id),
+  );
+  return routes.map((route) => ({ params: { slug: route.slug }, props: { route } }));
+}
+
+const { route } = Astro.props as { route: Route };
+const t = STRINGS[route.lang];
+
+const entryId = route.kind === 'blog-index' ? undefined : requireEntry(route.id, route.key);
+const entry =
+  entryId === undefined
+    ? undefined
+    : requireEntry(await getEntry(route.kind === 'post' ? 'blog' : 'pages', entryId), entryId);
+const rendered = entry ? await render(entry) : undefined;
+
+const posts =
+  route.kind === 'blog-index'
+    ? (
+        await Promise.all(
+          route.posts.map(async (id) => requireEntry(await getEntry('blog', id), id)),
+        )
+      ).sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+    : [];
+const dateFormat = new Intl.DateTimeFormat(route.lang, { dateStyle: 'long', timeZone: 'UTC' });
+---
+
+<Base
+  lang={route.lang}
+  title={entry ? entry.data.title : t.blogTitle}
+  description={entry ? entry.data.description : t.blogDescription}
+  pageKey={route.key}
+  available={route.translations}
+>
+  {route.kind === 'blog-index' ? (
+    <>
+      <h1>{t.blogTitle}</h1>
+      {posts.length === 0 ? (
+        <p>{t.blogEmpty}</p>
+      ) : (
+        <ul class="not-prose mt-6 space-y-6">
+          {posts.map((post) => (
+            <li>
+              <a href={pagePath(route.lang, post.id.split('/').slice(1).join('/'))}>
+                {post.data.title}
+              </a>
+              <time
+                datetime={post.data.date.toISOString().slice(0, 10)}
+                class="block text-sm text-subtle"
+              >
+                {dateFormat.format(post.data.date)}
+              </time>
+              <p class="mt-1">{post.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  ) : (
+    <>
+      {route.kind === 'post' && entry && 'date' in entry.data && (
+        <time
+          datetime={entry.data.date.toISOString().slice(0, 10)}
+          class="block text-sm text-subtle"
+        >
+          {dateFormat.format(entry.data.date)}
+        </time>
+      )}
+      {rendered && <rendered.Content />}
+      {route.kind === 'page' && route.key === 'index' && <HomeSections lang={route.lang} />}
+    </>
+  )}
+</Base>

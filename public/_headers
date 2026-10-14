@@ -1,0 +1,2 @@
+# Cloudflare static-assets response headers. Owned by task 005 (frame-ancestors,
+# HSTS, nosniff, referrer policy, _astro/* immutable, the rest revalidated).

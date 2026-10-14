@@ -1,0 +1,39 @@
+---
+// The page frame: head, skip link, header, the page, footer. The page's h1 is
+// the one `#` heading of its Markdown; the frame adds none.
+import Footer from '../components/Footer.astro';
+import Head from '../components/Head.astro';
+import Header from '../components/Header.astro';
+import type { Lang } from '../lib/languages';
+import { STRINGS } from '../lib/strings';
+import '../styles/global.css';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** The translation key of the page; the language links lead to its translations. */
+  pageKey: string;
+  /** The languages the page exists in. */
+  available: Lang[];
+}
+
+const { lang, title, description, pageKey, available } = Astro.props;
+---
+
+<html lang={lang}>
+  <Head title={title} description={description} />
+  <body class="flex min-h-screen flex-col">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:bg-page focus:p-2"
+    >
+      {STRINGS[lang].skip}
+    </a>
+    <Header lang={lang} pageKey={pageKey} available={available} />
+    <main id="main" class="content">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

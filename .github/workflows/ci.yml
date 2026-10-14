@@ -1,0 +1,40 @@
+# The checks of the README, in the order a failure is cheapest to read. Node
+# comes from .nvmrc; npm ci installs from the lockfile. The history is fetched
+# in full (fetch-depth: 0) because a page's lastmod is the date of the last
+# git commit of its file: a shallow clone would date every page the same.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx prettier --check .
+      - run: npx eslint .
+      - run: npx astro check
+      # The content rules run here: a broken file fails the build, naming it.
+      - run: npm run build
+      - run: npx vitest run --coverage
+      - run: npx vitest run --config vitest.dist.config.ts
+      # Internal links: every href of dist/ must reach a file.
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress --root-dir "${{ github.workspace }}/dist" "dist/**/*.html"
+          fail: true
+      - run: npm audit --audit-level=high

@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+@import './theme.css';
+
+/* Pages cross-fade (cross-document view transitions, no JavaScript); none
+   under reduced motion. Task 004 names the shared elements. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+/* The Markdown of a page, plain: task 004 restyles it. */
+@layer components {
+  .content {
+    @apply mx-auto w-full max-w-prose px-6 py-10 leading-relaxed;
+  }
+  .content h1 {
+    @apply font-serif text-4xl font-semibold text-heading;
+  }
+  .content h2 {
+    @apply mt-10 font-serif text-2xl font-semibold text-heading;
+  }
+  .content h3 {
+    @apply mt-6 text-xl font-semibold text-heading;
+  }
+  .content p,
+  .content ul,
+  .content ol {
+    @apply mt-4;
+  }
+  .content ul {
+    @apply list-disc pl-6;
+  }
+  .content ol {
+    @apply list-decimal pl-6;
+  }
+  .content a {
+    @apply text-gold-text underline underline-offset-2 hover:text-gold-hover;
+  }
+  .content .eyebrow {
+    @apply mt-10 text-sm uppercase tracking-wide text-subtle;
+  }
+  .content .eyebrow + h2 {
+    @apply mt-1;
+  }
+  .content mark {
+    @apply bg-transparent text-gold-text;
+  }
+  .content img {
+    @apply mt-4 h-auto max-w-full rounded;
+  }
+}

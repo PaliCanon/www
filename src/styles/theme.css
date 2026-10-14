@@ -1,0 +1,150 @@
+/* Copied by hand from ui-lib v0.1.1 (style/theme.css): the PaliCanon identity,
+   a dark slate and a light parchment theme, as CSS variables, and the
+   Tailwind names for them. Nothing else of ui-lib is used: no dependency.
+   The look is restyled in task 004; update this file when the tag moves. */
+
+:root,
+:root[data-theme='dark'],
+[data-theme='dark'] {
+  --ps-page: #20262e;
+  --ps-rail: #20262e;
+  --ps-primary: var(--ps-gold);
+  --ps-primary-hover: var(--ps-gold-hover);
+  --ps-on-primary: var(--ps-on-gold);
+  --ps-card: #2c333d;
+  --ps-card-edge: #3c4651;
+  --ps-chip: #262d36;
+  --ps-chip-hover: #2f3742;
+  --ps-line: #333b46;
+  --ps-field: #262d36;
+  --ps-heading: #f0e8df;
+  --ps-ink: #ddd5cb;
+  --ps-muted: #b0a89f;
+  --ps-subtle: #a0978c;
+  --ps-gold: #c9a84c;
+  --ps-gold-hover: #d8b95e;
+  --ps-gold-text: #c9a84c;
+  --ps-on-gold: #20262e;
+  --ps-mark: rgb(201 168 76 / 0.16);
+  --ps-danger: #e07a7a;
+  --ps-glass: rgb(44 51 61 / 0.6);
+  --ps-glow: rgb(201 168 76 / 0.2);
+  --ps-halo: rgb(201 168 76 / 0.14);
+  --ps-card-from: #2c333d;
+  --ps-card-to: #242a33;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'],
+[data-theme='light'] {
+  --ps-page: #f8f6f0;
+  --ps-rail: #eee9de;
+  --ps-primary: #f4e9cc;
+  --ps-primary-hover: #ecdcb2;
+  --ps-on-primary: #6e5410;
+  --ps-card: #ffffff;
+  --ps-card-edge: #e3dccd;
+  --ps-chip: #f3efe6;
+  --ps-chip-hover: #ece7dc;
+  --ps-line: #e3dccd;
+  --ps-field: #ffffff;
+  --ps-heading: #1d1c1a;
+  --ps-ink: #4a463f;
+  --ps-muted: #4a463f;
+  --ps-subtle: #6b665d;
+  --ps-gold: #9e7b22;
+  --ps-gold-hover: #8c6d18;
+  --ps-gold-text: #7a5f14;
+  --ps-on-gold: #ffffff;
+  --ps-mark: rgb(212 175 55 / 0.25);
+  --ps-danger: #a83535;
+  --ps-glass: rgb(255 255 255 / 0.8);
+  --ps-glow: rgb(212 175 55 / 0.2);
+  --ps-halo: rgb(212 175 55 / 0.12);
+  --ps-card-from: #ffffff;
+  --ps-card-to: #f8f6f0;
+  color-scheme: light;
+}
+
+/* System: no data-theme attribute. Dark is :root's default above; only the
+   light preference overrides it. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --ps-page: #f8f6f0;
+    --ps-rail: #eee9de;
+    --ps-primary: #f4e9cc;
+    --ps-primary-hover: #ecdcb2;
+    --ps-on-primary: #6e5410;
+    --ps-card: #ffffff;
+    --ps-card-edge: #e3dccd;
+    --ps-chip: #f3efe6;
+    --ps-chip-hover: #ece7dc;
+    --ps-line: #e3dccd;
+    --ps-field: #ffffff;
+    --ps-heading: #1d1c1a;
+    --ps-ink: #4a463f;
+    --ps-muted: #4a463f;
+    --ps-subtle: #6b665d;
+    --ps-gold: #9e7b22;
+    --ps-gold-hover: #8c6d18;
+    --ps-gold-text: #7a5f14;
+    --ps-on-gold: #ffffff;
+    --ps-mark: rgb(212 175 55 / 0.25);
+    --ps-danger: #a83535;
+    --ps-glass: rgb(255 255 255 / 0.8);
+    --ps-glow: rgb(212 175 55 / 0.2);
+    --ps-halo: rgb(212 175 55 / 0.12);
+    --ps-card-from: #ffffff;
+    --ps-card-to: #f8f6f0;
+    color-scheme: light;
+  }
+}
+
+@theme inline {
+  --color-page: var(--ps-page);
+  --color-rail: var(--ps-rail);
+  --color-primary: var(--ps-primary);
+  --color-primary-hover: var(--ps-primary-hover);
+  --color-on-primary: var(--ps-on-primary);
+  --color-card: var(--ps-card);
+  --color-card-edge: var(--ps-card-edge);
+  --color-chip: var(--ps-chip);
+  --color-chip-hover: var(--ps-chip-hover);
+  --color-line: var(--ps-line);
+  --color-field: var(--ps-field);
+  --color-heading: var(--ps-heading);
+  --color-ink: var(--ps-ink);
+  --color-muted: var(--ps-muted);
+  --color-subtle: var(--ps-subtle);
+  --color-gold: var(--ps-gold);
+  --color-gold-hover: var(--ps-gold-hover);
+  --color-gold-text: var(--ps-gold-text);
+  --color-on-gold: var(--ps-on-gold);
+  --color-mark: var(--ps-mark);
+  --color-danger: var(--ps-danger);
+  --color-glass: var(--ps-glass);
+  --color-glow: var(--ps-glow);
+  --color-halo: var(--ps-halo);
+  --color-card-from: var(--ps-card-from);
+  --color-card-to: var(--ps-card-to);
+  --font-serif: Lora, 'Iowan Old Style', Georgia, serif;
+  --font-sans: Inter, -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    background: var(--ps-page);
+  }
+  body {
+    background: var(--ps-page);
+    color: var(--ps-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ps-gold);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}

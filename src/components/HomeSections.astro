@@ -1,0 +1,54 @@
+---
+// The four sections of the home page, after the opening of index.md, always in
+// the same order (teaching, search, viz, learn): the eyebrow, the title as an
+// h2 with its highlight in <mark>, the body, and the link of the section.
+// Plain look; task 004 restyles it.
+import { getCollection, render } from 'astro:content';
+import { HOME_SECTIONS, type Lang } from '../lib/languages';
+import { requireEntry } from '../lib/entries';
+import { sectionHref, sectionIds, splitHighlight } from '../lib/home';
+import { STRINGS } from '../lib/strings';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const all = await getCollection('home');
+const ids = sectionIds(
+  all.map((entry) => entry.id),
+  lang,
+);
+const sections = await Promise.all(
+  ids.map(async (id) => {
+    const entry = requireEntry(
+      all.find((e) => e.id === id),
+      id,
+    );
+    const section = requireEntry(
+      HOME_SECTIONS.find((s) => id.endsWith(`/${s}`)),
+      id,
+    );
+    const { Content } = await render(entry);
+    return { section, data: entry.data, Content };
+  }),
+);
+---
+
+{sections.map(({ section, data, Content }) => {
+  const title = splitHighlight(data.title, data.highlight);
+  return (
+    <section data-home-section={section} aria-labelledby={`home-${section}`}>
+      {data.eyebrow && <p class="eyebrow">{data.eyebrow}</p>}
+      <h2 id={`home-${section}`}>
+        {title.before}
+        {title.mark && <mark>{title.mark}</mark>}
+        {title.after}
+      </h2>
+      <Content />
+      <p>
+        <a href={sectionHref(lang, section)}>{STRINGS[lang].sectionLink[section]}</a>
+      </p>
+    </section>
+  );
+})}

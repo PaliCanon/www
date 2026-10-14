@@ -1,0 +1,5 @@
+---
+eyebrow: "The teaching"
+---
+
+Text.

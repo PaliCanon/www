@@ -1,0 +1,93 @@
+---
+// Plain header: the lotus and name link home, the page links, the languages.
+// On a phone the links sit in an HTML popover opened by a button: no
+// JavaScript, and every link is a real link.
+import { Picture } from 'astro:assets';
+import lotus from '../assets/lotus.png';
+import type { Lang } from '../lib/languages';
+import { STRINGS } from '../lib/strings';
+import { pagePath } from '../lib/url';
+import LanguageSwitch from './LanguageSwitch.astro';
+
+interface Props {
+  lang: Lang;
+  pageKey: string;
+  available: Lang[];
+}
+
+const { lang, pageKey, available } = Astro.props;
+const t = STRINGS[lang];
+const links = [
+  ['search', t.nav.search],
+  ['viz', t.nav.viz],
+  ['learn', t.nav.learn],
+  ['tipitaka', t.nav.tipitaka],
+  ['about', t.nav.about],
+  ['support', t.nav.support],
+  ['blog', t.nav.blog],
+] as const;
+---
+
+<header class="border-b border-line">
+  <div class="mx-auto flex max-w-5xl items-center gap-4 px-6 py-3">
+    <a href={pagePath(lang, 'index')} aria-label={t.home} class="flex items-center gap-2">
+      <Picture
+        src={lotus}
+        formats={['avif', 'webp']}
+        densities={[1, 2]}
+        width={28}
+        height={28}
+        alt=""
+        class="size-7"
+        loading="eager"
+      />
+      <span class="font-serif text-lg font-semibold text-heading">PaliCanon</span>
+    </a>
+    <button
+      type="button"
+      popovertarget="menu"
+      class="ml-auto rounded border border-line px-3 py-1 text-sm text-heading md:hidden"
+    >
+      {t.menu}
+    </button>
+    <div
+      id="menu"
+      popover
+      class="m-0 hidden w-full border-b border-line bg-page p-6 md:ml-auto md:flex md:w-auto md:items-center md:gap-6 md:border-0 md:bg-transparent md:p-0"
+    >
+      <nav aria-label={t.menu}>
+        <ul class="flex flex-col gap-3 md:flex-row md:gap-5">
+          {links.map(([key, label]) => (
+            <li>
+              <a href={pagePath(lang, key)} class="text-ink hover:text-gold-hover">
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div class="mt-4 md:mt-0">
+        <LanguageSwitch lang={lang} pageKey={pageKey} available={available} />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* The popover is a drop-down panel on a phone, part of the bar from md up. */
+  #menu:popover-open {
+    display: block;
+    position: absolute;
+    inset: 3.5rem 0 auto 0;
+    margin: 0;
+  }
+  @media (min-width: 48rem) {
+    #menu[popover] {
+      display: flex;
+      position: static;
+      inset: auto;
+      width: auto;
+      overflow: visible;
+    }
+  }
+</style>
