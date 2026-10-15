@@ -1,14 +1,81 @@
-# Owned by task 003: hreflang reciprocity over dist/, the sitemap and the
-# JSON-LD parsed, Lighthouse CI and axe. Not yet: manual only.
+# The SEO checks over the built site: hreflang reciprocity, the sitemap, robots.txt
+# and the JSON-LD parsed (test/dist/seo.test.ts), Lighthouse CI (accessibility, SEO
+# and best practices must be 100; performance is reported) on the home pages, the
+# Tipiṭaka page and a post, and axe on every page of dist/. The history is fetched
+# in full: a page's lastmod is the date of the last git commit of its file.
+# The site is built for http://localhost:4173, where it is served here, so the
+# canonical and hreflang addresses are the ones the audits load.
 name: SEO
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 permissions:
   contents: read
 
+env:
+  # Tools run through npx, pinned.
+  LHCI: '@lhci/cli@0.15.1'
+  AXE: '@axe-core/cli@4.13.0'
+  SERVE: 'serve@14.2.6'
+
 jobs:
-  placeholder:
+  seo:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "The SEO checks arrive with task 003."
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          SITE_URL: http://localhost:4173
+      - name: hreflang, sitemap, robots.txt, JSON-LD and previews over dist/
+        run: npx vitest run --config vitest.dist.config.ts test/dist/seo.test.ts
+      - id: chrome
+        uses: browser-actions/setup-chrome@v2.2.0
+        with:
+          chrome-version: stable
+          install-chromedriver: true
+      # Lighthouse reads robots.txt from inside the page, which the CSP of the
+      # site (connect-src 'none') blocks: its robots.txt audit then fails the SEO
+      # category. The audits run on a copy without the CSP meta; the CSP itself
+      # is tested over dist/ (test/dist/head.test.ts).
+      - name: Copy of dist/ without the CSP meta, for Lighthouse
+        run: |
+          cp -r dist dist-lh
+          find dist-lh -name '*.html' -exec sed -i 's#<meta http-equiv="Content-Security-Policy"[^>]*>##' {} +
+      - name: Lighthouse CI
+        run: npx --yes "$LHCI" autorun --config=.github/lighthouserc.json
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+      - name: Lighthouse scores
+        if: always()
+        run: |
+          node -e "
+          const rows = require('./lhci-reports/manifest.json').map((r) => '| ' + r.url + ' | ' + ['performance', 'accessibility', 'best-practices', 'seo'].map((k) => Math.round(r.summary[k] * 100)).join(' | ') + ' |');
+          console.log(['| Page | Performance | Accessibility | Best practices | SEO |', '| --- | --- | --- | --- | --- |', ...rows].join('\n'));
+          " >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: lhci-reports
+      - name: axe on every page of dist/
+        run: |
+          npx --yes "$SERVE" dist --listen 4173 --no-clipboard > serve.log 2>&1 &
+          until curl -sf http://localhost:4173/robots.txt > /dev/null; do sleep 1; done
+          urls=$(cd dist && find . -name index.html | sed 's#^\./##; s#index.html$##; s#^#http://localhost:4173/#')
+          npx --yes "$AXE" $urls http://localhost:4173/404.html --exit \
+            --chrome-path "$CHROME_PATH" --chromedriver-path "$CHROMEDRIVER_PATH" \
+            --chrome-options="no-sandbox,headless"
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          CHROMEDRIVER_PATH: ${{ steps.chrome.outputs.chromedriver-path }}

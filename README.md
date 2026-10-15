@@ -93,6 +93,39 @@ npx vitest run --config vitest.e2e.config.ts      # real builds of fixture sites
 `http://localhost:4321`. `CONTENT_DIR` points the build at another content
 folder (the tests use it).
 
+## SEO
+
+Everything a page and the sitemap say about it comes from `src/lib/seo/`
+(with `url`, `translations` and `lastmod` behind it), so the `<head>`, the
+sitemap and the tests agree:
+
+- the `<title>` is `<title> · PaliCanon`; a home page's title is its content
+  title alone; a 404 is `noindex`;
+- the canonical is the page's own address; `hreflang` lists the languages the
+  page exists in plus `x-default` (English), in the head and in the sitemap
+  (`<xhtml:link>`), with each page's `lastmod` (its last git commit; CI
+  fetches the full history);
+- Open Graph and Twitter card on every page; the preview image is the post's
+  `image` when given, else the default card of the language. A post's image is
+  optimised (cropped to 1200 x 630) only when it is in this repository's
+  `content/images/`: a `CONTENT_DIR` elsewhere uses the default card;
+- structured data (JSON-LD): Organization and WebSite on each home page,
+  MobileApplication on the Tipiṭaka page, BlogPosting on each post; no rating;
+- `robots.txt`: the search and answer bots are allowed and the bots that
+  collect text to train models are refused. The two lists are `ALLOWED_BOTS`
+  and `DISALLOWED_BOTS` in `src/lib/seo/robots.ts`.
+
+The default cards (`public/og/default-<lang>.png`, 1200 x 630) and the lotus
+logo (`public/og/lotus.png`) are committed. Run `node scripts/make-og.mjs`
+(it needs Chrome; `CHROME_PATH` names it) when a home page's title changes,
+then commit the images.
+
+CI (`.github/workflows/seo.yml`) runs the checks over `dist/`, Lighthouse CI
+(accessibility, SEO and best practices at 100) and axe on every page.
+Lighthouse audits a copy of `dist/` without the CSP meta, because the CSP
+(`connect-src 'none'`) blocks the robots.txt fetch Lighthouse makes from the
+page; the shipped CSP is tested by `test/dist/head.test.ts`.
+
 ## The content rules
 
 Checked before any page is generated (`src/lib/content-check.ts`); a broken
@@ -104,7 +137,10 @@ one fails the build with `file:line [rule] message`:
   its title is its h2, and any `#` in its text is an error);
 - every image has a description (`![description](images/file.jpg)`) and exists
   in `content/images/` (`image-missing` for the text, `frontmatter-image-missing`
-  for a blog `image:`);
+  for a blog `image:`); a blog `image:` is `images/<file name>`
+  with no sub-folder, as images live flat in `content/images/`
+  (`frontmatter-image-not-in-images`: any other path is refused, not turned
+  into the default card);
 - no raw HTML;
 - the content folder exists and holds Markdown (`content-missing`,
   `content-empty`);

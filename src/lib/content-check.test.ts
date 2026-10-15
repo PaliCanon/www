@@ -113,6 +113,40 @@ describe('checkContent', () => {
     expect(v.map((x) => [x.rule, x.line])).toEqual([['frontmatter-image-missing', at]]);
   });
 
+  it('reports a blog image outside images/ by its own rule, at the line of the key', () => {
+    for (const image of [
+      'pics/a.jpg',
+      '../a.jpg',
+      'https://x.org/a.jpg',
+      '/images/a.jpg',
+      'images/sub/x.jpg',
+    ]) {
+      let at = 0;
+      const v = check((p) => {
+        // The file exists: the rule is about where it lives, not about the file.
+        write(p('images/sub/x.jpg'), 'x');
+        const text = `---\ntitle: T\ndescription: D\ndate: 2026-10-14\nimage: ${image}\n---\n\n# T\n`;
+        write(p('en/blog/img.md'), text);
+        at = lineOf(text, 'image:');
+      });
+      expect(
+        v.map((x) => [x.rule, x.file, x.line]),
+        image,
+      ).toEqual([['frontmatter-image-not-in-images', 'content/en/blog/img.md', at]]);
+      expect(v[0].message).toContain('images/');
+    }
+  });
+
+  it('keeps frontmatter-image-missing for a file of images/ that is absent', () => {
+    const v = check((p) =>
+      write(
+        p('en/blog/img.md'),
+        '---\ntitle: T\ndescription: D\ndate: 2026-10-14\nimage: images/nope.jpg\n---\n\n# T\n',
+      ),
+    );
+    expect(v.map((x) => x.rule)).toEqual(['frontmatter-image-missing']);
+  });
+
   it('tells a missing front matter image from a missing body image by the rule id', () => {
     const v = check((p) =>
       write(

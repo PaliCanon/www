@@ -1,7 +1,7 @@
-// Owned by task 003 (the AI crawler policy); 002 ships the minimum: everything
-// allowed, and the sitemap (src/lib/sitemap.ts).
+// The robots policy of the site (src/lib/seo/robots.ts): search and answer bots
+// allowed, training bots refused, the sitemap.
 import type { APIRoute } from 'astro';
-import { robotsTxt } from '../lib/sitemap';
+import { robotsTxt } from '../lib/seo/robots';
 import { siteUrl } from '../lib/url';
 
 export const GET: APIRoute = () =>

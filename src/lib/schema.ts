@@ -20,14 +20,18 @@ export const pageSchema = z.strictObject(base);
 
 /**
  * Front matter of a blog post: a page's, plus its date and an optional
- * image under `images/` for link previews.
+ * image for link previews: `images/<file name>`, a file of the flat
+ * `content/images/` (no sub-folder).
  */
 export const blogSchema = z.strictObject({
   ...base,
   date: dateField,
   image: z
     .string()
-    .regex(/^images\/.+/, 'must be written images/<file name>, a file of content/images/')
+    .refine((value) => /^images\/[^/]+$/.test(value), {
+      message: 'images live flat in content/images/',
+      params: { rule: 'frontmatter-image-not-in-images' },
+    })
     .optional(),
 });
 

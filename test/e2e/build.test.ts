@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import {
   cpSync,
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
@@ -99,6 +100,32 @@ describe('a broken rule fails astro build, naming the file, the line and the rul
     expect(text).toMatch(/content-missing|\[content-missing\]/);
     expect(text).not.toContain('ENOENT');
     expect(htmlIn(out), 'a broken build deploys nothing').toEqual([]);
+  });
+
+  it('a blog image outside images/ (it would silently show the default card)', () => {
+    const { run, text, out } = build((c) =>
+      writeFileSync(
+        join(c, 'en/blog/stray.md'),
+        '---\ntitle: T\ndescription: D\ndate: 2026-10-14\nimage: pics/dot.png\n---\n\n# T\n',
+      ),
+    );
+    expect(run.status).not.toBe(0);
+    expect(htmlIn(out), 'a broken build deploys nothing').toEqual([]);
+    expect(text).toMatch(/en\/blog\/stray\.md:5 \[frontmatter-image-not-in-images\]/);
+  });
+
+  it('a blog image in a sub-folder of images/, though the file exists (it would silently show the default card)', () => {
+    const { run, text, out } = build((c) => {
+      mkdirSync(join(c, 'images/sub'));
+      cpSync(join(c, 'images/dot.png'), join(c, 'images/sub/x.png'));
+      writeFileSync(
+        join(c, 'en/blog/deep.md'),
+        '---\ntitle: T\ndescription: D\ndate: 2026-10-14\nimage: images/sub/x.png\n---\n\n# T\n',
+      );
+    });
+    expect(run.status).not.toBe(0);
+    expect(htmlIn(out), 'a broken build deploys nothing').toEqual([]);
+    expect(text).toMatch(/en\/blog\/deep\.md:5 \[frontmatter-image-not-in-images\]/);
   });
 
   it('a description over 160 characters', () => {

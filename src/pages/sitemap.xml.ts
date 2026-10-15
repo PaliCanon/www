@@ -1,9 +1,12 @@
-// Owned by task 003 (alternates, x-default, lastmod); 002 ships the minimum:
-// the address of every generated page (src/lib/sitemap.ts).
+// The sitemap: every generated page with its lastmod and its hreflang
+// alternates, from the same routes and helpers as the pages' <head>
+// (src/lib/seo/sitemap.ts).
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { contentDir } from '../lib/content-dir';
 import { buildRoutes } from '../lib/routes';
-import { sitemapXml } from '../lib/sitemap';
+import { routeLastmod } from '../lib/seo/lastmod-sources';
+import { sitemapXml } from '../lib/seo/sitemap';
 import { siteUrl } from '../lib/url';
 
 export const GET: APIRoute = async () => {
@@ -13,7 +16,11 @@ export const GET: APIRoute = async () => {
     pages.map((p) => p.id),
     posts.map((p) => p.id),
   );
-  return new Response(sitemapXml(routes, siteUrl()), {
-    headers: { 'Content-Type': 'application/xml; charset=utf-8' },
-  });
+  const dir = contentDir();
+  return new Response(
+    sitemapXml(routes, siteUrl(), (route) => routeLastmod(route, dir)),
+    {
+      headers: { 'Content-Type': 'application/xml; charset=utf-8' },
+    },
+  );
 };

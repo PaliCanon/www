@@ -79,6 +79,20 @@ describe('blog front matter', () => {
   it('rejects an image outside images/', () => {
     expect(keys('blog', { ...post, image: 'https://x.org/a.jpg' })).toEqual(['image']);
     expect(keys('blog', { ...post, image: '../a.jpg' })).toEqual(['image']);
+    expect(frontmatterIssues('blog', { ...post, image: 'pics/a.jpg' }).map((i) => i.rule)).toEqual([
+      'frontmatter-image-not-in-images',
+    ]);
+  });
+
+  it('rejects a sub-folder of images/: images live flat in content/images/', () => {
+    for (const image of ['images/sub/x.jpg', 'images/a/b/c.png', 'images//x.jpg', 'images/x/']) {
+      const issues = frontmatterIssues('blog', { ...post, image });
+      expect(
+        issues.map((i) => [i.key, i.rule]),
+        image,
+      ).toEqual([['image', 'frontmatter-image-not-in-images']]);
+      expect(issues[0].message).toBe('images live flat in content/images/');
+    }
   });
 
   it('rejects an unknown key', () => {

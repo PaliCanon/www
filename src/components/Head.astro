@@ -1,11 +1,24 @@
 ---
-// The head of every page. Owned by task 003 (SEO): 002 puts what a page
-// cannot do without, in the order the CSP needs. The CSP meta comes first
-// (it only governs what follows it; production builds only, `astro dev` needs
-// its HMR script), then the one inline script, before any
-// stylesheet; the script's sha256 is computed from the very text inlined.
+// The head of every page: the CSP meta first (it only governs what follows it;
+// production builds only, `astro dev` needs its HMR script), then the one inline
+// script, before any stylesheet (the script's sha256 is computed from the very
+// text inlined), then everything search engines and link previews read: title,
+// description, canonical, hreflang, Open Graph, Twitter card, theme colours and
+// the structured data. All of it comes from src/lib/seo (and url, translations,
+// lastmod behind it), the same helpers as the sitemap. The page is found from its
+// address, so the layout passes only its title and description.
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import { getCollection, getEntry } from 'astro:content';
 import { pageCsp } from '../lib/csp';
+import { buildRoutes } from '../lib/routes';
+import { headData } from '../lib/seo/head';
+import { jsonLdFor, serializeJsonLd } from '../lib/seo/jsonld';
+import { defaultImage, OG_SIZE, type OgImage } from '../lib/seo/og';
+import { routeAt } from '../lib/seo/route-lookup';
+import { THEME_COLORS } from '../lib/seo/site';
 import { themeScript } from '../lib/theme-script';
+import { absoluteUrl, siteUrl } from '../lib/url';
 
 interface Props {
   title: string;
@@ -14,6 +27,37 @@ interface Props {
 
 const { title, description } = Astro.props;
 const csp = pageCsp(import.meta.env.PROD, themeScript);
+
+const site = siteUrl();
+const routes = buildRoutes(
+  (await getCollection('pages')).map((p) => p.id),
+  (await getCollection('blog')).map((p) => p.id),
+);
+const route = routeAt(routes, Astro.url.pathname);
+const post = route?.kind === 'post' && route.id ? await getEntry('blog', route.id) : undefined;
+
+// A post's own image (content/images/<file>), cropped to the preview's size; the
+// language's default image otherwise. A CONTENT_DIR outside the repository has
+// no image to optimise here: its posts take the default.
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/content/images/*.{png,jpg,jpeg,webp,avif}',
+);
+let image: OgImage | undefined = route ? defaultImage(route.lang, site, title) : undefined;
+const load = post?.data.image ? images[`/content/${post.data.image}`] : undefined;
+if (load) {
+  const { src, attributes } = await getImage({
+    src: (await load()).default,
+    ...OG_SIZE,
+    fit: 'cover',
+    format: 'jpeg',
+  });
+  image = { url: absoluteUrl(src, site), ...OG_SIZE, alt: attributes.alt ?? title };
+}
+
+const head = headData({ site, title, description, route, image, published: post?.data.date });
+const structured = route
+  ? jsonLdFor({ site, route, title, description, published: post?.data.date, image: image?.url })
+  : [];
 ---
 
 <head>
@@ -21,7 +65,23 @@ const csp = pageCsp(import.meta.env.PROD, themeScript);
   {csp && <meta http-equiv="Content-Security-Policy" content={csp} />}
   <script is:inline set:html={themeScript}></script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{title}</title>
-  <meta name="description" content={description} />
+  <title>{head.title}</title>
+  <meta name="description" content={head.description} />
+  {head.noindex && <meta name="robots" content="noindex" />}
+  {head.canonical && <link rel="canonical" href={head.canonical} />}
+  {head.alternates.map((a) => (
+    <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+  ))}
+  {head.openGraph.map(([property, content]) => (
+    <meta property={property} content={content} />
+  ))}
+  {head.twitter.map(([name, content]) => (
+    <meta name={name} content={content} />
+  ))}
+  <meta name="theme-color" content={THEME_COLORS.dark} media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content={THEME_COLORS.light} media="(prefers-color-scheme: light)" />
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  {structured.map((block) => (
+    <script is:inline type="application/ld+json" set:html={serializeJsonLd(block)} />
+  ))}
 </head>
