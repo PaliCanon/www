@@ -5,7 +5,7 @@ description: "Pourquoi PaliCanon existe, qui le fait, et d'où viennent ses text
 
 # À propos de PaliCanon
 
-PaliCanon est un projet gratuit et non commercial. Il veut rendre le Canon pāli facile à lire, à chercher et à étudier, pour tous et en plusieurs langues.
+PaliCanon est un projet gratuit et non commercial. Il veut rendre le Pali Canon facile à lire, à chercher et à étudier, pour tous et en plusieurs langues.
 
 ## Les textes
 

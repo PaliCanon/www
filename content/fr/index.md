@@ -1,8 +1,8 @@
 ---
-title: "PaliCanon : le Canon pāli pour tous"
-description: "Lire, chercher et apprendre le Canon pāli, les plus anciennes écritures bouddhistes. Gratuit et non commercial, en anglais, français et vietnamien."
+title: "PaliCanon : le Pali Canon pour tous"
+description: "Lire, chercher et apprendre le Pali Canon, les plus anciennes écritures bouddhistes. Gratuit et non commercial, en anglais, français et vietnamien."
 ---
 
-# Le Canon pāli, ouvert à tous
+# Le Pali Canon, ouvert à tous
 
-PaliCanon réunit des outils gratuits pour lire, chercher et apprendre le Canon pāli, le plus ancien recueil des enseignements du Bouddha.
+PaliCanon réunit des outils gratuits pour lire, chercher et apprendre le Pali Canon, le plus ancien recueil des enseignements du Bouddha.

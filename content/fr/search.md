@@ -1,9 +1,9 @@
 ---
-title: "Chercher dans le Canon pāli"
-description: "Cherchez dans tout le Canon pāli par les mots dont vous vous souvenez ou par ce que vous voulez dire, en anglais, français et vietnamien."
+title: "Chercher dans le Pali Canon"
+description: "Cherchez dans tout le Pali Canon par les mots dont vous vous souvenez ou par ce que vous voulez dire, en anglais, français et vietnamien."
 ---
 
-# Chercher dans le Canon pāli
+# Chercher dans le Pali Canon
 
 Tapez quelques mots dont vous vous souvenez, ou une question avec vos propres mots. La recherche trouve les passages correspondants, avec le sutta d'où ils viennent et un lien pour le lire sur SuttaCentral.
 
