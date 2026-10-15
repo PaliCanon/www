@@ -20,3 +20,7 @@ Trang này không đặt cookie và không thu thập dữ liệu cá nhân.
 ## Văn bản
 
 Các văn bản Kinh tạng thuộc về dịch giả và nhà xuất bản. Xem trang Về PaliCanon để biết nguồn và giấy phép.
+
+## Giấy phép
+
+Trang này, các văn bản và mã nguồn của nó được phát hành theo giấy phép [Creative Commons Ghi công - Phi thương mại 4.0](https://creativecommons.org/licenses/by-nc/4.0/deed.vi) (CC BY-NC 4.0): bạn có thể chia sẻ và chỉnh sửa, có ghi nguồn, cho mục đích phi thương mại. Các văn bản Kinh tạng giữ giấy phép riêng, nêu ở trang Về PaliCanon.
