@@ -1,7 +1,6 @@
 ---
 title: "PaliCanon: Kinh tạng Pāli cho mọi người"
 description: "Đọc, tìm kiếm và học Kinh tạng Pāli, bộ kinh Phật giáo cổ nhất. Miễn phí, phi thương mại, bằng tiếng Anh, tiếng Pháp và tiếng Việt."
-highlight: "Kinh tạng Pāli"
 ---
 
 # Kinh tạng Pāli, mở cho mọi người

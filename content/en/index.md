@@ -1,7 +1,6 @@
 ---
 title: "PaliCanon: the Pāli Canon for everyone"
 description: "Read, search and learn the Pāli Canon, the oldest Buddhist scriptures. Free and non-commercial, in English, French and Vietnamese."
-highlight: "Pāli Canon"
 ---
 
 # The Pāli Canon, open to everyone
