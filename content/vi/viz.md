@@ -5,6 +5,22 @@ description: "Khám phá Kinh tạng Pāli như một bản đồ 3D: các bài 
 
 # Bản đồ Kinh tạng Pāli
 
-Sẽ viết.
+[Une ou deux phrases d'introduction : ce qu'est la carte, en quoi elle aide à lire le Canon.]
 
-[viz.palicanon.app](https://viz.palicanon.app)
+## Bạn thấy gì
+
+[Un paragraphe : les points, les liens, les couleurs ; ce que représente une distance.]
+
+## Cách khám phá
+
+[Un paragraphe : zoom, clic sur un sutta, les deux vues (parallèles de SuttaCentral, espace vectoriel).]
+
+- [Geste ou action 1]
+- [Geste ou action 2]
+- [Geste ou action 3]
+
+## Dữ liệu từ đâu
+
+[Un paragraphe : SuttaCentral pour les textes et les parallèles, les vecteurs calculés sur le texte pāli.]
+
+[Mở bản đồ](https://viz.palicanon.app)
