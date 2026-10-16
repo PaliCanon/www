@@ -1,6 +1,6 @@
 # 007 The slide tag's contrast on /tipitaka/
 
-status: building · rank: 2 · level: simple · type: fix · request: 001 · after: [004] · light path
+status: merged · rank: 2 · level: simple · type: fix · request: 001 · after: [004] · light path
 
 ## Summary
 Rank: difficulty 1 (one colour rule in slider.css), impact 2 (the SEO workflow asserts Lighthouse accessibility 100 on /tipitaka/; the page scores 96) → 2. Light path: no viewer session, one Haiku lane, the orchestrator checks.
@@ -15,3 +15,6 @@ Found by the orchestrator running the SEO workflow's Lighthouse locally on main 
 
 ## Retro
 One line (light path): the dimming of a neighbour card by `opacity` dims its caption too and Lighthouse reads the contrast through it — dim an image by `filter`/`scale`, never a text's ancestor by `opacity` (goes with ask-yourself/front motion-element-state-inventory).
+
+## Merge
+408a6d0 on main, 2026-10-16.
