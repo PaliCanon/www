@@ -4,10 +4,10 @@ title: "Tìm trong Kinh tạng"
 highlight: "Kinh tạng"
 ---
 
-[Une phrase d'accroche : ce que la recherche permet, en une ligne.]
+Tìm trong toàn bộ Kinh tạng Pāli để học: tìm một đoạn kinh, một bài kinh hay một lời dạy trong vài giây, bằng tiếng Việt, tiếng Anh hoặc tiếng Pháp.
 
-[Un paragraphe : comment on cherche, par les mots ou par le sens, dans quelles langues, ce qu'on obtient.]
+Tìm theo bài kinh, theo từ khóa hoặc theo ý nghĩa. Dễ dàng tìm được điều bạn cần.
 
-- [Point clé 1, une ligne]
-- [Point clé 2, une ligne]
-- [Point clé 3, une ligne]
+- **Theo bài kinh**: một ký hiệu như MN 10 hoặc một tựa đề mở thẳng bài kinh.
+- **Theo từ khóa**: đúng những từ bạn còn nhớ, bằng tiếng Pāli hoặc bản dịch.
+- **Theo ý nghĩa**: một câu hỏi bằng lời của bạn, như "làm sao đối diện với cơn giận", và những đoạn kinh trả lời.

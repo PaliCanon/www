@@ -4,10 +4,10 @@ title: "Search the Canon"
 highlight: "the Canon"
 ---
 
-[Une phrase d'accroche : ce que la recherche permet, en une ligne.]
+Search the whole Pali Canon to study it: find a passage, a sutta or a teaching in seconds, in English, French or Vietnamese.
 
-[Un paragraphe : comment on cherche, par les mots ou par le sens, dans quelles langues, ce qu'on obtient.]
+Search by sutta, by keywords or by meaning. Find what you are looking for, easily.
 
-- [Point clé 1, une ligne]
-- [Point clé 2, une ligne]
-- [Point clé 3, une ligne]
+- **By sutta**: a reference such as MN 10 or a title opens the text straight away.
+- **By keywords**: the exact words you remember, in Pāli or in translation.
+- **By meaning**: a question in your own words, such as "how to deal with anger", and the passages that answer it.
