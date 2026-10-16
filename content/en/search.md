@@ -11,6 +11,23 @@ Type a few words you remember, or a question in your own words. The search finds
 - **By keywords**: the exact words you remember, in Pāli or in translation.
 - **By meaning**: a question in your own words, such as "how to deal with anger", and the passages that answer it.
 
+## What it searches
+
+The whole Sutta Piṭaka, the discourses of the Buddha: the Pāli text of the Mahāsaṅgīti edition and its translations, English by Bhikkhu Sujato, French and Vietnamese where a sutta has one, as published by SuttaCentral. Ask in English, French or Vietnamese: the search reads the translations in your language and the Pāli alike.
+
+You can narrow the search to one collection, the long discourses (DN), the middle ones (MN), the connected (SN), the numbered (AN) or the minor texts (KN), or search all of them at once.
+
+## What you get
+
+A list of passages, each with the sutta it belongs to, its reference and its title in your language, the words that matched, and a link to read the whole sutta on SuttaCentral. The best match comes first; a passage found by both words and meaning ranks above the others.
+
+## Try it
+
+- A question: "how to deal with anger", "what is right speech", "dealing with regret and guilt".
+- A Pāli term: "metta", "satipaṭṭhāna", "anicca".
+- A phrase you remember: "all conditioned things are impermanent".
+- A reference: "MN 10", "SN 56.11", "Dhp 1".
+
 ## How it works
 
 Two engines read the Canon, and the search combines them.
