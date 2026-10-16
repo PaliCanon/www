@@ -76,5 +76,6 @@ describe('scripts/deploy-check.sh', () => {
     const result = run('deploy-check.test.sh');
     expect(result.stdout + result.stderr).toMatch(/deploy-check\.test: \d+ passed, 0 failed/);
     expect(result.status).toBe(0);
-  });
+    // 62 cases of process-heavy shell: 15 s measured at a load average of 21, past vitest's 5 s default.
+  }, 60_000);
 });

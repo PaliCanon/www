@@ -1,1 +1,10 @@
 # Cloudflare static-assets redirects, one line per old URL. Owned by task 006.
+# The old site's pages that now live on the search (absolute targets, both
+# slash forms, 301). /support and /legal exist here: no line. The home's
+# /?q= and www are the zone's Redirect Rules (dashboard), not this file.
+/acknowledgements   https://search.palicanon.app/acknowledgements  301
+/acknowledgements/  https://search.palicanon.app/acknowledgements  301
+/terms              https://search.palicanon.app/terms             301
+/terms/             https://search.palicanon.app/terms             301
+/privacy            https://search.palicanon.app/privacy           301
+/privacy/           https://search.palicanon.app/privacy           301

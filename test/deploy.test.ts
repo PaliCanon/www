@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -37,6 +38,19 @@ const ENVS = {
   dev: { site: 'https://dev.palicanon.app', worker: 'www-dev' },
   prod: { site: 'https://palicanon.app', worker: 'www-prod' },
 } as const;
+
+/**
+ * Runs a step's `run:` as GitHub does (`bash -eo pipefail`), with the call of
+ * `scripts/deploy-check.sh` replaced by a command that exits with `code`
+ * (a stub file costs seconds on its first run); returns the step's exit code.
+ */
+function runStep(run: string, code: number): number {
+  const script = 'scripts/deploy-check.sh';
+  const stubbed = run.replaceAll(script, "bash -c 'exit $STUB_EXIT' --");
+  expect(stubbed, 'the step calls the script').not.toBe(run);
+  const env = { ...process.env, STUB_EXIT: String(code), GITHUB_STEP_SUMMARY: '/dev/null' };
+  return spawnSync('bash', ['-eo', 'pipefail', '-c', stubbed], { env }).status ?? -1;
+}
 
 /** The index of the first step matching, -1 when none does. */
 const at = (job: Job, match: (step: Step) => boolean) => job.steps.findIndex(match);
@@ -146,6 +160,12 @@ describe('deploy.yml: both jobs build, test and upload', () => {
       if (env === 'dev') expect(tested).toBeLessThan(at(job, runs('scripts/noindex.sh')));
     });
 
+    it(`${env}: tests dist/ with the SITE_URL it was built with (${site})`, () => {
+      const tested = job.steps[at(job, runs('npm run test:dist'))];
+      expect(tested.env?.SITE_URL).toBe(build().env?.SITE_URL);
+      expect(tested.env).toEqual({ SITE_URL: site });
+    });
+
     it(`${env}: uploads to ${worker} with the two repository secrets and a pinned wrangler`, () => {
       const step = job.steps[at(job, uses('cloudflare/wrangler-action'))];
       expect(step.with).toEqual({
@@ -173,7 +193,7 @@ describe('deploy.yml: both jobs build, test and upload', () => {
   });
 });
 
-describe('deploy.yml: dev is noindex and checked, prod is neither (yet)', () => {
+describe('deploy.yml: dev is noindex, prod is not, both are checked', () => {
   it('dev adds noindex to dist/_headers between the build and the upload', () => {
     const step = at(jobs.dev, runs('scripts/noindex.sh dist'));
     expect(step).toBeGreaterThan(at(jobs.dev, runs('npm run build')));
@@ -206,15 +226,41 @@ describe('deploy.yml: dev is noindex and checked, prod is neither (yet)', () => 
     });
   }
 
-  it('prod runs no host check until it has a host (task 006)', () => {
-    expect(at(jobs.prod, runs('deploy-check'))).toBe(-1);
+  it('prod checks its host, index, after the upload (task 006)', () => {
+    const step = at(jobs.prod, runs('scripts/deploy-check.sh'));
+    const run = jobs.prod.steps[step].run ?? '';
+    expect(run).toContain(`scripts/deploy-check.sh ${ENVS.prod.site} index`);
+    expect(run).not.toContain('noindex');
+    expect(run).toContain('status=$?');
+    expect(step).toBeGreaterThan(at(jobs.prod, uses('cloudflare/wrangler-action')));
   });
 
-  it("dev's check handles exit code 3 (Cloudflare challenge) as a warning, not a failure", () => {
-    const step = jobs.dev.steps[at(jobs.dev, runs('scripts/deploy-check.sh'))];
-    expect(step.run).toContain('if [ "$status" = 3 ]');
-    expect(step.run).toContain('::warning::deploy-check: Cloudflare challenged');
-    expect(step.run).toContain('$GITHUB_STEP_SUMMARY');
-    expect(step.run).toContain('exit 0');
+  it('prod runs its check on every tag, with no input to skip it', () => {
+    const step = jobs.prod.steps[at(jobs.prod, runs('scripts/deploy-check.sh'))];
+    expect(step.if).toBeUndefined();
   });
+
+  for (const env of Object.keys(ENVS)) {
+    it(`${env}'s check handles exit code 3 (Cloudflare challenge) as a warning, not a failure`, () => {
+      const step = jobs[env].steps[at(jobs[env], runs('scripts/deploy-check.sh'))];
+      expect(step.run).toContain('if [ "$status" = 3 ]');
+      expect(step.run).toContain('::warning::deploy-check: Cloudflare challenged');
+      expect(step.run).toContain('$GITHUB_STEP_SUMMARY');
+      expect(step.run).toContain('exit 0');
+      expect(step.run).toContain('exit "$status"');
+    });
+
+    it(`${env}'s check step exits with the script's status unless it is 3`, () => {
+      const step = jobs[env].steps[at(jobs[env], runs('scripts/deploy-check.sh'))];
+      const exits = [
+        { script: 0, step: 0 },
+        { script: 1, step: 1 },
+        { script: 2, step: 2 },
+        { script: 3, step: 0 },
+      ];
+      for (const { script, step: want } of exits) {
+        expect(runStep(step.run ?? '', script), `deploy-check exits ${script}`).toBe(want);
+      }
+    });
+  }
 });

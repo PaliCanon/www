@@ -48,11 +48,31 @@ describe('infra/versions.tf', () => {
   });
 });
 
-describe('infra/cloudflare.tf: the custom domains only', () => {
+describe('infra/cloudflare.tf: the custom domains, and the www placeholder', () => {
   it('declares no Worker script (wrangler owns www-dev and www-prod)', () => {
     expect(tf).not.toMatch(/resource\s+"cloudflare_workers_script"/);
     expect(tf).not.toMatch(/resource\s+"cloudflare_workers_route"/);
-    expect(tf).not.toMatch(/resource\s+"cloudflare_record"/);
+  });
+
+  it('holds one DNS record, the www placeholder (a Workers domain creates its own)', () => {
+    expect(
+      [...tf.matchAll(/resource\s+"cloudflare_record"\s+"([^"]+)"/g)].map((m) => m[1]),
+    ).toEqual(['www']);
+  });
+
+  it('www is a proxied AAAA 100:: with no origin behind it (the zone Redirect Rule answers, task 006)', () => {
+    const www = block('resource', 'cloudflare_record', 'www');
+    expect(attr(www, 'zone_id')).toMatch(/^data\.cloudflare_zone\.site\.id\b/);
+    expect(attr(www, 'name')).toBe('"www"');
+    expect(attr(www, 'type')).toBe('"AAAA"');
+    expect(attr(www, 'content')).toBe('"100::"');
+    expect(attr(www, 'proxied')).toBe('true');
+    expect(attr(www, 'ttl')).toBe('1');
+    expect(attr(www, 'count')).toBeUndefined();
+  });
+
+  it('outputs the www record next to the attached hosts', () => {
+    expect(read('outputs.tf')).toContain('cloudflare_record.www');
   });
 
   it('attaches the dev host to the dev Worker of wrangler.jsonc', () => {

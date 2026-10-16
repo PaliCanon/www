@@ -9,6 +9,7 @@ orchestrator, never by an agent or by CI.
 | The Workers `www-dev`, `www-prod`: static assets only, no script | wrangler, from `deploy.yml` | `../wrangler.jsonc` (`env.dev`, `env.prod`) |
 | The custom domain `dev.palicanon.app` → `www-dev` | tofu | `cloudflare.tf`, `cloudflare_workers_domain.dev` |
 | The custom domain `palicanon.app` → `www-prod` | tofu, task 006 | `cloudflare_workers_domain.prod`, attached only when `prod_host` is set |
+| The record `www.palicanon.app`: a proxied AAAA `100::`, no origin behind it | tofu, task 006 | `cloudflare.tf`, `cloudflare_record.www` |
 | The response headers, dev's `X-Robots-Tag: noindex` | the build | `../public/_headers`, `../scripts/noindex.sh` |
 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub repository secrets (set 2026-10-15) | read by `cloudflare/wrangler-action` |
 
@@ -17,7 +18,7 @@ Why the Workers are not in tofu: the cloudflare provider `~> 4.52`
 schema`: no `assets` block, `content` required), and provider 5 would make
 tofu and CI both upload `dist/` (ruling 2026-10-15). A Workers Custom
 Domain creates its proxied DNS record and the certificate for the exact
-host itself, so there is no record and no route here. `wrangler deploy`
+host itself, so there is no record for them and no route here. `wrangler deploy`
 publishes only the domains its config declares, none, so an upload never
 touches a domain tofu attached.
 
@@ -84,12 +85,22 @@ Nothing here has been applied yet (task 005 wrote it).
 
 ## Prod (task 006)
 
-`www-prod` is uploaded by the first `v*` tag (SITE_URL
-`https://palicanon.app`, no noindex) and runs no host check: it has no
-host yet. Task 006 frees `palicanon.app` (palisearch's `cloudflare_record.apex`
-and `cloudflare_pages_domain.apex` serve the old site there), then
-`tofu apply -var prod_host=palicanon.app`, and adds the prod check to
-`deploy.yml`.
+`www-prod` is uploaded by every `v*` tag (SITE_URL `https://palicanon.app`,
+no noindex) and, since task 006, checked at `https://palicanon.app` after
+the upload (`deploy-check.sh … index`: the old site's URLs redirect to the
+search). `palicanon.app` was attached on 2026-10-16
+(`tofu apply -var prod_host=palicanon.app`, after palisearch released the
+apex); `www.palicanon.app` is the placeholder record below.
+
+### The www placeholder
+
+`www.palicanon.app` has no Worker. The record exists so that Cloudflare
+answers for the host: a Redirect Rule only runs on a proxied record, and
+`100::` (the IPv6 discard prefix) is where the proxy has nothing to reach.
+The rule itself (`www` → `https://palicanon.app` + path, 301, query kept) is
+set in the dashboard (Rules, Redirect Rules; the token cannot), and answers
+before any origin. The orchestrator applies the record
+(`tofu plan`: 1 to add, `cloudflare_record.www`); output `www_record`.
 
 ## Notes
 
