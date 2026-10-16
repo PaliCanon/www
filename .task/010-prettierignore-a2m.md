@@ -1,6 +1,6 @@
 # 010 Prettier ignores the a2m caches
 
-status: building · rank: 1 · level: simple · type: chore · request: 006 · light path
+status: merged · rank: 1 · level: simple · type: chore · request: 006 · light path
 
 ## Summary
 Rank: difficulty 1 (one line in `.prettierignore`), impact 1 → 1. Light path, one Haiku lane.
@@ -15,3 +15,6 @@ Found at 006's fix rounds (2026-10-16): the reviewer's a2m runs leave `.a2m/cach
 
 ## Retro
 One line (light path): every tool that leaves files in a worktree (tofu init, a2m) has its line in the ignore list of each linter (008, 010).
+
+## Merge
+fa68dbf on main, 2026-10-16.
