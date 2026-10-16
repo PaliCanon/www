@@ -7,6 +7,9 @@ node_modules/
 package-lock.json
 test/fixtures/
 .task/
+# A local tofu init (www 005)
+.terraform/
+infra/.terraform/
 LICENSE
 README.md
 CLAUDE.md
