@@ -5,22 +5,22 @@ description: "Explorez le Pali Canon comme une carte en 3D : les suttas reliés 
 
 # Une carte du Pali Canon
 
-[Une ou deux phrases d'introduction : ce qu'est la carte, en quoi elle aide à lire le Canon.]
+Visualisez les relations entre les suttas comme une carte en trois dimensions. Chaque texte est un point ; plus deux points sont proches, plus les textes le sont. Faites tourner la carte, zoomez, ouvrez un sutta et lisez-le dans la recherche.
 
 ## Ce que vous voyez
 
-[Un paragraphe : les points, les liens, les couleurs ; ce que représente une distance.]
+Chaque point est un sutta, nommé par sa référence (MN 10, SN 56.11…) et coloré selon sa collection. Une ligne entre deux points est une relation ; une distance entre deux points, un degré de parenté : les suttas qui disent les mêmes choses se tiennent ensemble.
 
 ## Comment l'explorer
 
-[Un paragraphe : zoom, clic sur un sutta, les deux vues (parallèles de SuttaCentral, espace vectoriel).]
+La carte a deux vues, et les mêmes suttas s'y placent différemment :
 
-- [Geste ou action 1]
-- [Geste ou action 2]
-- [Geste ou action 3]
+- **La vue des parallèles** dessine les relations établies par SuttaCentral : un sutta et ses parallèles dans d'autres collections et d'autres langues, le fruit de décennies de travail savant.
+- **La vue par le sens** place chaque sutta selon le sens de son texte pāli, calculé par embeddings : deux suttas qui parlent de la même manière sont proches, que quelqu'un les ait reliés ou non.
+- Faites tourner avec la souris ou le doigt, zoomez à la molette ou en pinçant, cliquez un point pour voir son sutta et ses voisins.
 
 ## D'où viennent les données
 
-[Un paragraphe : SuttaCentral pour les textes et les parallèles, les vecteurs calculés sur le texte pāli.]
+Les textes et les parallèles viennent de SuttaCentral. La vue par le sens est calculée sur le texte pāli de l'édition Mahāsaṅgīti, avec les mêmes embeddings que la recherche. Rien n'est enregistré sur vous : la carte tourne entièrement dans votre navigateur.
 
 [Ouvrir la carte](https://viz.palicanon.app)

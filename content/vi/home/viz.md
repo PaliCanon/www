@@ -4,10 +4,6 @@ title: "Bản đồ Kinh tạng"
 highlight: "Bản đồ"
 ---
 
-[Une phrase d'accroche : ce que la carte montre, en une ligne.]
+Nhìn các mối liên hệ giữa những bài kinh như một bản đồ ba chiều: mỗi bài kinh là một điểm, mỗi đường nối là một mối quan hệ.
 
-[Un paragraphe : les suttas comme une carte en 3D, les parallèles, l'espace par le sens, ce qu'on y découvre.]
-
-- [Point clé 1, une ligne]
-- [Point clé 2, une ligne]
-- [Point clé 3, une ligne]
+Hai cách vẽ nên bản đồ: những bài kinh tương đương do SuttaCentral xác lập, hoặc ý nghĩa của chính văn bản Pāli, tính bằng embeddings.

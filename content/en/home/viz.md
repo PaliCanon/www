@@ -4,10 +4,6 @@ title: "A map of the Canon"
 highlight: "map"
 ---
 
-[Une phrase d'accroche : ce que la carte montre, en une ligne.]
+See the relations between the suttas as a map in three dimensions: each text a point, each link a kinship.
 
-[Un paragraphe : les suttas comme une carte en 3D, les parallèles, l'espace par le sens, ce qu'on y découvre.]
-
-- [Point clé 1, une ligne]
-- [Point clé 2, une ligne]
-- [Point clé 3, une ligne]
+Two ways to draw it: the parallels established by SuttaCentral, or the meaning of the Pāli text itself, computed as embeddings.
