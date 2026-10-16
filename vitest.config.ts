@@ -1,10 +1,11 @@
 import { defineConfig } from 'vitest/config';
 
-// Unit tests of src/lib (the content rules, urls, hashes), with v8 coverage.
+// Unit tests of src/lib (the content rules, urls, hashes), with v8 coverage,
+// and the deploy's own tests in test/ (scripts, workflow, wrangler, infra).
 // The tests over dist/ and the end-to-end builds have their own configs.
 export default defineConfig({
   test: {
-    include: ['src/lib/**/*.test.ts'],
+    include: ['src/lib/**/*.test.ts', 'test/*.test.ts'],
     coverage: {
       provider: 'v8',
       include: ['src/lib/**/*.ts'],

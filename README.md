@@ -160,6 +160,22 @@ one fails the build with `file:line [rule] message`:
   wider screen. Every page but the home starts its bar with a back arrow
   to the home of its language.
 
+## Deploying
+
+Cloudflare Workers static assets, no Worker script (`wrangler.jsonc`):
+`.github/workflows/deploy.yml` builds and uploads. A push to main deploys
+dev, `www-dev` at https://dev.palicanon.app (SITE_URL of that build, every
+response `X-Robots-Tag: noindex` through `scripts/noindex.sh`), then
+checks the host (`scripts/deploy-check.sh`); a `v*` tag deploys prod,
+`www-prod`, built for https://palicanon.app. The response headers are
+`public/_headers`. The custom domains are in `infra/` (tofu, applied by
+hand: `infra/README.md`).
+
+```
+bash scripts/deploy-check.test.sh                         # the check, over a stub curl
+scripts/deploy-check.sh https://dev.palicanon.app noindex # the live host
+```
+
 ## Licence
 
 CC-BY-NC-4.0 (`LICENSE`).

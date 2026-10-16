@@ -1,2 +1,19 @@
-# Cloudflare static-assets response headers. Owned by task 005 (frame-ancestors,
-# HSTS, nosniff, referrer policy, _astro/* immutable, the rest revalidated).
+# Response headers of the showcase, applied by Cloudflare Workers static
+# assets (wrangler reads this file at deploy and does not serve it). Every
+# rule whose path matches applies, in this order; a header set again by a
+# later rule is appended, so a rule that replaces one first removes it
+# (`! Name`). The Content-Security-Policy is the page's meta, not here.
+# Dev adds `X-Robots-Tag: noindex` to the first rule at deploy
+# (scripts/noindex.sh); prod is this file as written.
+/*
+  X-Frame-Options: DENY
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Cache-Control: no-cache
+
+# Astro's build output: every file name carries a hash of its content.
+/_astro/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable

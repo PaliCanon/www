@@ -1,14 +1,83 @@
-# Owned by task 005: push to main builds with SITE_URL https://dev.palicanon.app
-# and deploys dist/ to Cloudflare Workers static assets. Not yet: manual only.
+# The deploy of the showcase to Cloudflare Workers static assets
+# (wrangler.jsonc). A push to main deploys dev (www-dev, served at
+# https://dev.palicanon.app, every response noindex), then checks the host.
+# A v* tag deploys prod (www-prod, built for https://palicanon.app); prod
+# runs no host check until task 006 gives www-prod its custom domain.
+# By hand (workflow_dispatch): a branch deploys dev, a tag prod; `check:
+# false` skips dev's host check, for the first upload, before tofu has
+# attached dev.palicanon.app (infra/README.md, "Order").
+# The full history is fetched (fetch-depth: 0): a page's lastmod is the date
+# of the last commit of its file. The custom domains are tofu's (infra/).
 name: Deploy
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      check:
+        description: Check the dev host after the upload
+        type: boolean
+        default: true
 
 permissions:
   contents: read
 
 jobs:
-  placeholder:
+  dev:
+    if: github.ref_type != 'tag'
     runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-dev
+      cancel-in-progress: false
     steps:
-      - run: echo "The deploy arrives with task 005."
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          SITE_URL: https://dev.palicanon.app
+      - run: npm run test:dist
+      - run: scripts/noindex.sh dist
+      - uses: cloudflare/wrangler-action@v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: 4.151.0
+          command: deploy --env dev
+      - if: github.event_name != 'workflow_dispatch' || inputs.check
+        run: scripts/deploy-check.sh https://dev.palicanon.app noindex
+
+  prod:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-prod
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          SITE_URL: https://palicanon.app
+      - run: npm run test:dist
+      - uses: cloudflare/wrangler-action@v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: 4.151.0
+          command: deploy --env prod
