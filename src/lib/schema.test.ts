@@ -52,6 +52,26 @@ describe('page front matter', () => {
   it('rejects a title that is not a string', () => {
     expect(keys('page', { ...page, title: 12 })).toEqual(['title']);
   });
+
+  it('accepts an optional eyebrow and highlight (shown on the masthead)', () => {
+    expect(
+      frontmatterIssues('page', { ...page, eyebrow: 'PaliCanon', highlight: 'Canon' }),
+    ).toEqual([]);
+  });
+
+  it('rejects an empty eyebrow or highlight', () => {
+    expect(keys('page', { ...page, eyebrow: '', highlight: '' })).toEqual(['eyebrow', 'highlight']);
+  });
+
+  it('names eyebrow and highlight among the allowed keys', () => {
+    const [issue] = frontmatterIssues('page', { ...page, draft: true });
+    expect(issue.message).toContain('eyebrow');
+    expect(issue.message).toContain('highlight');
+  });
+
+  it('still refuses them on a blog post', () => {
+    expect(keys('blog', { ...post, highlight: 'x' })).toEqual(['highlight']);
+  });
 });
 
 describe('blog front matter', () => {

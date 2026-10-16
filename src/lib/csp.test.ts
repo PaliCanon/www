@@ -27,10 +27,15 @@ describe('scriptHash', () => {
 describe('cspContent', () => {
   const csp = cspContent(scriptHash(themeScript));
 
-  it('allows the one inline script by its hash and no other script', () => {
-    expect(csp).toContain(`script-src ${scriptHash(themeScript)};`);
+  it('allows the one inline script by its hash, then same-origin script files, and nothing else', () => {
+    expect(csp).toContain(`script-src ${scriptHash(themeScript)} 'self';`);
     expect(csp).not.toContain("'unsafe-inline'");
     expect(csp).not.toContain("'unsafe-eval'");
+    expect(csp).not.toMatch(/script-src[^;]*(https?:|\*)/);
+  });
+
+  it('lets the script files fetch nothing', () => {
+    expect(csp).toContain("connect-src 'none'");
   });
 
   it('allows nothing by default and only same-origin styles, images and fonts', () => {

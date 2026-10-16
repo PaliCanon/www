@@ -1,0 +1,9 @@
+/* No JavaScript and no scroll-driven animations: nothing can switch the bar
+   to glass once scrolled, so it does not float (chrome.css: the same static
+   bar the popover fallback uses). Loaded through <noscript> only. */
+@supports not (animation-timeline: scroll()) {
+  .site-header {
+    position: static;
+    margin: var(--inset);
+  }
+}

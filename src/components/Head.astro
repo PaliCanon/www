@@ -84,4 +84,8 @@ const structured = route
   {structured.map((block) => (
     <script is:inline type="application/ld+json" set:html={serializeJsonLd(block)} />
   ))}
+  {/* No JavaScript: a file, as the CSP refuses an inline style (nojs.css). */}
+  <noscript>
+    <link rel="stylesheet" href="/nojs.css" />
+  </noscript>
 </head>

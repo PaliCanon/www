@@ -1,0 +1,25 @@
+---
+// One of the site's line drawings, inline so it strokes in currentColor (gold
+// on parchment, gold on the deep cards). Decorative: hidden from assistive
+// technology. Every stroke carries pathLength="1", so the drawing can trace
+// itself in (drawings.css), never under reduced motion.
+import glass from '../assets/drawings/glass.svg';
+import hand from '../assets/drawings/hand.svg';
+import leaves from '../assets/drawings/leaves.svg';
+import lotus from '../assets/drawings/lotus.svg';
+import map from '../assets/drawings/map.svg';
+import type { DrawingName } from './drawings';
+
+const DRAWINGS = { glass, hand, leaves, lotus, map } as const;
+
+interface Props {
+  name: DrawingName;
+  /** Placement and size only; the colour comes from the surrounding text colour. */
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+const Svg = DRAWINGS[name];
+---
+
+<Svg class:list={['drawing', className]} aria-hidden="true" focusable="false" />

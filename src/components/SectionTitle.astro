@@ -1,0 +1,32 @@
+---
+// A home section's title: the short line above it, then the h2, a link to
+// the scene's page, with the section's highlight set on the gold
+// highlighter (<mark>); a title with a
+// letter carrying a mark, above or below, gets a looser line height
+// (has-marks under the band, bare-marks without one).
+import { marksClass, splitHighlight } from '../lib/home';
+
+interface Props {
+  id: string;
+  /** The page the title leads to (the scene's link). */
+  href: string;
+  /** The link's name: "<title>, read more" in the page's language. */
+  label: string;
+  eyebrow?: string;
+  title: string;
+  highlight?: string;
+}
+
+const { id, href, label, eyebrow, title, highlight } = Astro.props;
+const parts = splitHighlight(title, highlight);
+const room = marksClass(parts.mark !== undefined, title);
+---
+
+{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+<h2 id={id} class:list={['display', room]}>
+  <a href={href} aria-label={label} class="scene__link">
+    {parts.before}
+    {parts.mark && <mark>{parts.mark}</mark>}
+    {parts.after}
+  </a>
+</h2>

@@ -15,8 +15,17 @@ const base = {
     .max(160, 'must be at most 160 characters (search results cut it)'),
 };
 
-/** Front matter of a page: a title and a description, nothing else. */
-export const pageSchema = z.strictObject(base);
+/**
+ * Front matter of a page: a title and a description; optionally a small line
+ * above the h1 (`eyebrow`) and the part of the h1 shown on the gold
+ * highlighter (`highlight`, copied exactly from the h1: content-check.ts
+ * checks it against the body, where the h1 is).
+ */
+export const pageSchema = z.strictObject({
+  ...base,
+  eyebrow: z.string().min(1, 'must not be empty').optional(),
+  highlight: z.string().min(1, 'must not be empty').optional(),
+});
 
 /**
  * Front matter of a blog post: a page's, plus its date and an optional
@@ -94,7 +103,7 @@ export function frontmatterIssues(kind: FrontmatterKind, data: unknown): Frontma
 const SCHEMAS = { page: pageSchema, blog: blogSchema, section: sectionSchema };
 
 const ALLOWED_KEYS = {
-  page: 'title, description',
+  page: 'title, description, eyebrow, highlight',
   blog: 'title, description, date, image',
   section: 'eyebrow, title, highlight',
 };

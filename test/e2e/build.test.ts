@@ -39,6 +39,13 @@ function htmlIn(dir: string): string[] {
   return readdirSync(dir, { recursive: true, encoding: 'utf8' }).filter((f) => f.endsWith('.html'));
 }
 
+/** The languages a page's toggle lists, in order; the toggle must be there. */
+function othersListed(doc: string, page: string): string[] {
+  expect(doc, page).toContain('popovertarget="langs"');
+  const list = /<nav id="langs"[^>]*>([\s\S]*?)<\/nav>/.exec(doc)?.[1] ?? '';
+  return [...list.matchAll(/hreflang="([a-z-]+)"/g)].map((m) => m[1]);
+}
+
 afterAll(() => {
   for (const d of made) rmSync(d, { recursive: true, force: true });
 });
@@ -141,6 +148,54 @@ describe('a broken rule fails astro build, naming the file, the line and the rul
   });
 });
 
+describe('a page highlight that is not in its h1', () => {
+  it('fails the build, naming the file, the line of the key and the rule', () => {
+    const { run, text, out } = build((c) =>
+      writeFileSync(
+        join(c, 'fr/about.md'),
+        '---\ntitle: T\ndescription: D\nhighlight: Sutta\n---\n\n# Le Canon\n',
+      ),
+    );
+    expect(run.status).not.toBe(0);
+    expect(htmlIn(out), 'a broken build deploys nothing').toEqual([]);
+    expect(text).toMatch(/fr\/about\.md:4 \[highlight-not-in-title\]/);
+  });
+});
+
+describe('a page with an eyebrow and a highlight', () => {
+  const page = (eyebrow: string, title: string) =>
+    `---\ntitle: T\ndescription: D\neyebrow: ${eyebrow}\nhighlight: ${title.split(' ')[1]}\n---\n\n# ${title}\n\nThe lede.\n`;
+  const { run, out, text } = build((c) => {
+    writeFileSync(join(c, 'en/index.md'), page('The opening', 'Opening Canon line'));
+    writeFileSync(join(c, 'en/about.md'), page('The project', 'About Pāli here'));
+  });
+  const html = (p: string) => readFileSync(join(out, p), 'utf8');
+  const h1Of = (doc: string) => /<h1[^>]*>([\s\S]*?)<\/h1>/.exec(doc)?.[1] ?? '';
+
+  it('sets the highlight on the gold highlighter in the h1, the opening and a masthead alike', () => {
+    expect(run.status, text).toBe(0);
+    expect(h1Of(html('index.html'))).toBe('Opening <mark>Canon</mark> line');
+    expect(h1Of(html('about/index.html'))).toBe('About <mark>Pāli</mark> here');
+  });
+
+  it('shows the eyebrow right before the h1', () => {
+    for (const [file, eyebrow] of [
+      ['index.html', 'The opening'],
+      ['about/index.html', 'The project'],
+    ]) {
+      const doc = html(file);
+      const at = doc.indexOf(`<p class="eyebrow">${eyebrow}</p>`);
+      expect(at, file).toBeGreaterThan(-1);
+      expect(doc.indexOf('<h1')).toBeGreaterThan(at);
+    }
+  });
+
+  it('leaves a page without them untouched', () => {
+    expect(h1Of(html('fr/about/index.html'))).not.toContain('<mark>');
+    expect(html('fr/about/index.html')).not.toContain('class="eyebrow"');
+  });
+});
+
 describe('a valid fixture site', () => {
   const { run, out, text } = build();
   const html = (p: string) => readFileSync(join(out, p), 'utf8');
@@ -166,6 +221,62 @@ describe('a valid fixture site', () => {
     expect(html('blog/solo/index.html')).not.toContain('hreflang="fr"');
     expect(html('blog/shared/index.html')).toContain('hreflang="fr"');
     expect(html('blog/shared/index.html')).not.toContain('hreflang="vi"');
+  });
+
+  // H1/H6 of the header: with no other language, the current one stands
+  // alone (no button, no list); otherwise the list holds the others only.
+  it('shows the language toggle only where the page has another language', () => {
+    const solo = html('blog/solo/index.html');
+    expect(solo).not.toContain('popovertarget');
+    expect(solo).not.toContain('<nav id="langs"');
+    expect(solo).toMatch(/<span class="langs__button" lang="en"[^>]*>\s*English\s*<\/span>/);
+
+    const shared = html('blog/shared/index.html');
+    expect(shared).toContain('popovertarget="langs"');
+    const list = /<nav id="langs"[^>]*>([\s\S]*?)<\/nav>/.exec(shared)?.[1] ?? '';
+    const listed = [...list.matchAll(/hreflang="([a-z-]+)"/g)].map((m) => m[1]);
+    expect(listed).toEqual(['fr']);
+  });
+
+  // R4 (review round 2): a page in all three languages lists the two
+  // others, in LANGS order minus the current one.
+  it('lists the two other languages on a page in all three', () => {
+    const others = (page: string) => othersListed(html(page), page);
+    expect(others('about/index.html')).toEqual(['fr', 'vi']);
+    expect(others('fr/about/index.html')).toEqual(['en', 'vi']);
+    expect(others('vi/about/index.html')).toEqual(['en', 'fr']);
+  });
+
+  // R4: a page in French alone shows Français standing alone (its own
+  // build: a post added to the shared fixture would change the other
+  // builds' sitemaps and blog indexes).
+  // X5 (review round 3): the same build holds a post in English and
+  // Vietnamese only, so each lists the other one alone (French is left out).
+  it('shows Français alone on a page only in French, and the one other of a pair', () => {
+    const solo = build((c) => {
+      writeFileSync(
+        join(c, 'fr/blog/seul.md'),
+        '---\ntitle: "Seul en français"\ndescription: "Un billet dans une seule langue."\ndate: 2026-10-15\n---\n\n# Seul en français\n\nTexte.\n',
+      );
+      writeFileSync(
+        join(c, 'en/blog/gap.md'),
+        '---\ntitle: "A gap"\ndescription: "A post in English and Vietnamese."\ndate: 2026-10-15\n---\n\n# A gap\n\nText.\n',
+      );
+      mkdirSync(join(c, 'vi/blog'), { recursive: true });
+      writeFileSync(
+        join(c, 'vi/blog/gap.md'),
+        '---\ntitle: "Một khoảng trống"\ndescription: "Một bài viết bằng tiếng Anh và tiếng Việt."\ndate: 2026-10-15\n---\n\n# Một khoảng trống\n\nVăn bản.\n',
+      );
+    });
+    expect(solo.run.status, solo.text).toBe(0);
+    const page = (p: string) => readFileSync(join(solo.out, p), 'utf8');
+    const doc = page('fr/blog/seul/index.html');
+    expect(doc).not.toContain('popovertarget');
+    expect(doc).not.toContain('<nav id="langs"');
+    expect(doc).toMatch(/<span class="langs__button" lang="fr"[^>]*>\s*Français\s*<\/span>/);
+    const others = (p: string) => othersListed(page(p), p);
+    expect(others('blog/gap/index.html')).toEqual(['vi']);
+    expect(others('vi/blog/gap/index.html')).toEqual(['en']);
   });
 
   it('has a blog index in every language, with an empty state where there is no post', () => {

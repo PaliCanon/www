@@ -1,8 +1,8 @@
 ---
-// Plain footer: the services' own sites and the legal notice, centred, the
-// way ui-lib's footer reads on a phone. Task 004 gives it its final look.
+// The footer: the PALICANON wordmark and the legal notice, under a thin
+// line; centred on a phone, in one row from md up.
 import type { Lang } from '../lib/languages';
-import { SERVICE_LINKS, STRINGS } from '../lib/strings';
+import { STRINGS } from '../lib/strings';
 import { pagePath } from '../lib/url';
 
 interface Props {
@@ -10,26 +10,13 @@ interface Props {
 }
 
 const { lang } = Astro.props;
-const t = STRINGS[lang];
-const links = [
-  [SERVICE_LINKS.search, t.nav.search],
-  [SERVICE_LINKS.viz, t.nav.viz],
-  [SERVICE_LINKS.learn, t.nav.learn],
-  [SERVICE_LINKS.tipitaka, t.nav.tipitaka],
-  [pagePath(lang, 'legal'), t.legal],
-] as const;
 ---
 
-<footer class="mt-auto border-t border-line">
-  <nav aria-label={t.footerServices} class="mx-auto max-w-5xl px-6 py-4">
-    <ul class="flex flex-col items-center gap-3 text-[13px] sm:flex-row sm:justify-center sm:gap-6">
-      {links.map(([href, label]) => (
-        <li>
-          <a href={href} class="text-subtle hover:text-gold-hover">
-            {label}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </nav>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="site-footer__brand">PaliCanon</p>
+    <a href={pagePath(lang, 'legal')} class="site-footer__legal">
+      {STRINGS[lang].legal}
+    </a>
+  </div>
 </footer>

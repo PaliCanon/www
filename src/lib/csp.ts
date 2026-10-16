@@ -9,14 +9,16 @@ export function scriptHash(script: string): string {
 }
 
 /**
- * The content of the page's CSP `<meta>`: same-origin everything, no
- * script but the one allowed by `hash`. Only directives a `<meta>` honours
- * (`frame-ancestors` is a header: `public/_headers`).
+ * The content of the page's CSP `<meta>`: same-origin everything; scripts
+ * are the one inline script allowed by `hash`, then same-origin files (the
+ * site's one module, bundled under `/_astro/`), which may fetch nothing. The
+ * hash comes first. Only directives a `<meta>` honours (`frame-ancestors` is
+ * a header: `public/_headers`).
  */
 export function cspContent(hash: string): string {
   return [
     "default-src 'self'",
-    `script-src ${hash}`,
+    `script-src ${hash} 'self'`,
     "style-src 'self'",
     "img-src 'self' data:",
     "font-src 'self'",

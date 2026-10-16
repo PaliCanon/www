@@ -1,0 +1,28 @@
+---
+// The visual of a home scene: a slider where the project has one (the
+// search's and the map's screenshots), otherwise the
+// section's line drawing, sticky beside the scene's text and traced as the
+// scene scrolls (motion.css).
+import type { HomeSection, Lang } from '../lib/languages';
+import Drawing from './Drawing.astro';
+import Slider from './Slider.astro';
+
+interface Props {
+  section: HomeSection;
+  lang: Lang;
+}
+
+const { section, lang } = Astro.props;
+const DRAWING = { teaching: 'leaves', learn: 'hand' } as const;
+---
+
+<div class="stage">
+  <div class="stage__glow" aria-hidden="true"></div>
+  {section === 'search' || section === 'viz' ? (
+    <Slider project={section} lang={lang} />
+  ) : (
+    <div class="art">
+      <Drawing name={DRAWING[section]} class="art__drawing" />
+    </div>
+  )}
+</div>

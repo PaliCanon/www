@@ -1,14 +1,45 @@
 import { HOME_SECTIONS, type HomeSection, type Lang } from './languages';
-import { SERVICE_LINKS } from './strings';
 import { formatViolation } from './violations';
 import { pagePath } from './url';
 
+/** Any combining mark, once a letter is decomposed: above (à ā ế) or below (ạ ṭ ṃ ç). */
+const MARK = /[\u0300-\u036F]/u;
+
 /**
- * Where a home section leads: the teaching to the language's about page, the
- * others to their own service (the same site in every language).
+ * Whether `text` holds a letter with a mark above or below it (à, ā, ở, ṭ,
+ * ạ, ç…): set in capitals with the highlight band, such a heading needs a
+ * looser line height (chrome.css, `has-marks`).
  */
-export function sectionHref(lang: Lang, section: HomeSection): string {
-  return section === 'teaching' ? pagePath(lang, 'about') : SERVICE_LINKS[section];
+export function hasMarks(text: string): boolean {
+  return MARK.test(text.normalize('NFD'));
+}
+
+/**
+ * The class giving a heading's marked letters room (chrome.css): `has-marks`
+ * under a band (the band and the marks must clear each other, O2),
+ * `bare-marks` with no band (a dot under Ṭ must not fall on the next line,
+ * P1); none when no letter carries a mark.
+ */
+export function marksClass(banded: boolean, text: string): 'has-marks' | 'bare-marks' | undefined {
+  if (!hasMarks(text)) return undefined;
+  return banded ? 'has-marks' : 'bare-marks';
+}
+
+/**
+ * The page a home section's scene leads to, presenting the project with its
+ * link (user check 6): the teaching to the Tipiṭaka app, the others to their
+ * own page. These are the project pages (their service link is a pill, page.css).
+ */
+export const SECTION_PAGES = {
+  teaching: 'tipitaka',
+  search: 'search',
+  viz: 'viz',
+  learn: 'learn',
+} as const satisfies Record<HomeSection, string>;
+
+/** Where a home section's scene leads: its page on this site, in `lang`. */
+export function scenePath(lang: Lang, section: HomeSection): string {
+  return pagePath(lang, SECTION_PAGES[section]);
 }
 
 /** A section title cut around its highlight. */

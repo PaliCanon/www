@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 210" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <rect pathLength="1" x="24" y="34" width="212" height="38" rx="12" transform="rotate(-5 130 53)"/>
+  <rect pathLength="1" x="24" y="86" width="212" height="38" rx="12" transform="rotate(1 130 105)"/>
+  <rect pathLength="1" x="24" y="138" width="212" height="38" rx="12" transform="rotate(5 130 157)"/>
+  <circle pathLength="1" cx="72" cy="57" r="4"/>
+  <circle pathLength="1" cx="72" cy="104" r="4"/>
+  <circle pathLength="1" cx="72" cy="153" r="4"/>
+  <path pathLength="1" d="M88 50Q94 44 100 50T112 50T124 48T136 46T148 45T160 43T172 42T184 41T196 40"/>
+  <path pathLength="1" d="M88 64Q94 58 100 63T112 62T124 61T136 59T148 58T160 56"/>
+  <path pathLength="1" d="M88 101Q94 95 100 101T112 101T124 101T136 102T148 102T160 102T172 103T184 103T196 104"/>
+  <path pathLength="1" d="M88 114Q94 108 100 114T112 114T124 115T136 115T148 115"/>
+  <path pathLength="1" d="M88 150Q94 144 100 151T112 152T124 153T136 154T148 155T160 157T172 158T184 159T196 160"/>
+  <path pathLength="1" d="M72 61V100M72 108V149M72 157V188C72 198 60 204 50 198"/>
+  <path pathLength="1" d="M72 188C78 196 90 198 96 192"/>
+</svg>

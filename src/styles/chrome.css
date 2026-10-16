@@ -1,0 +1,490 @@
+/* What every page shares: the type, the buttons, the bar and its language
+   toggle, the footer. */
+
+html {
+  scroll-padding-top: calc(var(--bar-h) + 2 * var(--inset) + 1rem);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  overflow-x: clip;
+}
+
+main {
+  flex: 1;
+}
+
+/* The selection in the palette, not the browser's blue: a gold tint on the
+   page, a parchment one on the deep card (the opening, the mastheads) and
+   over the gold, the text keeping its colour there. The gold rule comes
+   last: at the same weight as the deep card's, it wins in the opening. */
+::selection {
+  background-color: var(--selection);
+}
+
+.opening ::selection,
+.masthead ::selection {
+  background-color: var(--selection-deep);
+  color: var(--on-deep);
+}
+
+:is(mark, .pill--gold, .masthead__link a, .slide__tag)::selection {
+  background-color: var(--selection-hl);
+  color: var(--on-hl);
+}
+
+.skip-link {
+  position: absolute;
+  z-index: 60;
+  top: 0.75rem;
+  left: 0.75rem;
+  translate: 0 -200%;
+  padding: 0.625rem 1rem;
+  border-radius: 999px;
+  background: var(--hl);
+  color: var(--on-hl);
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  translate: 0 0;
+}
+
+/* The display face: condensed capitals, Anton (fonts.css). Vietnamese stacks
+   two marks over a capital: its lines get more room. */
+.display,
+.opening__text > h1,
+.masthead__text > h1,
+.prose h2,
+.site-footer__brand {
+  font-family: Anton, Impact, 'Arial Narrow', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+:is(.display, .opening__text > h1, .masthead__text > h1):has(mark) {
+  line-height: 1.1;
+}
+
+:lang(vi) :is(.display, .opening__text > h1, .masthead__text > h1, .prose h2) {
+  line-height: 1.14;
+}
+
+/* With the band, a mark on a capital, above (À, Ā, the Vietnamese stacked
+   marks) or below (Ṭ, Ạ, Ç), must clear the band of the next or previous
+   line and the comma after it: the build marks such a heading (has-marks),
+   in every language, and Vietnamese always gets the room (header spec O2;
+   the arithmetic is in test/dist/css.test.ts). */
+:is(.display, .opening__text > h1, .masthead__text > h1).has-marks,
+:lang(vi) :is(.display, .opening__text > h1, .masthead__text > h1):has(mark) {
+  line-height: 1.5;
+}
+
+/* With no band, a mark still needs room (P1: on a phone the dot under the
+   Ṭ of "Tipiṭaka sur iPhone" fell between the lines and read as an
+   apostrophe): the next line's capitals start (line height - 0.86) em
+   under the baseline, a mark reaches about 0.25em under a capital or above
+   one (0.33em for the Vietnamese stacks). */
+:is(.display, .opening__text > h1, .masthead__text > h1).bare-marks {
+  line-height: 1.25;
+}
+
+.display {
+  color: var(--display-ink);
+}
+
+.display mark,
+.opening__text > h1 mark,
+.masthead__text > h1 mark {
+  /* The highlighter is a band over the capitals and their marks (Anton:
+     ascent 1.18em, cap height 0.86em, descent 0.33em; the Pāli and
+     Vietnamese marks reach about 0.25em above the capitals and under the
+     baseline), not the whole inline box, which is taller than the line and
+     covered the lines around it. A heading with a mark gets the line height
+     the band needs. */
+  padding: 0 0.12em;
+  background: linear-gradient(var(--hl), var(--hl)) 0 0.08em / 100% 1.36em no-repeat;
+  color: var(--on-hl);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.eyebrow {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ps-gold-text);
+}
+
+.opening__text > .eyebrow,
+.masthead__text > .eyebrow {
+  color: var(--on-deep-gold);
+}
+
+/* Pill buttons: a variant for each surface. On a project page (the four a
+   home scene leads to, Base.astro), the closing paragraph holding only the
+   service's link shows it as the gold pill, in the masthead (user checks 6
+   and 12). */
+.pill,
+.masthead__link p:has(> a:only-child) > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.625rem 1.375rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    translate 0.2s;
+}
+
+.pill:hover,
+.masthead__link p:has(> a:only-child) > a:hover {
+  translate: 0 -1px;
+}
+
+.pill--gold,
+.masthead__link p:has(> a:only-child) > a {
+  background: var(--hl);
+  color: var(--on-hl);
+}
+
+.pill--gold:hover,
+.masthead__link p:has(> a:only-child) > a:hover {
+  background: var(--hl-hover);
+  color: var(--on-hl);
+}
+
+.pill--deep {
+  border-color: var(--deep-edge);
+  background: var(--deep);
+  color: var(--on-deep);
+}
+
+.pill--deep:hover {
+  background: color-mix(in oklab, var(--deep), #f0e8df 12%);
+}
+
+/* The bar. Its colours are roles set on .bar for its two looks, so every
+   part (the brand, the language toggle and its list) follows:
+   - clear, at the top of every page, on the deep card the page starts with
+     (the opening, a masthead, the 404): light text;
+   - glass, once the page has scrolled 4rem: a CSS scroll-driven animation
+     where it exists, `data-scrolled` from story.ts elsewhere, and always
+     while the language list is open. */
+.site-header {
+  position: fixed;
+  z-index: 50;
+  top: var(--inset);
+  inset-inline: var(--inset);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  transition: translate 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  view-transition-name: site-header;
+}
+
+/* Hidden by story.ts while scrolling down; CSS keeps it shown while it is
+   pointed at, focused (a Tab from the skip link lands on a visible bar) or
+   its language list is open. Never under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .site-header[data-hidden]:not(:hover, :focus-within, :has(#langs:popover-open)) {
+    translate: 0 calc(-100% - 2 * var(--inset));
+  }
+}
+
+.bar {
+  --bar-ink: var(--on-deep);
+  --bar-chip: rgb(240 232 223 / 0.12);
+  --bar-edge: rgb(240 232 223 / 0.28);
+  --bar-ring: var(--on-deep-gold);
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: min(100%, 84rem);
+  height: var(--bar-h);
+  padding: 0 0.4375rem 0 1rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background-color: transparent;
+  box-shadow: 0 0.75rem 2rem -1.25rem transparent;
+  color: var(--bar-ink);
+  pointer-events: auto;
+  backdrop-filter: blur(0) saturate(1);
+}
+
+@keyframes bar-glass {
+  to {
+    --bar-ink: var(--ps-heading);
+    --bar-chip: var(--ps-chip);
+    --bar-edge: var(--glass-edge-strong);
+    --bar-ring: var(--ps-gold-text);
+
+    border-color: var(--glass-edge);
+    background-color: var(--bar-glass);
+    box-shadow: 0 0.75rem 2rem -1.25rem var(--shadow-c);
+    backdrop-filter: blur(18px) saturate(1.4);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .bar {
+    /* Longhands: a timeline inside the animation shorthand is invalid. */
+    animation-name: bar-glass;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 4rem;
+  }
+}
+
+.site-header[data-scrolled] .bar,
+.site-header:has(#langs:popover-open) .bar {
+  --bar-ink: var(--ps-heading);
+  --bar-chip: var(--ps-chip);
+  --bar-edge: var(--glass-edge-strong);
+  --bar-ring: var(--ps-gold-text);
+
+  border-color: var(--glass-edge);
+  background-color: var(--bar-glass);
+  box-shadow: 0 0.75rem 2rem -1.25rem var(--shadow-c);
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+
+.site-header:has(#langs:popover-open) .bar {
+  animation: none;
+}
+
+.bar :focus-visible {
+  outline-color: var(--bar-ring);
+}
+
+/* Every page but the home: a round back link at the bar's left end, a
+   chevron to the language's home (user check 14). It wears the bar's
+   roles, so it follows the clear look on the deep card and the glass one;
+   a tint of its own and a blur over what passes under the bar. */
+.bar:has(> .back) {
+  padding-left: 0.4375rem;
+}
+
+.back {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-right: -0.25rem;
+  border: 1px solid var(--bar-edge);
+  border-radius: 50%;
+  background: var(--bar-chip);
+  color: var(--bar-ink);
+  backdrop-filter: blur(12px);
+  transition: translate 0.2s;
+}
+
+.back:hover {
+  translate: -2px 0;
+}
+
+.back svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back {
+    transition: none;
+  }
+
+  .back:hover {
+    translate: none;
+  }
+}
+
+.brand {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: auto;
+  color: var(--bar-ink);
+  text-decoration: none;
+}
+
+.brand__lotus {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.brand__name {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* The language toggle: an outlined pill with the current language and a
+   chevron; it opens a glass list of the others under the bar, at its right
+   end. Non-modal: Escape and a tap outside close it (light dismiss). */
+.langs__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 2.75rem;
+  padding: 0 0.875rem 0 1.125rem;
+  border: 1px solid var(--bar-edge);
+  border-radius: 999px;
+  background: none;
+  color: var(--bar-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+span.langs__button {
+  cursor: default;
+}
+
+button.langs__button:hover {
+  background: var(--bar-chip);
+}
+
+.langs__button svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  transition: rotate 0.2s;
+}
+
+.site-header:has(#langs:popover-open) .langs__button svg {
+  rotate: 180deg;
+}
+
+#langs:popover-open {
+  position: fixed;
+  /* Under the bar's right end: the bar is at most 84rem wide, centred. */
+  inset: calc(2 * var(--inset) + var(--bar-h))
+    max(calc(var(--inset) + 0.25rem), calc((100vw - 84rem) / 2 + 0.25rem)) auto auto;
+  min-width: 12rem;
+  margin: 0;
+  padding: 0.375rem;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius-sheet);
+  background: var(--bar-glass);
+  box-shadow: 0 1.5rem 3rem -1.5rem var(--shadow-c);
+  color: var(--bar-ink);
+  backdrop-filter: blur(22px) saturate(1.4);
+}
+
+.langs__link {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border-radius: calc(var(--radius-sheet) - 0.375rem);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--bar-ink);
+  text-decoration: none;
+}
+
+.langs__link:hover {
+  background: var(--bar-chip);
+}
+
+/* A browser without popovers shows the list in flow: no toggle button, a
+   static bar, the other languages as plain links. */
+@supports not selector(:popover-open) {
+  .site-header {
+    position: static;
+    margin: var(--inset);
+  }
+
+  .bar,
+  .site-header[data-scrolled] .bar {
+    --bar-ink: var(--on-deep);
+    --bar-chip: rgb(240 232 223 / 0.12);
+    --bar-edge: rgb(240 232 223 / 0.28);
+    --bar-ring: var(--on-deep-gold);
+
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-card);
+    background-color: var(--deep);
+  }
+
+  button.langs__button {
+    display: none;
+  }
+
+  #langs ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+}
+
+/* The footer: the wordmark and the legal notice. */
+.site-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--ps-line);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 84rem;
+  margin: 0 auto;
+  padding: 2rem var(--gutter) 2.5rem;
+}
+
+.site-footer__brand {
+  font-size: 1.75rem;
+  color: var(--display-ink);
+}
+
+.site-footer__legal {
+  display: inline-block;
+  padding: 0.625rem 0;
+  font-size: 0.875rem;
+  color: var(--ps-subtle);
+  text-decoration: none;
+}
+
+.site-footer__legal:hover {
+  color: var(--ps-gold-text);
+}
+
+@media (min-width: 48rem) {
+  .site-footer__inner {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

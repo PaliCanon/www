@@ -1,0 +1,389 @@
+/* The home: the opening card (index.md), then one scene per section, as
+   tall as its content (user check 5: a short scroll), its text beside a
+   sticky visual. */
+
+/* The opening: a deep card inset from the page edges, under the glass bar. */
+.opening {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  margin: var(--inset);
+  padding: calc(var(--bar-h) + var(--inset) + clamp(2.5rem, 7vw, 5rem)) var(--gutter)
+    clamp(3rem, 7vw, 5.5rem);
+  overflow: clip;
+  isolation: isolate;
+  border: 1px solid var(--deep-edge);
+  border-radius: var(--radius-card);
+  background: var(--deep);
+  color: var(--on-deep-ink);
+  view-transition-name: masthead;
+}
+
+.opening::before,
+.masthead::before {
+  position: absolute;
+  z-index: -1;
+  inset: auto -20% -45% -20%;
+  height: 80%;
+  background: radial-gradient(closest-side, rgb(201 168 76 / 0.2), transparent);
+  content: '';
+  pointer-events: none;
+}
+
+.opening__text {
+  display: grid;
+  justify-items: center;
+  width: min(100%, 70rem);
+  text-align: center;
+}
+
+.opening__text > h1 {
+  max-width: 16ch;
+  font-size: clamp(3rem, 1.4rem + 6vw, 7.5rem);
+  color: var(--on-deep);
+}
+
+/* "PaliCanon, the end of suffering": the brand on its own line at the
+   headline size, the phrase under it one step down (0.7 of it), the same
+   measure (user check 4). The h1 takes the phrase's size so its band and
+   the line heights (has-marks) follow the phrase. */
+.opening__text > h1:has(.brand-line) {
+  max-width: calc(16ch / 0.7);
+  font-size: calc(0.7 * clamp(3rem, 1.4rem + 6vw, 7.5rem));
+}
+
+.opening__text > h1 .brand-line {
+  display: block;
+  margin-bottom: 0.14em;
+  font-size: calc(1em / 0.7);
+  line-height: 1;
+}
+
+.opening__text > h1 + p {
+  max-width: 36rem;
+  margin-top: 1.75rem;
+  font-size: var(--text-body);
+}
+
+.opening__lotus {
+  width: 5.5rem;
+  height: auto;
+  margin-bottom: 1.25rem;
+  color: var(--on-deep-gold);
+}
+
+.opening__lotus--small {
+  display: none;
+}
+
+@media (min-width: 56rem) {
+  .opening__lotus {
+    position: absolute;
+    z-index: -1;
+    bottom: 3%;
+    left: -1.5rem;
+    width: clamp(12rem, 20vw, 19rem);
+    margin: 0;
+    opacity: 0.85;
+  }
+
+  .opening__lotus--small {
+    top: calc(var(--bar-h) + 12%);
+    right: 3%;
+    bottom: auto;
+    left: auto;
+    display: block;
+    width: clamp(6rem, 9vw, 9rem);
+    rotate: 14deg;
+  }
+}
+
+/* A scene: the title, then the body's blocks as steps; the visual
+   sticks on the other side (on a phone: at the top, the steps passing over
+   it on glass). */
+.scene {
+  --scene-bg: var(--ps-page);
+
+  position: relative;
+  padding: 1.5rem var(--gutter);
+  view-timeline: --scene block;
+}
+
+/* The whole scene leads to its page (A5). The title is the link; a cover
+   link fills the scene under everything else, hidden from the keyboard and
+   screen readers. The layout boxes let clicks through to the cover; the
+   text stays selectable, the slider usable on top. One action per scene
+   (user check 6): its button leads to the same page (user check 9). */
+.scene__cover {
+  position: absolute;
+  z-index: 0;
+  inset: 0 var(--inset);
+  border: 2px solid transparent;
+  border-radius: var(--radius-card);
+  transition:
+    background-color 0.25s,
+    border-color 0.25s,
+    box-shadow 0.25s,
+    translate 0.25s;
+}
+
+.scene__grid,
+.step,
+.steps,
+.stage {
+  pointer-events: none;
+}
+
+.scene__link,
+.steps > *,
+.step .pill,
+.stage .slider {
+  pointer-events: auto;
+}
+
+.scene__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.scene__link:focus-visible {
+  outline: none;
+}
+
+/* Hovered or focused: the scene lifts as a card, with a gold ring (AA
+   against the page in both themes). */
+.scene:hover,
+.scene:has(.scene__link:focus-visible) {
+  --scene-bg: var(--ps-chip);
+}
+
+.scene:hover > .scene__cover,
+.scene:has(.scene__link:focus-visible) > .scene__cover {
+  border-color: var(--ps-gold-text);
+  background-color: var(--ps-chip);
+  box-shadow: 0 1.5rem 3rem -2rem var(--shadow-c);
+  translate: 0 -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene__cover {
+    transition: none;
+  }
+
+  .scene:hover > .scene__cover,
+  .scene:has(.scene__link:focus-visible) > .scene__cover {
+    translate: none;
+  }
+}
+
+.scene__grid {
+  display: flex;
+  flex-direction: column;
+  max-width: 84rem;
+  margin: 0 auto;
+}
+
+.scene__text {
+  display: contents;
+}
+
+.step,
+.steps > * {
+  position: relative;
+  z-index: 2;
+}
+
+.step--title {
+  order: 0;
+  padding-block: 0 1.375rem;
+}
+
+.step--title .display {
+  font-size: clamp(2.75rem, 1.4rem + 4.6vw, 6rem);
+}
+
+/* On a phone the visual sticks under the bar, as tall as its drawing: no
+   blank between the title and the drawing, none of it under the bar (P3). */
+.stage {
+  position: sticky;
+  z-index: 1;
+  top: calc(var(--bar-h) + 2 * var(--inset));
+  order: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  height: auto;
+  padding-block: 0 1rem;
+}
+
+.steps {
+  order: 2;
+}
+
+/* The button to the scene's page, under the text, above the cover;
+   centred on a phone (user check 13), at the text's start from 64rem. */
+.step--link {
+  order: 3;
+  padding-block: 0.25rem 0.5rem;
+  text-align: center;
+}
+
+.steps > * {
+  margin: 0 0 0.75em;
+  padding: 1.25rem 1.375rem;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius-sheet);
+  background: var(--glass-bg);
+  font-size: 1.125rem;
+  color: var(--ps-ink);
+  backdrop-filter: blur(16px) saturate(1.3);
+}
+
+/* Lists in a scene: plain, gold dots, as in the pages. */
+.steps ul {
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.steps ul > li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.steps ul > li::before {
+  position: absolute;
+  top: 0.65em;
+  left: 0.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--hl);
+  content: '';
+}
+
+.steps ol {
+  padding-left: 1.5rem;
+  list-style: decimal;
+}
+
+@media (min-width: 64rem) {
+  .scene__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: clamp(2rem, 6vw, 7rem);
+
+    /* The text column beside the visual, centred on it; a scene is at
+       least 60svh tall and grows with its text. */
+    align-items: center;
+    min-height: 60svh;
+  }
+
+  .scene__text {
+    display: block;
+    padding-block: 1rem;
+  }
+
+  .scene--stage-left .scene__text {
+    order: 2;
+  }
+
+  .step--link {
+    text-align: start;
+  }
+
+  .stage {
+    top: calc(var(--bar-h) + 2 * var(--inset));
+    align-self: start;
+    height: 60svh;
+    padding-block: 0;
+  }
+
+  /* Reading gaps in em of the body (user: "un peu plus d'espace quand
+     même"): 1.25em under the title block, 0.75em between paragraphs. */
+  .step--title {
+    padding: 0;
+  }
+
+  .steps > :first-child {
+    margin-top: 1.25em;
+  }
+
+  /* S1, only where the text column is taller than the screen (story.ts
+     marks the scene data-tall): the heading stays pinned under the bar,
+     opaque, while its steps pass under it, until the scene ends. */
+  .scene[data-tall] .step--title {
+    position: sticky;
+    z-index: 3;
+    top: 0;
+    padding-top: calc(var(--bar-h) + 2 * var(--inset) + 1rem);
+    padding-bottom: 0.75rem;
+    background: linear-gradient(var(--scene-bg) calc(100% - 0.75rem), transparent);
+  }
+
+  /* Margins, not padding, between the steps: the gaps let clicks through to
+     the scene's cover. */
+  .steps > * {
+    max-width: 34rem;
+    margin-bottom: 0.75em;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: var(--text-body);
+    line-height: 1.6;
+    backdrop-filter: none;
+  }
+}
+
+/* The visuals: a soft gold glow, then a drawing or a slider. */
+.stage__glow {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--glow), transparent 72%);
+  pointer-events: none;
+}
+
+.art {
+  position: relative;
+  width: min(17rem, 72%);
+  color: var(--art);
+}
+
+.art__drawing {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 30svh;
+}
+
+@media (min-width: 64rem) {
+  .art {
+    width: min(30rem, 82%);
+  }
+
+  .art__drawing {
+    max-height: none;
+  }
+}
+
+/* A scene whose visual is a slider: on a phone the slider follows the text,
+   full width, not sticky; on a desktop it sits beside it like a drawing. */
+.scene:has(.slider) .stage {
+  position: relative;
+  top: auto;
+  order: 4;
+  height: auto;
+  margin-inline: calc(-1 * var(--gutter));
+}
+
+@media (min-width: 64rem) {
+  .scene:has(.slider) .stage {
+    position: sticky;
+    top: calc(var(--bar-h) + 2 * var(--inset));
+    height: auto;
+    margin-inline: 0;
+  }
+}

@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkCompleteness } from './completeness';
 import { FrontmatterError, parseFrontmatter } from './frontmatter';
-import { checkMarkdown } from './remark-rules';
+import { checkMarkdown, h1Text } from './remark-rules';
 import { frontmatterIssues, type FrontmatterKind } from './schema';
 import { formatViolation, type Violation } from './violations';
 
@@ -94,12 +94,29 @@ function checkFile(root: string, path: string, label: string): Violation[] {
     imageExists,
     kind: kind === 'section' ? 'section' : 'page',
   });
-  return [...issues, ...frontMatterImage(root, parsed, file), ...markdown];
+  const highlight = kind === 'page' ? pageHighlight(parsed, file) : [];
+  return [...issues, ...frontMatterImage(root, parsed, file), ...highlight, ...markdown];
 }
 
 function fileKind(path: string): FrontmatterKind {
   if (path.includes('/blog/')) return 'blog';
   return path.includes('/home/') ? 'section' : 'page';
+}
+
+/** A page's `highlight:` is copied from its h1 (the body's `#` heading). */
+function pageHighlight(parsed: ReturnType<typeof parseFrontmatter>, file: string): Violation[] {
+  const highlight = parsed.data.highlight;
+  const title = h1Text(parsed.body);
+  if (typeof highlight !== 'string' || !highlight || title === undefined) return [];
+  if (title.includes(highlight)) return [];
+  return [
+    {
+      file,
+      line: parsed.keyLines.highlight ?? 1,
+      rule: 'highlight-not-in-title',
+      message: `"highlight" must be copied exactly from the # heading: "${highlight}" is not in "${title}"`,
+    },
+  ];
 }
 
 /** The blog `image:` key names a file of images/: it must exist. */

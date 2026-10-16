@@ -1,13 +1,19 @@
 ---
-// The four sections of the home page, after the opening of index.md, always in
-// the same order (teaching, search, viz, learn): the eyebrow, the title as an
-// h2 with its highlight in <mark>, the body, and the link of the section.
-// Plain look; task 004 restyles it.
+// The home's four scenes, after the opening of index.md, always in the same
+// order (teaching, search, viz, learn). Each scene is as tall as its content:
+// its title, then each block of its Markdown as one step, then its gold
+// button, beside its visual on the other side (alternating): a sticky line drawing,
+// or the service's screenshots in a slider. The whole scene leads to its
+// page: the title is the link; a cover link under the text, hidden from the
+// keyboard and screen readers, makes the rest of the scene clickable (A5);
+// the button under the text says so (user check 9), to the same page.
 import { getCollection, render } from 'astro:content';
 import { HOME_SECTIONS, type Lang } from '../lib/languages';
 import { requireEntry } from '../lib/entries';
-import { sectionHref, sectionIds, splitHighlight } from '../lib/home';
+import { scenePath, sectionIds } from '../lib/home';
 import { STRINGS } from '../lib/strings';
+import SceneStage from './SceneStage.astro';
+import SectionTitle from './SectionTitle.astro';
 
 interface Props {
   lang: Lang;
@@ -19,7 +25,7 @@ const ids = sectionIds(
   all.map((entry) => entry.id),
   lang,
 );
-const sections = await Promise.all(
+const scenes = await Promise.all(
   ids.map(async (id) => {
     const entry = requireEntry(
       all.find((e) => e.id === id),
@@ -35,20 +41,41 @@ const sections = await Promise.all(
 );
 ---
 
-{sections.map(({ section, data, Content }) => {
-  const title = splitHighlight(data.title, data.highlight);
-  return (
-    <section data-home-section={section} aria-labelledby={`home-${section}`}>
-      {data.eyebrow && <p class="eyebrow">{data.eyebrow}</p>}
-      <h2 id={`home-${section}`}>
-        {title.before}
-        {title.mark && <mark>{title.mark}</mark>}
-        {title.after}
-      </h2>
-      <Content />
-      <p>
-        <a href={sectionHref(lang, section)}>{STRINGS[lang].sectionLink[section]}</a>
-      </p>
+<div data-home-sections class="scenes">
+  {scenes.map(({ section, data, Content }, i) => (
+    <section
+      data-home-section={section}
+      aria-labelledby={`home-${section}`}
+      class:list={[
+        'scene',
+        `scene--${section}`,
+        i % 2 === 0 ? 'scene--stage-right' : 'scene--stage-left',
+      ]}
+    >
+      <a href={scenePath(lang, section)} class="scene__cover" aria-hidden="true" tabindex="-1" />
+      <div class="scene__grid">
+        <div class="scene__text">
+          <div class="step step--title">
+            <SectionTitle
+              id={`home-${section}`}
+              href={scenePath(lang, section)}
+              label={`${data.title}, ${STRINGS[lang].readMore}`}
+              eyebrow={data.eyebrow}
+              title={data.title}
+              highlight={data.highlight}
+            />
+          </div>
+          <div class="steps">
+            <Content />
+          </div>
+          <p class="step step--link">
+            <a class="pill pill--gold" href={scenePath(lang, section)}>
+              {STRINGS[lang].sceneButton[section]}
+            </a>
+          </p>
+        </div>
+        <SceneStage section={section} lang={lang} />
+      </div>
     </section>
-  );
-})}
+  ))}
+</div>

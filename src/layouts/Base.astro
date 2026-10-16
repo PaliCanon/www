@@ -1,11 +1,26 @@
 ---
-// The page frame: head, skip link, header, the page, footer. The page's h1 is
-// the one `#` heading of its Markdown; the frame adds none.
+// The page frame: head, skip link, the floating bar, the page, footer. The
+// page's h1 is the one `#` heading of its Markdown; the frame adds none.
+// The frame receives the page as one block of HTML and cuts it (split.ts):
+// a home page into its opening card and its scenes, any other page into its
+// masthead card (h1 and lede) and its text. A project page's closing
+// service link moves into its masthead as the gold pill (user check 12):
+// centred under the lede on a phone, from 48rem on the right, under the
+// drawing, level with the lede (page.css). A page with a slider (the
+// Tipiṭaka app's screenshots) shows it after its text (user check 8: the
+// description first).
+import Drawing from '../components/Drawing.astro';
+import type { DrawingName } from '../components/drawings';
 import Footer from '../components/Footer.astro';
 import Head from '../components/Head.astro';
 import Header from '../components/Header.astro';
+import Slider from '../components/Slider.astro';
+import type { ScreensProject } from '../data/screens';
 import type { Lang } from '../lib/languages';
+import { getEntry } from 'astro:content';
+import { SECTION_PAGES } from '../lib/home';
 import { STRINGS } from '../lib/strings';
+import { dressTitle, splitClosingLink, splitHome, splitMasthead } from './split';
 import '../styles/global.css';
 
 interface Props {
@@ -19,21 +34,77 @@ interface Props {
 }
 
 const { lang, title, description, pageKey, available } = Astro.props;
+// A main page's eyebrow and highlight dress its h1 (not the 404, which
+// borrows the home's key: its title tells it apart).
+const entry = await getEntry('pages', `${lang}/${pageKey}`);
+const own = entry && entry.data.title === title ? entry.data : undefined;
+const html = dressTitle(await Astro.slots.render('default'), own?.eyebrow, own?.highlight);
+const home = splitHome(html);
+const page = home ? undefined : splitMasthead(html);
+/** The drawing beside a page's masthead, by the page's key (blog posts take the blog's). */
+const PAGE_DRAWINGS: Record<string, DrawingName> = {
+  search: 'glass',
+  viz: 'map',
+  learn: 'hand',
+  tipitaka: 'leaves',
+  about: 'lotus',
+  support: 'lotus',
+  blog: 'leaves',
+  index: 'lotus',
+};
+const pageDrawing = PAGE_DRAWINGS[pageKey.split('/')[0]];
+/** A project page, one a home scene leads to: its service link shows as a pill in the masthead (chrome.css). */
+const projectPage = (Object.values(SECTION_PAGES) as string[]).includes(pageKey);
+/** The pages with a slider of their project's screenshots, shown after the text. */
+const PAGE_SLIDERS: Record<string, ScreensProject> = { tipitaka: 'tipitaka' };
+const slider = PAGE_SLIDERS[pageKey];
+const body = projectPage ? splitClosingLink(page?.body ?? '') : { text: page?.body, link: '' };
 ---
 
 <html lang={lang}>
   <Head title={title} description={description} />
-  <body class="flex min-h-screen flex-col">
-    <a
-      href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:bg-page focus:p-2"
-    >
+  <body class:list={[home ? 'is-home' : 'is-page']}>
+    <a href="#main" class="skip-link">
       {STRINGS[lang].skip}
     </a>
-    <Header lang={lang} pageKey={pageKey} available={available} />
-    <main id="main" class="content">
-      <slot />
-    </main>
+    <Header lang={lang} pageKey={pageKey} available={available} back={!home} />
+    {home ? (
+      <main id="main" class="home">
+        <div class="opening">
+          <Drawing name="lotus" class="opening__lotus" />
+          <div class="opening__text">
+            <Fragment set:html={home.opening} />
+          </div>
+          <Drawing name="lotus" class="opening__lotus opening__lotus--small" />
+        </div>
+        <Fragment set:html={home.sections} />
+      </main>
+    ) : (
+      <main id="main" class="page">
+        <div class="masthead">
+          <div class="masthead__text">
+            <Fragment set:html={page?.masthead} />
+          </div>
+          {pageDrawing && <Drawing name={pageDrawing} class="masthead__drawing" />}
+          {body.link && (
+            <div class="masthead__link">
+              <Fragment set:html={body.link} />
+            </div>
+          )}
+        </div>
+        <div class:list={['prose', slider && 'prose--before-slider']}>
+          <Fragment set:html={body.text} />
+        </div>
+        {slider && (
+          <div class="page-slider">
+            <Slider project={slider} lang={lang} />
+          </div>
+        )}
+      </main>
+    )}
     <Footer lang={lang} />
+    <script>
+      import '../scripts/story';
+    </script>
   </body>
 </html>

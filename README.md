@@ -150,8 +150,15 @@ one fails the build with `file:line [rule] message`:
   of the title, copied exactly: otherwise `highlight-not-in-title`); no
   description; the 4 sections (`teaching`, `search`, `viz`, `learn`) exist in
   every language and no other name is a section. They are shown on the home
-  page, after `index.md`, in that order, each ending with its link: the
-  teaching to the About page, the others to their own site.
+  page, after `index.md`, in that order, each scene (its title, the whole
+  card and a gold button under its text) leading to its project page: the
+  teaching to the Tipiṭaka app page, the others to the search,
+  map and learning pages. On those four pages, the last paragraph, when it
+  holds only one link (the link to the app or the service), shows as a gold
+  button at the top, in the page's header card: centred under its first
+  paragraph on a phone, beside it on the right, under the drawing, on a
+  wider screen. Every page but the home starts its bar with a back arrow
+  to the home of its language.
 
 ## Licence
 

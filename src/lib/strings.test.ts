@@ -28,20 +28,36 @@ describe('the chrome strings', () => {
     expect(LANGUAGE_NAMES.vi).toBe('Tiếng Việt');
   });
 
-  it('name the map in the navigation and say what each home section leads to', () => {
-    for (const lang of LANGS) {
-      expect(STRINGS[lang].nav.viz).not.toBe('');
-      expect(Object.keys(STRINGS[lang].sectionLink)).toEqual([
-        'teaching',
-        'search',
-        'viz',
-        'learn',
-      ]);
-    }
+  it("name the map in the navigation and each home scene's button (user check 9)", () => {
+    for (const lang of LANGS) expect(STRINGS[lang].nav.viz).not.toBe('');
+    expect(STRINGS.en.sceneButton).toEqual({
+      teaching: 'Discover the app',
+      search: 'Discover the search',
+      viz: 'Discover the map',
+      learn: 'Discover Learn Pāli',
+    });
+    expect(STRINGS.fr.sceneButton).toEqual({
+      teaching: "Découvrir l'app",
+      search: 'Découvrir la recherche',
+      viz: 'Découvrir la carte',
+      learn: 'Découvrir Apprendre le pāli',
+    });
+    expect(STRINGS.vi.sceneButton).toEqual({
+      teaching: 'Khám phá ứng dụng',
+      search: 'Khám phá tìm kiếm',
+      viz: 'Khám phá bản đồ',
+      learn: 'Khám phá Học Pāli',
+    });
+  });
+
+  it("name the bar's back link to the home (user check 14)", () => {
+    expect(STRINGS.en.back).toBe('Back to the home');
+    expect(STRINGS.fr.back).toBe("Retour à l'accueil");
+    expect(STRINGS.vi.back).toBe('Về trang chủ');
   });
 
   it('link the services to https sites', () => {
     for (const href of Object.values(SERVICE_LINKS)) expect(href).toMatch(/^https:\/\//);
-    expect(SERVICE_LINKS.viz).toBe('https://viz.palicanon.app');
+    expect(SERVICE_LINKS.viz).toBe('https://map.palicanon.app');
   });
 });

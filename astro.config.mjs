@@ -36,5 +36,12 @@ export default defineConfig({
       remarkPlugins: [[remarkContentImages, { contentRoot }]],
     }),
   },
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+    // Every script is a file under _astro/ too: the CSP allows the theme
+    // script's hash and 'self', nothing else inline. Astro inlines a small
+    // module with no import below this limit (orchestrator, 004 trial 2: the
+    // one exception to "final").
+    build: { assetsInlineLimit: 0 },
+  },
 });

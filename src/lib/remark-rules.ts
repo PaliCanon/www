@@ -1,4 +1,5 @@
-import type { Image, ImageReference, Root } from 'mdast';
+import type { Heading, Image, ImageReference, Root } from 'mdast';
+import { toString } from 'mdast-util-to-string';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import { unified } from 'unified';
@@ -79,4 +80,14 @@ function checkImage(
   } else if (options.imageExists && !options.imageExists(url)) {
     add(line, 'image-missing', `image "${url}" is not in content/images/`);
   }
+}
+
+/** The text of the body's first `#` heading (the page's h1), formatting marks left out; undefined when it has none. */
+export function h1Text(body: string): string | undefined {
+  const tree = unified().use(remarkParse).use(remarkGfm).parse(body) as Root;
+  let text: string | undefined;
+  visit(tree, 'heading', (node: Heading) => {
+    if (text === undefined && node.depth === 1) text = toString(node);
+  });
+  return text;
 }

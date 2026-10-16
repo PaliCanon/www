@@ -1,11 +1,12 @@
-import type { Lang } from './languages';
+import type { HomeSection, Lang } from './languages';
 
 /** The words of the site's own chrome: navigation, footer, empty states. The copy of the pages is in `content/`. */
 export interface Strings {
   language: string;
-  menu: string;
   skip: string;
   home: string;
+  /** The bar's back link on every page but the home, to the language's home (user check 14). */
+  back: string;
   nav: {
     search: string;
     viz: string;
@@ -15,10 +16,11 @@ export interface Strings {
     support: string;
     blog: string;
   };
-  /** The text of the link that ends each home section. */
-  sectionLink: Record<'teaching' | 'search' | 'viz' | 'learn', string>;
+  /** Ends a home scene's link name: "<title>, read more". */
+  readMore: string;
+  /** The gold button under a home scene's text, to the scene's page (user check 9). */
+  sceneButton: Record<HomeSection, string>;
   legal: string;
-  footerServices: string;
   blogTitle: string;
   blogDescription: string;
   blogEmpty: string;
@@ -36,9 +38,9 @@ export const LANGUAGE_NAMES: Record<Lang, string> = {
 export const STRINGS: Record<Lang, Strings> = {
   en: {
     language: 'Language',
-    menu: 'Menu',
     skip: 'Skip to the content',
     home: 'PaliCanon, home',
+    back: 'Back to the home',
     nav: {
       search: 'Search',
       viz: 'Map',
@@ -48,14 +50,14 @@ export const STRINGS: Record<Lang, Strings> = {
       support: 'Support',
       blog: 'Blog',
     },
-    sectionLink: {
-      teaching: 'About the project',
-      search: 'Open the search',
-      viz: 'Open the map',
-      learn: 'Start learning Pāli',
+    readMore: 'read more',
+    sceneButton: {
+      teaching: 'Discover the app',
+      search: 'Discover the search',
+      viz: 'Discover the map',
+      learn: 'Discover Learn Pāli',
     },
     legal: 'Legal notice',
-    footerServices: 'The PaliCanon services',
     blogTitle: 'Blog',
     blogDescription: 'News and guides from PaliCanon.',
     blogEmpty: 'No post yet.',
@@ -64,9 +66,9 @@ export const STRINGS: Record<Lang, Strings> = {
   },
   fr: {
     language: 'Langue',
-    menu: 'Menu',
     skip: 'Aller au contenu',
     home: 'PaliCanon, accueil',
+    back: "Retour à l'accueil",
     nav: {
       search: 'Recherche',
       viz: 'Carte',
@@ -76,14 +78,14 @@ export const STRINGS: Record<Lang, Strings> = {
       support: 'Soutenir',
       blog: 'Blog',
     },
-    sectionLink: {
-      teaching: 'À propos du projet',
-      search: 'Ouvrir la recherche',
-      viz: 'Ouvrir la carte',
-      learn: 'Commencer à apprendre le pāli',
+    readMore: 'en savoir plus',
+    sceneButton: {
+      teaching: "Découvrir l'app",
+      search: 'Découvrir la recherche',
+      viz: 'Découvrir la carte',
+      learn: 'Découvrir Apprendre le pāli',
     },
     legal: 'Mentions légales',
-    footerServices: 'Les services PaliCanon',
     blogTitle: 'Blog',
     blogDescription: 'Les nouvelles et les guides de PaliCanon.',
     blogEmpty: 'Aucun article pour le moment.',
@@ -92,9 +94,9 @@ export const STRINGS: Record<Lang, Strings> = {
   },
   vi: {
     language: 'Ngôn ngữ',
-    menu: 'Menu',
     skip: 'Chuyển đến nội dung',
     home: 'PaliCanon, trang chủ',
+    back: 'Về trang chủ',
     nav: {
       search: 'Tìm kiếm',
       viz: 'Bản đồ',
@@ -104,14 +106,14 @@ export const STRINGS: Record<Lang, Strings> = {
       support: 'Ủng hộ',
       blog: 'Blog',
     },
-    sectionLink: {
-      teaching: 'Về dự án',
-      search: 'Mở trang tìm kiếm',
-      viz: 'Mở bản đồ',
-      learn: 'Bắt đầu học Pāli',
+    readMore: 'xem thêm',
+    sceneButton: {
+      teaching: 'Khám phá ứng dụng',
+      search: 'Khám phá tìm kiếm',
+      viz: 'Khám phá bản đồ',
+      learn: 'Khám phá Học Pāli',
     },
     legal: 'Thông tin pháp lý',
-    footerServices: 'Các dịch vụ của PaliCanon',
     blogTitle: 'Blog',
     blogDescription: 'Tin tức và hướng dẫn từ PaliCanon.',
     blogEmpty: 'Chưa có bài viết nào.',
@@ -123,7 +125,7 @@ export const STRINGS: Record<Lang, Strings> = {
 /** The services the footer links to: their own sites. */
 export const SERVICE_LINKS = {
   search: 'https://search.palicanon.app',
-  viz: 'https://viz.palicanon.app',
+  viz: 'https://map.palicanon.app',
   learn: 'https://learn.palicanon.app',
   tipitaka: 'https://apps.apple.com/app/id6760995639',
 } as const;

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 220" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- A point cloud in perspective: near points larger and fuller, far points small and faint; thin edges for the parallels; ringed points for the suttas. -->
+  <path pathLength="1" d="M248.0 101.9L247.9 107.1L246.9 112.0L244.9 116.6L242.1 121.0L238.7 125.1L234.7 128.9L230.2 132.4L225.4 135.7L220.2 138.6L214.8 141.3L209.1 143.8L203.3 146.0L197.3 148.0L191.2 149.8L185.0 151.4L178.8 152.8L172.5 154.0L166.1 155.0L159.7 155.8L153.3 156.5L146.8 157.0L140.4 157.3L133.9 157.5L127.5 157.5L121.0 157.4L114.5 157.1L108.1 156.6L101.7 156.0L95.3 155.2L88.9 154.2L82.6 153.0L76.3 151.7L70.1 150.2L64.0 148.4L58.0 146.4L52.1 144.3L46.4 141.9L40.9 139.2L35.7 136.3L30.8 133.1L26.2 129.6L22.2 125.9L18.6 121.8L15.7 117.5L13.6 112.9L12.3 108.1L12.0 102.9L12.9 97.6L15.0 92.2L18.6 86.6L23.7 81.0L30.4 75.6L38.9 70.3L49.0 65.4L60.8 61.0L74.0 57.3L88.5 54.3L104.0 52.2L120.2 51.1L136.6 51.0L152.8 51.9L168.5 53.8L183.3 56.6L196.8 60.2L208.9 64.5L219.3 69.3L228.1 74.5L235.2 79.9L240.6 85.5L244.5 91.0L246.9 96.5L248.0 101.9Z" stroke-width="1.6" stroke-opacity="0.3"/>
+  <path pathLength="1" d="M126.5 97.3L125.3 99.2" stroke-width="2.59" stroke-opacity="0.94"/>
+  <path pathLength="1" d="M123.4 113.4L130.3 148.9" stroke-width="2.54" stroke-opacity="0.92"/>
+  <path pathLength="1" d="M130.4 106.4L148.9 109.7" stroke-width="2.5" stroke-opacity="0.9"/>
+  <path pathLength="1" d="M141.8 44.8L134.6 31.7" stroke-width="2.4" stroke-opacity="0.86"/>
+  <path pathLength="1" d="M116.6 42.6L125.7 31.0" stroke-width="2.39" stroke-opacity="0.86"/>
+  <path pathLength="1" d="M233.6 116.5L229.0 125.4" stroke-width="2.34" stroke-opacity="0.83"/>
+  <path pathLength="1" d="M101.3 181.9L111.7 176.3" stroke-width="2.16" stroke-opacity="0.75"/>
+  <path pathLength="1" d="M230.6 105.8L230.5 105.7" stroke-width="2.15" stroke-opacity="0.75"/>
+  <path pathLength="1" d="M26.5 132.8L38.6 120.7" stroke-width="2.13" stroke-opacity="0.74"/>
+  <path pathLength="1" d="M147.3 188.2L123.6 176.1" stroke-width="2.09" stroke-opacity="0.72"/>
+  <path pathLength="1" d="M149.4 104.3L160.9 118.8" stroke-width="2.06" stroke-opacity="0.71"/>
+  <path pathLength="1" d="M169.6 130.6L168.8 129.4" stroke-width="1.95" stroke-opacity="0.65"/>
+  <path pathLength="1" d="M177.0 140.6L195.2 163.9" stroke-width="1.95" stroke-opacity="0.65"/>
+  <path pathLength="1" d="M184.3 115.2L176.1 130.2" stroke-width="1.83" stroke-opacity="0.6"/>
+  <circle pathLength="1" cx="111.0" cy="123.8" r="2.3" stroke-width="2.25" stroke-opacity="0.4"/>
+  <circle pathLength="1" cx="111.2" cy="145.4" r="2.4" stroke-width="2.3" stroke-opacity="0.41"/>
+  <circle pathLength="1" cx="155.2" cy="160.3" r="2.7" stroke-width="2.42" stroke-opacity="0.45"/>
+  <circle pathLength="1" cx="154.8" cy="125.5" r="2.7" stroke-width="2.43" stroke-opacity="0.46"/>
+  <circle pathLength="1" cx="151.2" cy="141.6" r="2.9" stroke-width="2.48" stroke-opacity="0.48"/>
+  <circle pathLength="1" cx="162.2" cy="166.2" r="2.9" stroke-width="2.5" stroke-opacity="0.48"/>
+  <circle pathLength="1" cx="187.1" cy="110.2" r="3.2" stroke-width="2.61" stroke-opacity="0.52"/>
+  <circle pathLength="1" cx="96.9" cy="133.7" r="3.2" stroke-width="2.61" stroke-opacity="0.52"/>
+  <circle pathLength="1" cx="92.3" cy="147.5" r="3.2" stroke-width="2.64" stroke-opacity="0.53"/>
+  <circle pathLength="1" cx="170.0" cy="181.3" r="3.3" stroke-width="2.67" stroke-opacity="0.54"/>
+  <circle pathLength="1" cx="158.8" cy="77.9" r="3.4" stroke-width="2.72" stroke-opacity="0.56"/>
+  <circle pathLength="1" cx="173.1" cy="135.7" r="3.7" stroke-width="2.86" stroke-opacity="0.61"/>
+  <circle pathLength="1" cx="132.1" cy="136.0" r="4.0" stroke-width="2.97" stroke-opacity="0.65"/>
+  <circle pathLength="1" cx="68.7" cy="144.5" r="4.0" stroke-width="2.98" stroke-opacity="0.65"/>
+  <circle pathLength="1" cx="199.3" cy="169.1" r="4.1" stroke-width="3.0" stroke-opacity="0.66"/>
+  <circle pathLength="1" cx="165.0" cy="124.0" r="4.1" stroke-width="3.01" stroke-opacity="0.66"/>
+  <circle pathLength="1" cx="117.6" cy="173.1" r="4.2" stroke-width="3.07" stroke-opacity="0.68"/>
+  <circle pathLength="1" cx="224.7" cy="102.1" r="4.3" stroke-width="3.11" stroke-opacity="0.69"/>
+  <circle pathLength="1" cx="129.8" cy="55.2" r="4.5" stroke-width="3.2" stroke-opacity="0.72"/>
+  <circle pathLength="1" cx="43.6" cy="115.7" r="4.5" stroke-width="3.2" stroke-opacity="0.72"/>
+  <circle pathLength="1" cx="144.9" cy="98.7" r="4.6" stroke-width="3.23" stroke-opacity="0.74"/>
+  <circle pathLength="1" cx="153.7" cy="191.4" r="4.6" stroke-width="3.25" stroke-opacity="0.74"/>
+  <circle pathLength="1" cx="153.7" cy="191.4" r="9.6" stroke-width="1.95" stroke-opacity="0.74"/>
+  <circle pathLength="1" cx="21.4" cy="137.9" r="4.7" stroke-width="3.27" stroke-opacity="0.75"/>
+  <circle pathLength="1" cx="237.1" cy="109.7" r="5.1" stroke-width="3.43" stroke-opacity="0.8"/>
+  <circle pathLength="1" cx="94.5" cy="185.6" r="5.2" stroke-width="3.49" stroke-opacity="0.83"/>
+  <circle pathLength="1" cx="205.0" cy="188.3" r="5.3" stroke-width="3.54" stroke-opacity="0.84"/>
+  <circle pathLength="1" cx="205.0" cy="188.3" r="10.3" stroke-width="2.12" stroke-opacity="0.84"/>
+  <circle pathLength="1" cx="111.6" cy="49.0" r="5.6" stroke-width="3.65" stroke-opacity="0.88"/>
+  <circle pathLength="1" cx="130.6" cy="24.6" r="5.6" stroke-width="3.67" stroke-opacity="0.89"/>
+  <circle pathLength="1" cx="145.8" cy="51.8" r="5.6" stroke-width="3.67" stroke-opacity="0.89"/>
+  <circle pathLength="1" cx="157.0" cy="111.2" r="5.7" stroke-width="3.72" stroke-opacity="0.9"/>
+  <circle pathLength="1" cx="157.0" cy="111.2" r="10.7" stroke-width="2.23" stroke-opacity="0.9"/>
+  <circle pathLength="1" cx="225.1" cy="132.8" r="5.8" stroke-width="3.73" stroke-opacity="0.91"/>
+  <circle pathLength="1" cx="132.0" cy="157.3" r="6.1" stroke-width="3.86" stroke-opacity="0.95"/>
+  <circle pathLength="1" cx="100.4" cy="58.6" r="6.1" stroke-width="3.87" stroke-opacity="0.96"/>
+  <circle pathLength="1" cx="121.7" cy="104.8" r="6.3" stroke-width="3.96" stroke-opacity="0.99"/>
+  <circle pathLength="1" cx="121.7" cy="104.8" r="11.3" stroke-width="2.38" stroke-opacity="0.99"/>
+  <circle pathLength="1" cx="130.0" cy="91.7" r="6.4" stroke-width="4.0" stroke-opacity="1.0"/>
+</svg>

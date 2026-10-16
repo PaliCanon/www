@@ -1,0 +1,245 @@
+/* Every page but the home: a masthead card (the h1 and its lede, the page's
+   drawing), then the text in one calm column. */
+
+.masthead {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  align-items: end;
+  margin: var(--inset);
+  padding: calc(var(--bar-h) + var(--inset) + clamp(2.5rem, 7vw, 5.5rem)) var(--gutter)
+    clamp(2.25rem, 5vw, 4rem);
+  overflow: clip;
+  isolation: isolate;
+  border: 1px solid var(--deep-edge);
+  border-radius: var(--radius-card);
+  background: var(--deep);
+  color: var(--on-deep-ink);
+  view-transition-name: masthead;
+}
+
+.masthead__text {
+  max-width: 56rem;
+}
+
+.masthead__text > h1 {
+  font-size: clamp(2.75rem, 1.5rem + 4.4vw, 6rem);
+  color: var(--on-deep);
+}
+
+.masthead__text > p {
+  max-width: 38rem;
+  margin-top: 1.25rem;
+  font-size: var(--text-body);
+}
+
+/* A project page's service link, the gold pill (user check 12): under the
+   lede, centred (user check 13); from 48rem on its own full-width row
+   under the lede and the drawing (user check 15). */
+.masthead__link {
+  justify-self: center;
+}
+
+.masthead__link > p {
+  margin: 0;
+}
+
+/* The masthead's size of the pill, large at every width (user check 15):
+   same specificity as chrome.css's .pill geometry, which global.css
+   imports earlier, so this one wins. */
+.masthead__link p:has(> a:only-child) > a {
+  min-height: 3.25rem;
+  padding: 0.875rem 2rem;
+  font-size: 1.0625rem;
+}
+
+.masthead__text > time {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--on-deep-gold);
+}
+
+.masthead__drawing {
+  order: -1;
+  width: 5.5rem;
+  height: auto;
+  color: var(--on-deep-gold);
+}
+
+@media (min-width: 48rem) {
+  .masthead {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .masthead__drawing {
+    order: 0;
+    width: clamp(8rem, 15vw, 13rem);
+  }
+
+  /* A project page: the text box steps aside so the eyebrow, the title
+     and the lede take the left column's rows, the drawing beside them,
+     level with the lede; the pill on a full-width row of its own under
+     both, centred (user check 15). */
+  .masthead:has(> .masthead__link) {
+    grid-template-areas:
+      'eyebrow drawing'
+      'title drawing'
+      'lede drawing'
+      'link link';
+    row-gap: 0;
+  }
+
+  .masthead:has(> .masthead__link) > .masthead__text {
+    display: contents;
+  }
+
+  .masthead:has(> .masthead__link) > .masthead__text > .eyebrow {
+    grid-area: eyebrow;
+  }
+
+  .masthead:has(> .masthead__link) > .masthead__text > h1 {
+    grid-area: title;
+    max-width: 56rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .masthead:has(> .masthead__link) > .masthead__text > h1 + p {
+    grid-area: lede;
+    margin-top: 0;
+  }
+
+  .masthead:has(> .masthead__link) > .masthead__drawing {
+    grid-area: drawing;
+    justify-self: center;
+    align-self: end;
+    margin-bottom: 0;
+  }
+
+  .masthead:has(> .masthead__link) > .masthead__link {
+    grid-area: link;
+    justify-self: center;
+    margin-top: 2rem;
+  }
+}
+
+.prose {
+  width: 100%;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: clamp(3rem, 8vw, 6rem) 1.5rem clamp(4rem, 10vw, 8rem);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* A page with a slider: its text, then the slider. */
+.prose--before-slider {
+  padding-bottom: clamp(1rem, 3vw, 2rem);
+}
+
+.prose > * + * {
+  margin-top: 1.25rem;
+}
+
+.prose h2 {
+  margin-top: 3.5rem;
+  font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+  line-height: 1;
+  color: var(--display-ink);
+}
+
+.prose h3 {
+  margin-top: 2.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ps-heading);
+}
+
+.prose a {
+  color: var(--ps-gold-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.prose a:hover {
+  color: var(--ps-gold-hover);
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--ps-heading);
+}
+
+.prose ul {
+  display: grid;
+  gap: 0.625rem;
+  padding: 0;
+  list-style: none;
+}
+
+.prose ul > li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.prose ul > li::before {
+  position: absolute;
+  top: 0.65em;
+  left: 0.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--hl);
+  content: '';
+}
+
+.prose ol {
+  padding-left: 1.5rem;
+  list-style: decimal;
+}
+
+.prose ol > li::marker {
+  font-weight: 600;
+  color: var(--ps-gold-text);
+}
+
+.prose blockquote {
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--hl);
+  font-style: italic;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1rem;
+}
+
+/* The blog's list of posts: one card per post. */
+.prose ul.not-prose {
+  gap: 1rem;
+}
+
+.prose ul.not-prose > li {
+  padding: 1.5rem;
+  border: 1px solid var(--ps-line);
+  border-radius: var(--radius-sheet);
+  background: var(--sheet);
+}
+
+.prose ul.not-prose > li::before {
+  content: none;
+}
+
+.prose ul.not-prose > li > a {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ps-heading);
+  text-decoration: none;
+}
+
+.prose ul.not-prose > li > a:hover {
+  color: var(--ps-gold-text);
+}

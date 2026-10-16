@@ -1,0 +1,185 @@
+/* Motion: short, and none under reduced motion. One moment on load (the
+   opening's lotus traces itself, its text rises); the rest follows the
+   scroll, with CSS scroll-driven animations where they exist. Elsewhere the
+   page is complete and still: no fallback script. */
+
+@keyframes trace {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .opening__lotus [pathLength] {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: trace 2.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+  }
+
+  .opening__lotus--small [pathLength] {
+    animation-delay: 0.9s;
+  }
+
+  .opening__text > * {
+    animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .opening__text > h1 + p {
+    animation-delay: 0.12s;
+  }
+
+  .opening__text > h2,
+  .opening__text > h2 + p {
+    animation-delay: 0.24s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header,
+  .slider__button,
+  .langs__button svg,
+  .pill,
+  .masthead__link p:has(> a:only-child) > a {
+    transition: none;
+  }
+
+  /* No hover lift either (as .back, chrome.css): same selectors as the
+     lift, later in the cascade. */
+  .pill:hover,
+  .masthead__link p:has(> a:only-child) > a:hover {
+    translate: none;
+  }
+}
+
+@keyframes recede {
+  to {
+    scale: 0.95;
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    translate: 0 2.5rem;
+  }
+}
+
+@keyframes reveal-out {
+  to {
+    opacity: 0.25;
+  }
+}
+
+@keyframes slide-focus {
+  0%,
+  100% {
+    scale: 0.8;
+    filter: grayscale(1);
+    opacity: 0.75;
+  }
+  50% {
+    scale: 1;
+    filter: none;
+    opacity: 1;
+  }
+}
+
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    scale: 0.86;
+  }
+}
+
+@keyframes stage-out {
+  to {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .opening {
+      animation-name: recede;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+
+    /* The scene's heading only rises in: pinned on a desktop, it leaves
+       with its scene, opaque over the steps passing under it. */
+    .step--title {
+      animation-name: reveal-in;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+
+    .steps > * {
+      animation-name: reveal-in, reveal-out;
+      animation-timing-function: linear;
+      animation-fill-mode: both, forwards;
+      animation-timeline: view(), view();
+      animation-range:
+        entry 0% entry 70%,
+        exit 55% exit 100%;
+    }
+
+    /* The glow comes and goes with its visual (P2: left alone, it stayed
+       a gold blob over a fading slider). */
+    .stage > .slider,
+    .stage > .art,
+    .stage > .stage__glow {
+      animation-name: stage-in, stage-out;
+      animation-timing-function: linear;
+      animation-fill-mode: both, forwards;
+      animation-timeline: --scene, --scene;
+      animation-range:
+        entry 15% entry 85%,
+        exit 10% exit 70%;
+    }
+
+    /* On a phone a slider is not sticky and ends its scene: the scene
+       leaves while it is still the part in view. It rises in, then
+       scrolls away whole, its glow with it. */
+    @media (width < 64rem) {
+      .scene:has(.slider) .stage > .slider,
+      .scene:has(.slider) .stage > .stage__glow {
+        animation-name: stage-in;
+        animation-fill-mode: both;
+        animation-timeline: --scene;
+        animation-range: entry 15% entry 85%;
+      }
+    }
+
+    .art [pathLength] {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation-name: trace;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --scene;
+      /* Traced while the scene comes in, complete once it is in view (scenes
+         are as tall as their content, often shorter than the screen). */
+      animation-range: entry 25% entry 100%;
+    }
+
+    .slide {
+      animation-name: slide-focus;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view(inline);
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}

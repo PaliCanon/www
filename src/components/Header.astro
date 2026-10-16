@@ -1,7 +1,11 @@
 ---
-// Plain header: the lotus and name link home, the page links, the languages.
-// On a phone the links sit in an HTML popover opened by a button: no
-// JavaScript, and every link is a real link.
+// The bar: the lotus and name link home at the left, the language toggle at
+// the right; no page links (each home scene leads to its page). Every page
+// but the home starts the bar with a round back link, a chevron to the
+// language's home (user check 14): a plain link, no history.back, so it
+// works with no JavaScript and from a page opened directly. The bar
+// sits clear on the page's deep card at the top and turns to glass once the
+// page scrolls (chrome.css); story.ts hides it while scrolling down.
 import { Picture } from 'astro:assets';
 import lotus from '../assets/lotus.png';
 import type { Lang } from '../lib/languages';
@@ -13,24 +17,24 @@ interface Props {
   lang: Lang;
   pageKey: string;
   available: Lang[];
+  /** Show the back link to the language's home (every page but the home). */
+  back?: boolean;
 }
 
-const { lang, pageKey, available } = Astro.props;
-const t = STRINGS[lang];
-const links = [
-  ['search', t.nav.search],
-  ['viz', t.nav.viz],
-  ['learn', t.nav.learn],
-  ['tipitaka', t.nav.tipitaka],
-  ['about', t.nav.about],
-  ['support', t.nav.support],
-  ['blog', t.nav.blog],
-] as const;
+const { lang, pageKey, available, back = false } = Astro.props;
 ---
 
-<header class="border-b border-line">
-  <div class="mx-auto flex max-w-5xl items-center gap-4 px-6 py-3">
-    <a href={pagePath(lang, 'index')} aria-label={t.home} class="flex items-center gap-2">
+<header class="site-header">
+  <div class="bar">
+    {back && (
+      <a href={pagePath(lang, 'index')} class="back">
+        <span class="sr-only">{STRINGS[lang].back}</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M15 5l-7 7 7 7" />
+        </svg>
+      </a>
+    )}
+    <a href={pagePath(lang, 'index')} aria-label={STRINGS[lang].home} class="brand">
       <Picture
         src={lotus}
         formats={['avif', 'webp']}
@@ -38,56 +42,11 @@ const links = [
         width={28}
         height={28}
         alt=""
-        class="size-7"
+        class="brand__lotus"
         loading="eager"
       />
-      <span class="font-serif text-lg font-semibold text-heading">PaliCanon</span>
+      <span class="brand__name">PaliCanon</span>
     </a>
-    <button
-      type="button"
-      popovertarget="menu"
-      class="ml-auto rounded border border-line px-3 py-1 text-sm text-heading md:hidden"
-    >
-      {t.menu}
-    </button>
-    <div
-      id="menu"
-      popover
-      class="m-0 hidden w-full border-b border-line bg-page p-6 md:ml-auto md:flex md:w-auto md:items-center md:gap-6 md:border-0 md:bg-transparent md:p-0"
-    >
-      <nav aria-label={t.menu}>
-        <ul class="flex flex-col gap-3 md:flex-row md:gap-5">
-          {links.map(([key, label]) => (
-            <li>
-              <a href={pagePath(lang, key)} class="text-ink hover:text-gold-hover">
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <div class="mt-4 md:mt-0">
-        <LanguageSwitch lang={lang} pageKey={pageKey} available={available} />
-      </div>
-    </div>
+    <LanguageSwitch lang={lang} pageKey={pageKey} available={available} />
   </div>
 </header>
-
-<style>
-  /* The popover is a drop-down panel on a phone, part of the bar from md up. */
-  #menu:popover-open {
-    display: block;
-    position: absolute;
-    inset: 3.5rem 0 auto 0;
-    margin: 0;
-  }
-  @media (min-width: 48rem) {
-    #menu[popover] {
-      display: flex;
-      position: static;
-      inset: auto;
-      width: auto;
-      overflow: visible;
-    }
-  }
-</style>

@@ -88,6 +88,30 @@ describe('checkContent', () => {
     expect(v[0].message).toContain('title');
   });
 
+  it('accepts a page highlight copied from its h1, formatting marks aside', () => {
+    const v = check((p) =>
+      write(
+        p('en/legal.md'),
+        '---\ntitle: T\ndescription: D\nhighlight: Pāli Canon\n---\n\n# The **Pāli** Canon\n',
+      ),
+    );
+    expect(v).toEqual([]);
+  });
+
+  it('reports a page highlight that is not in its h1, at the line of the key', () => {
+    const v = check((p) =>
+      write(
+        p('fr/about.md'),
+        '---\ntitle: T\ndescription: D\neyebrow: E\nhighlight: Sutta\n---\n\n# Le Canon\n',
+      ),
+    );
+    expect(v.map((x) => [x.file, x.rule, x.line])).toEqual([
+      ['content/fr/about.md', 'highlight-not-in-title', 5],
+    ]);
+    expect(v[0].message).toContain('Sutta');
+    expect(v[0].message).toContain('Le Canon');
+  });
+
   it('reports an unknown key at its line', () => {
     const v = check((p) =>
       write(p('en/legal.md'), '---\ntitle: T\ndescription: D\ndraft: true\n---\n\n# T\n'),

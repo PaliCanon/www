@@ -1,7 +1,10 @@
 ---
-// Links to the page's existing translations, each marked with hreflang: the
-// theme script writes pc_lang when one is followed. The current language is
-// not a link.
+// The language toggle: a button showing the current language under its own
+// name, which opens the list of the page's other translations (a native
+// popover: no JavaScript; Escape or a tap outside closes it). Each language
+// is a link under its own name and in its own language, marked with
+// hreflang: the theme script writes pc_lang when one is followed. A missing
+// translation is left out; with none, the current name stands alone.
 import { LANGS, type Lang } from '../lib/languages';
 import { LANGUAGE_NAMES, STRINGS } from '../lib/strings';
 import { pagePath } from '../lib/url';
@@ -16,26 +19,34 @@ interface Props {
 
 const { lang, pageKey, available } = Astro.props;
 const others = LANGS.filter((l) => l !== lang && available.includes(l));
+const label = STRINGS[lang].language;
 ---
 
-<nav aria-label={STRINGS[lang].language}>
-  <ul class="flex items-center gap-3 text-sm">
-    <li>
-      <span aria-current="true" lang={lang} class="font-semibold text-heading">
-        {LANGUAGE_NAMES[lang]}
-      </span>
-    </li>
-    {others.map((l) => (
-      <li>
-        <a
-          href={pagePath(l, pageKey)}
-          hreflang={l}
-          lang={l}
-          class="text-muted hover:text-gold-hover"
-        >
-          {LANGUAGE_NAMES[l]}
-        </a>
-      </li>
-    ))}
-  </ul>
-</nav>
+<div class="langs">
+  {others.length > 0 ? (
+    <button type="button" popovertarget="langs" class="langs__button">
+      <span class="sr-only">{label}: </span>
+      <span lang={lang}>{LANGUAGE_NAMES[lang]}</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </button>
+  ) : (
+    <span class="langs__button" lang={lang}>
+      {LANGUAGE_NAMES[lang]}
+    </span>
+  )}
+  {others.length > 0 && (
+    <nav id="langs" popover aria-label={label} class="langs__list">
+      <ul>
+        {others.map((l) => (
+          <li>
+            <a href={pagePath(l, pageKey)} hreflang={l} lang={l} class="langs__link">
+              {LANGUAGE_NAMES[l]}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )}
+</div>

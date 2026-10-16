@@ -48,3 +48,23 @@ describe('the links of the head', () => {
     });
   }
 });
+
+// F2, 001 v6: every page works with no JavaScript. With neither story.ts nor
+// a scroll timeline nothing switches the bar to glass once scrolled, so a
+// stylesheet loaded through <noscript> keeps it from floating. A file of
+// dist, because the CSP refuses an inline <style>.
+describe('the bar with no JavaScript', () => {
+  for (const file of htmlFiles()) {
+    it(`${file}: loads /nojs.css through <noscript>, in the head`, () => {
+      const head = /<head>([\s\S]*?)<\/head>/.exec(read(file))?.[1] ?? '';
+      expect(head).toContain('<noscript><link rel="stylesheet" href="/nojs.css"></noscript>');
+    });
+  }
+
+  it('nojs.css keeps the bar static where there is no scroll timeline', () => {
+    expect(exists('nojs.css')).toBe(true);
+    const css = read('nojs.css');
+    expect(css).toContain('@supports not (animation-timeline: scroll())');
+    expect(css).toMatch(/\.site-header\s*\{[^}]*position:\s*static;[^}]*margin:\s*var\(--inset\);/);
+  });
+});

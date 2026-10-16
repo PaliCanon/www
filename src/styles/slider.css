@@ -1,0 +1,151 @@
+/* A project's screenshots: tall cards in a native horizontal scroll that
+   snaps each card to the centre. The centre card is in full colour, its
+   neighbours smaller and grey (motion.css); round previous and next buttons
+   in dark glass sit at the sides once story.ts runs, each dimmed at its
+   end. */
+
+.slider {
+  --card-w: clamp(260px, 25vw, 480px);
+  --card-gap: 1rem;
+
+  position: relative;
+  width: 100%;
+}
+
+.slider__track {
+  position: relative;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  border-radius: var(--radius-sheet);
+}
+
+.slider__track::-webkit-scrollbar {
+  display: none;
+}
+
+.slider__track:focus-visible {
+  outline-offset: -2px;
+}
+
+.slider__list {
+  display: flex;
+  gap: var(--card-gap);
+  width: max-content;
+  margin: 0;
+  padding: 2rem calc(50% - var(--card-w) / 2) 3rem;
+  list-style: none;
+}
+
+.slide {
+  flex: 0 0 var(--card-w);
+  aspect-ratio: 480 / 685;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  background: var(--deep);
+  box-shadow:
+    0 1px 2px rgb(32 38 46 / 0.08),
+    0 0.75rem 1.5rem -0.5rem var(--shadow-c),
+    0 2rem 3.5rem -1.5rem var(--shadow-c);
+  scroll-snap-align: center;
+}
+
+.slide__figure {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.slide__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.slide__caption {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 5rem 1.25rem 1.25rem;
+  background: linear-gradient(to top, rgb(32 38 46 / 0.94), rgb(32 38 46 / 0.7) 55%, transparent);
+  color: #f0e8df;
+}
+
+.slide__tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--hl);
+  color: var(--on-hl);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.slide__title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.slider__button {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  translate: 0 -50%;
+  border: 1px solid rgb(240 232 223 / 0.18);
+  border-radius: 50%;
+  background: rgb(32 38 46 / 0.62);
+  color: #f0e8df;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: background-color 0.2s;
+}
+
+.slider__button[hidden] {
+  display: none;
+}
+
+.slider__button:hover:not(:disabled) {
+  background: rgb(32 38 46 / 0.85);
+}
+
+/* The first card's previous, the last card's next (story.ts). */
+.slider__button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.slider__button--previous {
+  left: 0.75rem;
+}
+
+.slider__button--next {
+  right: 0.75rem;
+}
+
+.slider__button svg {
+  width: 1.375rem;
+  height: 1.375rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* A project page's slider (the Tipiṭaka app's): after the text, before the
+   closing link. */
+.page-slider {
+  max-width: 84rem;
+  margin: 0 auto;
+}

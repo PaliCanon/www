@@ -1,0 +1,64 @@
+---
+// A project's screenshots as a row of tall cards: a native horizontal
+// scroll with snap points (touch, trackpad, the keyboard once the row has the
+// focus), so it works with no JavaScript. The card in the centre is in full
+// colour, its neighbours smaller and grey (motion.css). With more than one
+// card, story.ts shows the previous and next buttons, makes them scroll by
+// one card and disables each at its end.
+import { Picture } from 'astro:assets';
+import { CAPTIONS, SCREENS, SLIDER_WORDS, type ScreensProject } from '../data/screens';
+import type { Lang } from '../lib/languages';
+import { STRINGS } from '../lib/strings';
+
+interface Props {
+  project: ScreensProject;
+  lang: Lang;
+}
+
+const { project, lang } = Astro.props;
+const words = SLIDER_WORDS[lang];
+const tag = STRINGS[lang].nav[project];
+const captions = CAPTIONS[project][lang];
+---
+
+<div class="slider" data-slider>
+  <div class="slider__track" tabindex="0" role="region" aria-label={`${words.region}: ${tag}`}>
+    <ul class="slider__list">
+      {SCREENS[project].map((src, i) => (
+        <li class="slide">
+          <figure class="slide__figure">
+            <Picture
+              src={src}
+              formats={['avif', 'webp']}
+              widths={[277, 554]}
+              sizes="(min-width: 64rem) 25vw, 260px"
+              alt=""
+              class="slide__img"
+              loading={i === 0 ? 'eager' : 'lazy'}
+            />
+            <figcaption class="slide__caption">
+              <span class="slide__tag">{tag}</span>
+              <span class="slide__title">{captions[i]}</span>
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+  {SCREENS[project].length > 1 && (
+    <>
+      <button type="button" class="slider__button slider__button--previous" data-step="-1" hidden>
+        <span class="sr-only">{words.previous}</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M15 5l-7 7 7 7" />
+        </svg>
+      </button>
+      <button type="button" class="slider__button slider__button--next" data-step="1" hidden>
+        <span class="sr-only">{words.next}</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </>
+  )}
+</div>
