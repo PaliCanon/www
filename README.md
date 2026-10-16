@@ -170,8 +170,7 @@ checks the host (`scripts/deploy-check.sh`); a `v*` tag deploys prod,
 `www-prod`, built for https://palicanon.app and indexable, then checks
 https://palicanon.app the same way (`index` form: no noindex, and
 `/support` and `/legal` end at a 200 on exactly their slash form
-(`/support/`, `/legal/`), `/?q=metta` is a 301 to the search,
-`www.` is a 301 to the apex, `/daily.json` is a 404, the IndexNow key is
+(`/support/`, `/legal/`), `www.` is a 301 to the apex, `/daily.json` is a 404, the IndexNow key is
 served unchanged). Both forms check that `/acknowledgements`, `/terms` and
 `/privacy` answer 301 to search.palicanon.app and that the redirects,
 followed (at most 5), end at a 200 on that host. The response headers are
@@ -180,8 +179,8 @@ followed (at most 5), end at a 200 on that host. The response headers are
 
 `public/_redirects` sends the old site's `/acknowledgements`, `/terms` and
 `/privacy` to https://search.palicanon.app (301, absolute targets, both
-slash forms); `/support` and `/legal` are pages here. The home's `/?q=`
-and `www` are the zone's Redirect Rules, set in the dashboard.
+slash forms); `/support` and `/legal` are pages here. The home ignores `?q=`;
+`www` is the zone's Redirect Rules, set in the dashboard.
 `public/ea61cff5ec8386a25c60f8d2ea079010.txt` is the old site's IndexNow
 key, carried over unchanged so the search engines keep trusting the host.
 

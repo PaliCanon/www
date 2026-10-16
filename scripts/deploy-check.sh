@@ -9,8 +9,7 @@
 # and their redirects, followed (at most 5), end at a 200 on that host.
 # `index` also checks the rest of the cutover: /support and /legal end at
 # a 200 on exactly <origin>/support/ and <origin>/legal/ once redirects are
-# followed, /?q=metta is a 301 to the search with the query,
-# www.<host>/x?a=1 is a 301 to <host>/x?a=1, /daily.json is a 404, and the
+# followed, www.<host>/x?a=1 is a 301 to <host>/x?a=1, /daily.json is a 404, and the
 # IndexNow key file is served unchanged (the bytes of
 # public/ea61cff5ec8386a25c60f8d2ea079010.txt).
 # Every failure is listed; the exit code is 1 if there was one.
@@ -158,14 +157,6 @@ moved() {
   fi
 }
 
-# moved_query: the home's ?q= goes to the search, the query kept.
-moved_query() {
-  is_301 '/?q=metta' '/?q=metta' || return 0
-  case $got in
-    "$search/?"*q=metta*) ;;
-    *) fail "/?q=metta: location is '$got' (want $search/?…q=metta…)" ;;
-  esac
-}
 
 # www_to_apex: www.<host>/x?a=1 is a 301 to <host>/x?a=1, path and query kept.
 www_to_apex() {
@@ -205,7 +196,6 @@ search=https://search.palicanon.app
 for old in /acknowledgements /terms /privacy; do moved "$old"; done
 if [ "$robots" = index ]; then
   for page in /support /legal; do stays "$page"; done
-  moved_query
   www_to_apex
   gone /daily.json
   key

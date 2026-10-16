@@ -137,11 +137,9 @@ good_site() {
     respond "/$old" 301 '' "location: $SEARCH/$old"
     respond "search/$old" 200 '<html>the search</html>' "${SECURITY[@]}"
   done
-  # The rest of the cutover (index form): two pages stay here, the home's
-  # ?q= goes to the search, www goes to the apex, the old feed is gone, and
-  # the IndexNow key is served unchanged.
+  # The rest of the cutover (index form): two pages stay here, www goes to
+  # the apex, the old feed is gone, and the IndexNow key is served unchanged.
   if [ "$1" = index ]; then
-    respond '/?q=metta' 301 '' "location: $SEARCH/?q=metta"
     respond 'www/x?a=1' 301 '' "location: $ORIGIN/x?a=1"
     respond "/$KEY" 200 "$(cat "$KEYFILE")" 'content-type: text/plain'
     respond /support 307 '' 'location: /support/'
@@ -343,19 +341,10 @@ expect 'prod: /support in a redirect loop fails' 1 '/support: ends at 000 (want 
 expect 'prod: /support in a redirect loop stops after 5 redirects' 1 \
   'Maximum (5) redirects followed' -- "$ORIGIN" index
 
-# The home's ?q= goes to the search (index form).
+# The home ignores ?q= (index form): the query is not redirected (task 011).
 good_site index
-respond '/?q=metta' 301 '' 'location: https://elsewhere.test/?q=metta'
-expect 'prod: /?q= redirecting elsewhere fails' 1 "/?q=metta: location is 'https://elsewhere.test/?q=metta'" -- "$ORIGIN" index
-good_site index
-respond '/?q=metta' 301 ''
-expect 'prod: /?q= with no location fails' 1 "/?q=metta: location is ''" -- "$ORIGIN" index
-good_site index
-respond '/?q=metta' 301 '' "location: $SEARCH/"
-expect 'prod: /?q= dropping the query fails' 1 "/?q=metta: location is '$SEARCH/'" -- "$ORIGIN" index
-good_site index
-respond '/?q=metta' 200 '<html>home</html>' "${SECURITY[@]}"
-expect 'prod: /?q= answering 200 fails' 1 '/?q=metta: status 200 (want 301)' -- "$ORIGIN" index
+respond '/?q=metta' 200 '<html>home</html>' "${SECURITY[@]}" 'cache-control: no-cache'
+expect 'index: the home with ?q= answering 200 passes' 0 "deploy-check: OK $ORIGIN" -- "$ORIGIN" index
 
 # www goes to the apex, path and query kept (the host derived from the origin).
 good_site index
