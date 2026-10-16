@@ -144,4 +144,27 @@ describe('the built CSS keeps what the browsers need', () => {
       expect(stop, selector).toBeGreaterThan(lift);
     }
   });
+
+  // 007: the slide tag maintains sufficient colour contrast even when its
+  // card is dimmed by the slide-focus animation. The dimming is via
+  // filter/scale/grayscale on .slide__img, not opacity on .slide.
+  it('the slide-focus animation dims the image, not the whole slide', () => {
+    const css = readdirSync(join(DIST, '_astro'))
+      .filter((f) => f.endsWith('.css'))
+      .map((f) => read(`_astro/${f}`))
+      .join('\n');
+    expect(css).toContain('@keyframes slide-focus');
+    // Extract the slide-focus keyframe content
+    const kfMatch = css.match(/@keyframes slide-focus\{([^}]+)\}/);
+    expect(kfMatch, '@keyframes slide-focus should be found in built CSS').toBeTruthy();
+    if (kfMatch) {
+      const kfBody = kfMatch[1];
+      // Verify that opacity is not used for dimming (should not have opacity < 1)
+      // The keyframe should use filter: grayscale() and scale, not opacity.
+      const opacityDimming = /opacity\s*:\s*\.75\b/.test(kfBody);
+      expect(opacityDimming, 'slide-focus animation should not use opacity:.75 for dimming').toBe(false);
+      // Instead, verify filter: grayscale is used
+      expect(kfBody).toContain('grayscale');
+    }
+  });
 });
