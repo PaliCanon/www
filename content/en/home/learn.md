@@ -4,10 +4,6 @@ title: "Learn Pāli"
 highlight: "Pāli"
 ---
 
-[Une phrase d'accroche : apprendre le pāli, pour quoi faire, en une ligne.]
+Read the suttas in the Buddha's own language. Learn Pāli takes you there one word at a time, starting with the words the suttas use most.
 
-[Un paragraphe : la méthode, par quoi on commence, le rythme.]
-
-- [Point clé 1, une ligne]
-- [Point clé 2, une ligne]
-- [Point clé 3, une ligne]
+Each word comes with its meaning, its forms and a line from a sutta, reviewed at a rhythm that follows your memory.

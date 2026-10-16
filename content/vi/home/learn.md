@@ -4,10 +4,6 @@ title: "Học tiếng Pāli"
 highlight: "Pāli"
 ---
 
-[Une phrase d'accroche : apprendre le pāli, pour quoi faire, en une ligne.]
+Đọc kinh trong chính ngôn ngữ của Đức Phật. Học Pāli đưa bạn đến đó từng từ một, bắt đầu từ những từ kinh điển dùng nhiều nhất.
 
-[Un paragraphe : la méthode, par quoi on commence, le rythme.]
-
-- [Point clé 1, une ligne]
-- [Point clé 2, une ligne]
-- [Point clé 3, une ligne]
+Mỗi từ đi kèm nghĩa, các dạng biến hóa và một dòng kinh, được ôn lại theo nhịp của trí nhớ bạn.

@@ -4,10 +4,6 @@ title: "Apprendre le pāli"
 highlight: "pāli"
 ---
 
-[Une phrase d'accroche : apprendre le pāli, pour quoi faire, en une ligne.]
+Lisez les suttas dans la langue même du Bouddha. Apprendre le pāli vous y mène un mot après l'autre, en commençant par les mots que les suttas emploient le plus.
 
-[Un paragraphe : la méthode, par quoi on commence, le rythme.]
-
-- [Point clé 1, une ligne]
-- [Point clé 2, une ligne]
-- [Point clé 3, une ligne]
+Chaque mot vient avec son sens, ses formes et une ligne d'un sutta, revus à un rythme qui suit votre mémoire.
