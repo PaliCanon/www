@@ -7,8 +7,8 @@ description: "Search the whole Pāli Canon by the words you remember or by what 
 
 Type a few words you remember, or a question in your own words. The search finds the passages that match, with the sutta they come from and a link to read it on SuttaCentral.
 
-- **By words**: the exact terms, in Pāli or in translation.
-- **By meaning**: a question such as "how to deal with anger".
-- **In three languages**: English, French and Vietnamese.
+- **By sutta**: a reference such as MN 10 or a title opens the text straight away.
+- **By keywords**: the exact words you remember, in Pāli or in translation.
+- **By meaning**: a question in your own words, such as "how to deal with anger", and the passages that answer it.
 
 [Open the search](https://search.palicanon.app)

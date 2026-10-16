@@ -7,8 +7,8 @@ description: "Cherchez dans tout le Pali Canon par les mots dont vous vous souve
 
 Tapez quelques mots dont vous vous souvenez, ou une question avec vos propres mots. La recherche trouve les passages correspondants, avec le sutta d'où ils viennent et un lien pour le lire sur SuttaCentral.
 
-- **Par les mots** : les termes exacts, en pāli ou en traduction.
-- **Par le sens** : une question comme « comment gérer la colère ».
-- **En trois langues** : anglais, français et vietnamien.
+- **Par sutta** : une référence comme MN 10 ou un titre ouvre directement le texte.
+- **Par mots-clés** : les mots exacts dont vous vous souvenez, en pāli ou en traduction.
+- **Par sens** : une question avec vos propres mots, comme « comment gérer la colère », et les passages qui y répondent.
 
 [Ouvrir la recherche](https://search.palicanon.app)
