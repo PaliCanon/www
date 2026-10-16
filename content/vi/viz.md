@@ -23,4 +23,4 @@ Bản đồ có hai cách nhìn, và cùng những bài kinh ấy nằm ở vị
 
 Văn bản và các bài kinh tương đương lấy từ SuttaCentral. Cách nhìn theo ý nghĩa được tính trên văn bản Pāli ấn bản Mahāsaṅgīti, với cùng embeddings mà công cụ tìm kiếm dùng. Không có gì về bạn được lưu lại: bản đồ chạy hoàn toàn trong trình duyệt của bạn.
 
-[Mở bản đồ](https://viz.palicanon.app)
+[Mở bản đồ](https://map.palicanon.app)

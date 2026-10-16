@@ -23,4 +23,4 @@ The map has two views, and the same suttas sit in different places in each:
 
 The texts and the parallels come from SuttaCentral. The meaning view is computed on the Pāli text of the Mahāsaṅgīti edition, with the same embeddings the search uses. Nothing is stored about you: the map runs entirely in your browser.
 
-[Open the map](https://viz.palicanon.app)
+[Open the map](https://map.palicanon.app)

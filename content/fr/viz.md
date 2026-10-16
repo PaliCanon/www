@@ -23,4 +23,4 @@ La carte a deux vues, et les mêmes suttas s'y placent différemment :
 
 Les textes et les parallèles viennent de SuttaCentral. La vue par le sens est calculée sur le texte pāli de l'édition Mahāsaṅgīti, avec les mêmes embeddings que la recherche. Rien n'est enregistré sur vous : la carte tourne entièrement dans votre navigateur.
 
-[Ouvrir la carte](https://viz.palicanon.app)
+[Ouvrir la carte](https://map.palicanon.app)
