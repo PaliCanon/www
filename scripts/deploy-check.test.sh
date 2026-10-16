@@ -146,7 +146,7 @@ expect 'a sitemap built for another origin fails' 1 "sitemap.xml: no <loc>$ORIGI
 
 good_site noindex
 respond / 403 'challenge' 'cf-mitigated: challenge'
-expect 'a Cloudflare challenge is named' 1 'Cloudflare challenged' -- "$ORIGIN" noindex
+expect 'a challenged response exits 3 and runs no further check' 3 'deploy-check: challenge:' -- "$ORIGIN" noindex
 
 good_site noindex
 respond / 302 '' 'location: https://pali-canon.cloudflareaccess.com/cdn-cgi/access/login/dev'

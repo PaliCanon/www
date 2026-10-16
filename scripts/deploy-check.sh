@@ -44,10 +44,16 @@ expect_header() {
   [ "$got" = "$3" ] || fail "$1: $2 is '$got' (want '$3')"
 }
 
+# When a Cloudflare challenge stops the check: exit 3, not 1.
+challenged() {
+  echo "deploy-check: challenge: Cloudflare challenged this runner (cf-mitigated); re-run scripts/deploy-check.sh $origin noindex …  by hand" >&2
+  exit 3
+}
+
 # Why a response is not the site's own: a Cloudflare challenge or Access.
 blocked() {
   if [ -n "$(header cf-mitigated)" ]; then
-    fail "$1: Cloudflare challenged the runner (cf-mitigated: $(header cf-mitigated))"
+    challenged
   elif header location | grep -q 'cloudflareaccess.com'; then
     fail "$1: redirected to $(header location | cut -d/ -f3) (Cloudflare Access still gates this host)"
   else

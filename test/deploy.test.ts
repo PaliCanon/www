@@ -186,9 +186,9 @@ describe('deploy.yml: dev is noindex and checked, prod is neither (yet)', () => 
 
   it('dev checks the host it was built for, noindex, after the upload', () => {
     const step = at(jobs.dev, runs('scripts/deploy-check.sh'));
-    expect(jobs.dev.steps[step].run?.trim()).toBe(
-      `scripts/deploy-check.sh ${ENVS.dev.site} noindex`,
-    );
+    const run = jobs.dev.steps[step].run ?? '';
+    expect(run).toContain(`scripts/deploy-check.sh ${ENVS.dev.site} noindex`);
+    expect(run).toContain('status=$?');
     expect(step).toBeGreaterThan(at(jobs.dev, uses('cloudflare/wrangler-action')));
   });
 
@@ -208,5 +208,13 @@ describe('deploy.yml: dev is noindex and checked, prod is neither (yet)', () => 
 
   it('prod runs no host check until it has a host (task 006)', () => {
     expect(at(jobs.prod, runs('deploy-check'))).toBe(-1);
+  });
+
+  it("dev's check handles exit code 3 (Cloudflare challenge) as a warning, not a failure", () => {
+    const step = jobs.dev.steps[at(jobs.dev, runs('scripts/deploy-check.sh'))];
+    expect(step.run).toContain('if [ "$status" = 3 ]');
+    expect(step.run).toContain('::warning::deploy-check: Cloudflare challenged');
+    expect(step.run).toContain('$GITHUB_STEP_SUMMARY');
+    expect(step.run).toContain('exit 0');
   });
 });

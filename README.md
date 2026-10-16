@@ -171,6 +171,11 @@ checks the host (`scripts/deploy-check.sh`); a `v*` tag deploys prod,
 `public/_headers`. The custom domains are in `infra/` (tofu, applied by
 hand: `infra/README.md`).
 
+When the host check runs in GitHub Actions and Cloudflare challenges the
+runner, `scripts/deploy-check.sh` exits with code 3 and the workflow logs a
+warning; the job stays green and the check must be re-run by hand from your
+laptop.
+
 ```
 bash scripts/deploy-check.test.sh                         # the check, over a stub curl
 scripts/deploy-check.sh https://dev.palicanon.app noindex # the live host

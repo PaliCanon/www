@@ -53,7 +53,17 @@ jobs:
           wranglerVersion: 4.151.0
           command: deploy --env dev
       - if: github.event_name != 'workflow_dispatch' || inputs.check
-        run: scripts/deploy-check.sh https://dev.palicanon.app noindex
+        run: |
+          set +e
+          scripts/deploy-check.sh https://dev.palicanon.app noindex
+          status=$?
+          set -e
+          if [ "$status" = 3 ]; then
+            echo "::warning::deploy-check: Cloudflare challenged the runner; re-run scripts/deploy-check.sh by hand"
+            echo "deploy-check: challenged, re-run by hand" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          exit "$status"
 
   prod:
     if: github.ref_type == 'tag'
