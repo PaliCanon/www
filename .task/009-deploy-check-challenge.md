@@ -1,6 +1,6 @@
 # 009 deploy-check: a Cloudflare challenge is a skip, not a failure
 
-status: building · rank: 2 · level: simple · type: fix · request: 005 · light path
+status: merged · rank: 2 · level: simple · type: fix · request: 005 · light path
 
 ## Summary
 
@@ -22,3 +22,6 @@ Tests: `scripts/deploy-check.test.sh` gains the case "a challenged response exit
 
 ## Retro
 One line (light path): a host check from a GitHub runner meets Cloudflare's challenge; every deploy check treats a challenge as a skip to re-run by hand, never a failure nor a pass (deploy.md; search-front 018, www 009).
+
+## Merge
+4c149a5 on main, 2026-10-16.
