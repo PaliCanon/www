@@ -18,6 +18,14 @@ Bộ thẻ gồm những từ kinh điển dùng nhiều nhất, với nghĩa l�
 
 Từ bạn đã biết chuyển sang nhịp dài hơn, từ mỗi ngày đến mỗi tuần, mỗi tháng và xa hơn; từ bạn quên quay lại vào hôm sau. Vài phút mỗi ngày là đủ.
 
+## Phương pháp
+
+Học Pāli dựa trên lặp lại ngắt quãng: bạn gặp lại một từ ngay trước khi quên nó, nên mỗi lần ôn tốn ít công mà nhớ lâu.
+
+Mỗi từ có một bậc: hằng ngày, hằng tuần, hằng tháng, hằng quý, nửa năm, hằng năm. Một từ đến hạn khi tới ngày của nó; hôm ấy các thẻ của từ được hỏi, mỗi khía cạnh một thẻ. Khi bạn qua hết mọi khía cạnh, từ lên một bậc và ngày tiếp theo lùi đi theo độ dài của bậc ấy: bảy ngày, ba mươi, chín mươi, một trăm tám mươi, một năm. Trượt một thẻ, từ rơi về bậc hằng ngày và tính một lần quên; những thẻ đã qua trong ngày cũng bị xóa, để cả từ được kiểm tra lại.
+
+Một buổi học xáo trộn các thẻ đến hạn hôm nay, thẻ trượt được hỏi lại trước khi buổi học kết thúc, và vài từ mới được thêm mỗi ngày để bộ thẻ lớn dần theo nhịp của bạn. "42 thẻ cần ôn" là tổng các khía cạnh còn phải qua của những từ đến hạn hôm nay.
+
 ## Bắt đầu từ đâu
 
 Những từ đầu tiên là những từ bạn sẽ gặp ở mọi trang Kinh tạng: các tiểu từ và đại từ, các động từ nói và biết, những tên gọi của giáo pháp. Từ đó, bộ thẻ đi theo các bài kinh, để điều bạn học là điều bạn đọc.

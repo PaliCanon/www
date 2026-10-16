@@ -18,6 +18,14 @@ The deck holds the words the suttas use most, with their meaning from the Digita
 
 A word you know moves to a longer rhythm, from daily to weekly, monthly and beyond; a word you forget comes back the next day. A few minutes a day are enough.
 
+## The method
+
+Learn Pāli uses spaced repetition: you see a word again just before you would forget it, so each review costs little and lasts long.
+
+Every word has a stage: daily, weekly, monthly, quarterly, half-yearly, yearly. A word is due when its date comes; on that day its cards are asked, one per facet. When you pass every facet, the word moves up one stage and its next date moves by that stage's length: seven days, thirty, ninety, one hundred and eighty, a year. Miss one card and the word goes back to daily, with a lapse counted; the cards you passed that day are forgotten too, so the whole word is checked again.
+
+A session shuffles the cards due today, a failed card is asked again before the session ends, and a few new words come in each day so the deck grows at your pace. "42 cards to review" is the sum of the facets still to pass for the words due today.
+
 ## Where you start
 
 The first words are the ones you will meet on every page of the Canon: the particles and pronouns, the verbs of saying and knowing, the names of the teaching. From there the deck follows the suttas, so what you learn is what you read.
