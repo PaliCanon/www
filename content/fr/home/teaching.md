@@ -4,7 +4,7 @@ title: "Les trois corbeilles"
 highlight: "trois corbeilles"
 ---
 
-Le Tipiṭaka, les « trois corbeilles », est le plus ancien témoignage de l'enseignement du Bouddha : ce qu'il a enseigné pendant quarante-cinq ans dans le nord de l'Inde, récité par ses disciples puis mis par écrit en pāli au Sri Lanka, au premier siècle avant notre ère.
+Le Tipiṭaka, les « trois corbeilles », est le plus ancien témoignage de l'enseignement du Bouddha : ce qu'il a enseigné il y a plus de vingt-cinq siècles, récité par ses disciples puis mis par écrit en pāli au Sri Lanka, au premier siècle avant notre ère.
 
 Au cœur, un diagnostic simple : la souffrance existe, elle a une cause, elle peut cesser, et il existe un chemin vers sa fin. Les suttas montrent ce chemin dans les mots mêmes du Bouddha, à travers des dialogues, des récits et la pratique.
 

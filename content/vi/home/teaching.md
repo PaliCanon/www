@@ -4,7 +4,7 @@ title: "Ba tạng kinh"
 highlight: "Ba tạng"
 ---
 
-Tipiṭaka, "ba tạng" hay "ba giỏ", là ghi chép cổ nhất về lời dạy của Đức Phật: những gì Ngài giảng trong bốn mươi lăm năm ở miền bắc Ấn Độ, được các đệ tử tụng đọc rồi chép thành văn bằng tiếng Pāli tại Sri Lanka vào thế kỷ thứ nhất trước Công nguyên.
+Tipiṭaka, "ba tạng" hay "ba giỏ", là ghi chép cổ nhất về lời dạy của Đức Phật: những gì Ngài giảng cách đây hơn hai mươi lăm thế kỷ, được các đệ tử tụng đọc rồi chép thành văn bằng tiếng Pāli tại Sri Lanka vào thế kỷ thứ nhất trước Công nguyên.
 
 Cốt lõi là một chẩn đoán giản dị: khổ có thật, khổ có nguyên nhân, khổ có thể chấm dứt, và có con đường đưa đến sự chấm dứt ấy. Các bài kinh chỉ ra con đường đó bằng chính lời Đức Phật, qua những cuộc đối thoại, những câu chuyện và sự thực hành.
 
