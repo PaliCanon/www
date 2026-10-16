@@ -23,3 +23,6 @@ The 005 part of the validated overall design (www 001 v6): nodes HOST and RT. Cl
 
 ## After the merge
 - 2026-10-16 first upload from the laptop (GitHub Actions stopped): `SITE_URL=https://dev.palicanon.app npm run build` (31 pages, dist tests 1000), `scripts/noindex.sh dist`, `wrangler@4.151.0 deploy --env dev` → www-dev, 145 files, version 2c24bda1; "No targets deployed": the custom domain waits for the user's `tofu apply` of palisearch 049 (the old CNAME `dev` still answers), then `tofu apply` in `infra/` here, then `scripts/deploy-check.sh https://dev.palicanon.app noindex`.
+
+## Retro
+Validated 2026-10-16 (retro-discussion deffc585cc0e34d #10074, gemini #10075). Errors: the host's owner never asked at Define (palisearch 049, a day's wait, rights and applier unsettled); the provider's schema not probed (wrangler/tofu split mid-Build); main red when the lead was briefed; weak YAML reds; a voice mention inside pasted text; deep returned nothing four times; the shell test under sh; tofu init's .terraform scanned by Prettier; the pre-merge hook refused twice (main moved; a branch name shared with search-front). Written: docs 78b3767, f12a2e6, c227f59, e7b3ad3, 3175ffe; claude-memory bb503ef; www 008.
