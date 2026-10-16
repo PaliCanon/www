@@ -1,6 +1,6 @@
 # 011 No /?q= redirect on palicanon.app
 
-status: building · rank: 2 · level: simple · type: chore · request: 006 · light path
+status: merged · rank: 2 · level: simple · type: chore · request: 006 · light path
 
 ## Summary
 Rank: difficulty 2 (one check and its cases removed, docs), impact 2 (the prod host check no longer asserts a rule that will not exist) → 2. Light path, one Haiku lane.
@@ -14,3 +14,6 @@ Decision (user, 2026-10-16, docs decisions.md 774a27b: "puisque le search ne l'u
 
 ## Retro
 One line (light path): a cutover rule the product does not need (the old site's search URLs) is dropped with its check the same day it is questioned; the decision is written before the code (decisions.md 774a27b).
+
+## Merge
+dfb14b5 on main, 2026-10-16.
