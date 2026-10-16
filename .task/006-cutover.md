@@ -119,3 +119,6 @@ Graph v3; deep #11064 (Δ none: G1, G3, G4, G5 built as ruled), sage #11080 (its
 
 ## Merge
 b6828aa on main, 2026-10-16.
+
+## After the merge
+- 2026-10-16: `cloudflare_record.www` applied (5f0e11fd…); tag v0.1.1 → the prod job green (the runner's host check was challenged → warning); live: `/terms`, `/privacy`, `/acknowledgements` 301 to search.palicanon.app, the IndexNow key 200, `/daily.json` 404. Still the user's: the two Redirect Rules (`/?q=` → search, www → apex: `/?q=metta` answers 200 and www does not answer yet), the purge, Search Console and Bing; then C1 from the laptop. O3 (delete the Pages project after 7 days, revoke its API_TOKEN) and F1 (learn-pali's footer and the app link palicanon.app/terms and /privacy) are follow-ups to open.
