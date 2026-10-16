@@ -217,3 +217,6 @@ Graph v4; deep #9462, sage #9480. Δ: none from either voice. T, ruled:
 
 ## Merge
 7f12943 on main, 2026-10-16 (feat/design at 96d810d).
+
+## Retro
+Validated 2026-10-16 (retro-discussion d5898099362524e #9974, deep #9983; sage asked for a diagram). Errors: content ahead of its rule (lesson 2026-10-15); two leads stopped mid-step by the user; design wording drifted between the task file, the viewer and the graph (a ruling from the Log called the 404 plain); the voices' window is characters, not ten messages; the threads kept rank 6 to rank 8; the bundler rewrote CSS and JS silently; test-first slips; a rebase refused by unstaged content; GitHub Actions stopped (billing) so the merge's CI did not run. Written: docs 2f1e243 (five lessons), 9ceb069 (prompts), 652a56d (conventions, three front questions), 37084fb (a ruling after the hand-back briefs a new lane); claude-memory eb83841. Follow-ups: followup-browser-tests, followup-masthead-guards (session www).
