@@ -57,7 +57,7 @@ Nothing here has been applied yet (task 005 wrote it).
 
    ```sh
    npm ci && SITE_URL=https://dev.palicanon.app npm run build && scripts/noindex.sh dist
-   CLOUDFLARE_API_TOKEN=$(security find-generic-password -a lsh -s cloudflare-api-token -w) \
+   CLOUDFLARE_API_TOKEN=$(security find-generic-password -a lsh -s cloudflare-api-token-palicanon -w) \
      CLOUDFLARE_ACCOUNT_ID=c0690c72f1b7c85737052c3a9ebac154 npx wrangler@4.151.0 deploy --env dev
    ```
 3. **Attach the domain.** Credentials from the environment, the token
@@ -65,7 +65,7 @@ Nothing here has been applied yet (task 005 wrote it).
 
    ```sh
    gcloud auth application-default login
-   export CLOUDFLARE_API_TOKEN=$(security find-generic-password -a lsh -s cloudflare-api-token -w)
+   export CLOUDFLARE_API_TOKEN=$(security find-generic-password -a lsh -s cloudflare-api-token-palicanon -w)
    cd infra
    tofu init
    tofu plan     # 1 to add: cloudflare_workers_domain.dev (dev.palicanon.app -> www-dev); 0 to change, 0 to destroy
