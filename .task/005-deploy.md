@@ -20,3 +20,6 @@ The 005 part of the validated overall design (www 001 v6): nodes HOST and RT. Cl
 
 ## Merge
 2b4526d on main, 2026-10-16 (branch renamed feat/www-deploy: search-front has a feat/deploy and the pre-merge hook finds a branch by name).
+
+## After the merge
+- 2026-10-16 first upload from the laptop (GitHub Actions stopped): `SITE_URL=https://dev.palicanon.app npm run build` (31 pages, dist tests 1000), `scripts/noindex.sh dist`, `wrangler@4.151.0 deploy --env dev` → www-dev, 145 files, version 2c24bda1; "No targets deployed": the custom domain waits for the user's `tofu apply` of palisearch 049 (the old CNAME `dev` still answers), then `tofu apply` in `infra/` here, then `scripts/deploy-check.sh https://dev.palicanon.app noindex`.
