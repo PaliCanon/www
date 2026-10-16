@@ -9,7 +9,7 @@ See the relations between the suttas as a map in three dimensions. Each text is 
 
 ## What you see
 
-Each point is a sutta, named by its reference (MN 10, SN 56.11…) and coloured by its collection. A line between two points is a relation; a distance between two points is a degree of kinship: the suttas that say the same things sit together.
+Each point is a sutta, named by its reference (MN 10, SN 56.11…) and coloured by its collection. A line between two points is a relation; a distance between two points is a degree of closeness: the suttas that say the same things sit together.
 
 ## How to explore it
 
