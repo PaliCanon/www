@@ -1,6 +1,6 @@
 # 006 Cutover: palicanon.app serves the showcase
 
-status: merging · rank: 8 · level: hard · type: infra · request: 001 · after: [005] · session: www-006-cutover · process: ../../docs/workflows/development-process.mmd
+status: merged · rank: 8 · level: hard · type: infra · request: 001 · after: [005] · session: www-006-cutover · process: ../../docs/workflows/development-process.mmd
 
 ## Summary
 Rank: 8 since review round 2 (a second round with a medium finding: the prod job's test:dist step has no SITE_URL, so the build-form test fails by construction on the tag). Was 7 since review round 1 (a medium finding: C1 built two of its five checks). Was 6: difficulty 5 (two tofu states, the zone's rules, the apex certificate, old URLs and their ranking), impact 7 (the project's front door moves; a wrong redirect loses the search's traffic) → 6. Level hard: the orchestrator itself; the user applies what the token cannot (Pages, rulesets) and runs the palisearch destroy.
@@ -116,3 +116,6 @@ Graph v3; deep #11064 (Δ none: G1, G3, G4, G5 built as ruled), sage #11080 (its
 
 **Follow-up** (`followup-deploy-check-cases` in the session): deep T3 (a 3-hop chain on the search's side still passes within the cap), T4 (the www and query rules sampled on one path each: a multi-segment `www.<host>/support/` and the `mode`, `c`, `lang` args), T5 (the stub's default `--max-redirs` branch unexercised).
 | Fix round 3 read | done | orchestrator, 2026-10-16: diff da51b7f..7db2468 read — `moved` pins the final URL's host to search.palicanon.app (the brief's "exact path" contradicted H2's five-hop chain: the host pin is the ruling, accepted), the stub picks pages by host, the five-hop pass case; 71 shell cases, 315 unit. Three rounds done. Merge; then the www record applied, the user's rules checked from the laptop (C1), tag v0.1.1. |
+
+## Merge
+b6828aa on main, 2026-10-16.
