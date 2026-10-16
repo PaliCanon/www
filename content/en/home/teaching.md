@@ -1,15 +1,13 @@
 ---
 eyebrow: "The teaching"
-title: "What the Tipiṭaka is"
-highlight: "Tipiṭaka"
+title: "The three baskets"
+highlight: "three baskets"
 ---
 
-[Une phrase d'accroche : ce qu'est le Tipiṭaka, en une ligne.]
+The Tipiṭaka, the "three baskets", is the oldest record of the Buddha's teaching: what he taught over forty-five years in northern India, recited by his disciples and written down in Pāli in Sri Lanka in the first century BCE.
 
-[Un paragraphe : les trois corbeilles, d'où viennent les textes, pourquoi ils comptent aujourd'hui.]
+At its heart is a simple diagnosis: suffering exists, it has a cause, it can end, and there is a path to its end. The suttas show that path in the Buddha's own words, through conversations, stories and practice.
 
-[Un paragraphe sur l'enseignement : ce qu'on y trouve, à qui il s'adresse.]
-
-- [Point clé 1, une ligne]
-- [Point clé 2, une ligne]
-- [Point clé 3, une ligne]
+- **Vinaya Piṭaka**: the discipline, the rules of life of monks and nuns and the stories behind them.
+- **Sutta Piṭaka**: the discourses, the Buddha's teachings to monastics and lay people, the part most people read.
+- **Abhidhamma Piṭaka**: the systematic analysis of mind and matter, a later ordering of the teaching.
