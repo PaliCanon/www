@@ -10,6 +10,8 @@ test/fixtures/
 # A local tofu init (www 005)
 .terraform/
 infra/.terraform/
+# a2m review caches (www 006)
+.a2m/
 LICENSE
 README.md
 CLAUDE.md
