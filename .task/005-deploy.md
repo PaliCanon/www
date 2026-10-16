@@ -1,6 +1,6 @@
 # 005 Deploy the showcase to dev.palicanon.app
 
-status: merging · rank: 6 · level: hard · type: infra · request: 001 · after: [002] · session: www-005-deploy · process: ../../docs/workflows/development-process.mmd
+status: merged · rank: 6 · level: hard · type: infra · request: 001 · after: [002] · session: www-005-deploy · process: ../../docs/workflows/development-process.mmd
 
 ## Summary
 Rank: difficulty 5 (Cloudflare Workers static assets with its own tofu state, a custom domain, headers, a deploy workflow with a post-deploy check), impact 6 (the first public host of the showcase; the same path serves prod at the cutover) → 6. Level hard: infra, the shared zone.
@@ -17,3 +17,6 @@ The 005 part of the validated overall design (www 001 v6): nodes HOST and RT. Cl
 | Fix 1 | done | scripts/deploy-check.test.sh: 11 new cases (15 → 26): each of strict-transport-security, x-content-type-options, referrer-policy, permissions-policy, x-frame-options, cache-control, x-robots-tag (dev) missing alone from a page; the asset without cache-control and with only no-cache; prod with x-robots-tag noindex on a page and on an asset. Red: 1 failed / 25 passed (permissions-policy named "no permissions-policy", not the header the way the others are) → scripts/deploy-check.sh now says "permissions-policy is '' (want a value)" → 26 passed. The script already checked every other header, so those cases were green at once; shown not vacuous by deleting each check from a copy of the script (each deletion turns its case red; cache-control 4 red, x-robots-tag 5 red). The shell test now runs its cases side by side (6.8 s → 1.7 s) because the vitest wrapper times out at 5 s. Checks exit 0: deploy-check.test.sh 26/0, vitest --coverage 228 (lines 100%), prettier, eslint. |
 | Review round 2 | clean | review v2; sage #6987: Δ none, each round-1 item has its named failing test, none vacuous. Deep: nothing (deepseek-flash "returned nothing" today in five sessions); gemini quota. Merge waits for palisearch 049 applied (the Cloudflare token lacks Access and Pages rights): a push to main would run the dev deploy and its host check red. |
 | Local checks (merge gate) | done | orchestrator, 2026-10-16, tip b37b1a8 rebased on main 07af48b (the design merged): vitest 305 (31 files), build 31 pages, dist 1000 (17 files), deploy-check.test.sh 26 passed 0 failed, tofu validate valid, prettier and eslint clean. GitHub Actions is stopped on the organisation (billing): the local matrix is the gate (quality.md, 2026-10-16); the user: "si les tests passent en local tu peux merger". dev.palicanon.app still carries the old CNAME (palisearch 049 apply pending, the user's): the first upload goes through wrangler from the laptop, the custom domain after the apply. |
+
+## Merge
+2b4526d on main, 2026-10-16 (branch renamed feat/www-deploy: search-front has a feat/deploy and the pre-merge hook finds a branch by name).
