@@ -1,6 +1,6 @@
 # 008 Prettier ignores infra/.terraform
 
-status: building · rank: 1 · level: simple · type: chore · request: 005 · light path
+status: merged · rank: 1 · level: simple · type: chore · request: 005 · light path
 
 ## Summary
 Rank: difficulty 1 (one line in `.prettierignore`), impact 1 → 1. Light path, one Haiku lane.
@@ -14,3 +14,6 @@ Found at 005's merge gate (2026-10-16): `tofu init` run inside the worktree crea
 
 ## Retro
 One line (light path): a tool run inside a worktree (tofu init) leaves files a linter scans; the ignore list names them (claude-memory tofu-init-in-a-worktree).
+
+## Merge
+c014613 on main, 2026-10-16.
