@@ -19,9 +19,12 @@ Cốt lõi là Tứ Diệu Đế, bài pháp đầu tiên của Đức Phật: k
 
 ## Ứng dụng
 
-- Tiếng Pāli và bản dịch song song.
-- Từ điển cho từng từ.
-- Kế hoạch học và ghi chú.
-- Bằng tiếng Anh, tiếng Pháp và tiếng Việt.
+Toàn bộ Kinh tạng trên iPhone, đọc ở bất cứ đâu.
+
+- **Ngoại tuyến**: mọi văn bản nằm trong điện thoại, không cần kết nối.
+- **Riêng tư**: không tài khoản, không theo dõi, không gì rời khỏi điện thoại của bạn.
+- **Tiếng Pāli và bản dịch song song**, từ điển cho từng từ.
+- **Kế hoạch học và ghi chú**, để quay lại những gì đã đọc.
+- **Miễn phí**, không quảng cáo, bằng tiếng Việt, tiếng Anh và tiếng Pháp.
 
 [Tải trên App Store](https://apps.apple.com/app/id6760995639)

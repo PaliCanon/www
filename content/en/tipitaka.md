@@ -19,9 +19,12 @@ At its heart are the Four Noble Truths, the Buddha's first teaching: there is su
 
 ## The app
 
-- Pāli and translations side by side.
-- A dictionary on every word.
-- Study plans and notes.
-- In English, French and Vietnamese.
+The whole Canon on your iPhone, to read anywhere.
+
+- **Offline**: every text is on the phone; no connection needed.
+- **Private**: no account, no tracking, nothing leaves your phone.
+- **Pāli and translations side by side**, a dictionary on every word.
+- **Study plans and notes**, to come back to what you read.
+- **Free**, with no ads, in English, French and Vietnamese.
 
 [Download on the App Store](https://apps.apple.com/app/id6760995639)

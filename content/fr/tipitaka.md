@@ -19,9 +19,12 @@ Au cœur se trouvent les Quatre Nobles Vérités, le premier enseignement du Bou
 
 ## L'app
 
-- Le pāli et les traductions côte à côte.
-- Un dictionnaire sur chaque mot.
-- Des plans d'étude et des notes.
-- En anglais, français et vietnamien.
+Tout le Canon sur votre iPhone, à lire n'importe où.
+
+- **Hors ligne** : tous les textes sont dans le téléphone, aucune connexion nécessaire.
+- **Privé** : pas de compte, pas de pistage, rien ne quitte votre téléphone.
+- **Le pāli et les traductions côte à côte**, un dictionnaire sur chaque mot.
+- **Des plans d'étude et des notes**, pour revenir à ce que vous avez lu.
+- **Gratuit**, sans publicité, en français, en anglais et en vietnamien.
 
 [Télécharger dans l'App Store](https://apps.apple.com/app/id6760995639)
