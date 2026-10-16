@@ -43,3 +43,4 @@ flowchart TB
   classDef user fill:#3a2f1f,stroke:#fc6,color:#ffd
   classDef keep fill:#2b2b2b,stroke:#888,color:#ddd
 ```
+| N1 palicanon.app → www-prod | done | 2026-10-16: the user removed the two Pages custom domains (the CNAMEs went with them; the zone keeps the Google TXT); palisearch 050 merged (config) and the four resources removed from its state; `tofu apply` of the saved plan (`prod_host=palicanon.app`): `cloudflare_workers_domain.prod` created (8636ab4d…). Live: `/`, `/fr/`, `/vi/`, `/tipitaka/`, sitemap, robots 200, no x-robots-tag; `/support` and `/legal` 307 to their slash form; `/terms` 404 until N4's `_redirects`. |
