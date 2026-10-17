@@ -1,6 +1,6 @@
 ---
 title: "Mentions légales"
-description: "Qui publie palicanon.app, comment il est hébergé, et ce qu'il collecte : rien."
+description: "Qui publie palicanon.app et comment il est hébergé. Learn synchronise optionnellement la progression via Google Drive."
 ---
 
 # Mentions légales
@@ -16,6 +16,14 @@ Le site est servi par Cloudflare.
 ## Vie privée
 
 Ce site ne dépose aucun cookie et ne collecte aucune donnée personnelle.
+
+### Learn : synchroniser sa progression avec Google Drive
+
+Les utilisateurs de Learn peuvent optionnellement synchroniser leur progression avec leur propre Google Drive. Cette synchronisation ne se fait que lorsque vous vous connectez avec Google. L'accès est limité à un dossier caché (`drive.appdata`) que seul PaliCanon peut consulter. Votre progression est stockée dans ce dossier au même format que la fonction Exporter.
+
+Votre jeton de connexion Google est conservé dans la mémoire de votre navigateur (sur le site) ou dans la chaîne de clés macOS (sur l'application), jamais sur les serveurs de PaliCanon. PaliCanon n'a pas de copie côté serveur de votre jeton ou de vos données. Se déconnecter supprime l'accès quand le jeton est toujours stocké. Sur l'application, le jeton est toujours stocké. Sur le site, le jeton est stocké seulement jusqu'au rechargement de la page. Vous pouvez supprimer l'accès à tout moment sur https://myaccount.google.com/connections.
+
+La politique de confidentialité de Google s'applique à la façon dont Google traite vos données. Selon les exigences d'utilisation limitée de Google, les données des API Google ne sont utilisées que pour fournir cette fonction de synchronisation.
 
 ## Textes
 
