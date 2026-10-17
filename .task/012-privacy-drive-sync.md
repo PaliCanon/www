@@ -1,6 +1,6 @@
 # 012 The legal notice says what Learn's Google Drive sync uses
 
-status: building · rank: 2 · level: simple · type: docs · request: user, 2026-10-17 («ajoute la partie privacy dans les mentions légales») · light path
+status: merged · rank: 2 · level: simple · type: docs · request: user, 2026-10-17 («ajoute la partie privacy dans les mentions légales») · light path
 
 ## Summary
 Rank: difficulty 1 (one paragraph in en and fr), impact 2 (the privacy text Google's consent screen links to, palicanon.app/privacy, before learn's sync goes to prod) → 2.
@@ -12,3 +12,7 @@ learn-pali 050 (merged 2026-10-17) lets a learner sync their progress through th
 | Build | done | 4b5f17e; build exit 0, check exit 0, dist tests exit 0 |
 | Correction | done | 357c664; build exit 0, check exit 0, dist tests exit 0 |
 | Check | done | orchestrator, 2026-10-17: the paragraph read in en (and the sign-out sentence corrected to say exactly when revoke happens); build, check, dist tests exit 0 per the lane |
+| Merge | done | a5a35fc on main, pushed (palicanon.app deploys) |
+
+## Retro
+One line (light path): the first wording promised a revoke the site cannot do after a reload; the orchestrator read the copy against the design before merging.
