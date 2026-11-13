@@ -6,27 +6,30 @@ orchestrator, never by an agent or by CI.
 
 | What | Owner | Where |
 | --- | --- | --- |
-| The Workers `www-dev`, `www-prod`: static assets only, no script | wrangler, from `deploy.yml` | `../wrangler.jsonc` (`env.dev`, `env.prod`) |
+| The Worker `www-dev`: static assets only, no script | wrangler, from `deploy.yml` | `../wrangler.jsonc` (`env.dev`) |
 | The custom domain `dev.palicanon.app` → `www-dev` | tofu | `cloudflare.tf`, `cloudflare_workers_domain.dev` |
-| The custom domain `palicanon.app` → `www-prod` | tofu, task 006 | `cloudflare_workers_domain.prod`, attached only when `prod_host` is set |
+| `palicanon.app` | not here: the nginx container of the lsh-tech stack, behind the lsh-tech tunnel (task 014) | `Lsh0x/lsh-tech`, `stacks/palicanon/prod` |
 | The record `www.palicanon.app`: a proxied AAAA `100::`, no origin behind it | tofu, task 006 | `cloudflare.tf`, `cloudflare_record.www` |
 | The response headers, dev's `X-Robots-Tag: noindex` | the build | `../public/_headers`, `../scripts/noindex.sh` |
 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub repository secrets (set 2026-10-15) | read by `cloudflare/wrangler-action` |
 
-Why the Workers are not in tofu: the cloudflare provider `~> 4.52`
+Why the Worker is not in tofu: the cloudflare provider `~> 4.52`
 (4.52.9) has no assets on `cloudflare_workers_script` (`tofu providers
 schema`: no `assets` block, `content` required), and provider 5 would make
 tofu and CI both upload `dist/` (ruling 2026-10-15). A Workers Custom
 Domain creates its proxied DNS record and the certificate for the exact
-host itself, so there is no record for them and no route here. `wrangler deploy`
+host itself, so there is no record for it and no route here. `wrangler deploy`
 publishes only the domains its config declares, none, so an upload never
 touches a domain tofu attached.
 
 `wrangler.jsonc` sets `workers_dev: false` and `preview_urls: false`: the
-custom domain is the only way to a Worker. Always deploy with `--env`; a
-bare `wrangler deploy` would create a third Worker named `www`.
+custom domain is the only way to the Worker. Always deploy with `--env`; a
+bare `wrangler deploy` would create a Worker named `www`.
 
 ## Order (dev), the orchestrator
+
+This order is dev's. Prod has no Worker and no order here: the lsh-tech
+stack serves palicanon.app (see "Prod" below).
 
 Nothing here has been applied yet (task 005 wrote it).
 
@@ -83,14 +86,17 @@ Nothing here has been applied yet (task 005 wrote it).
 5. **Merge.** The push to main deploys dev again and runs the host check;
    from then on every push to main does.
 
-## Prod (task 006)
+## Prod (tasks 006, 013, 014)
 
-`www-prod` is uploaded by every `v*` tag (SITE_URL `https://palicanon.app`,
-no noindex) and, since task 006, checked at `https://palicanon.app` after
-the upload (`deploy-check.sh … index`: the old site's URLs redirect to the
-search). `palicanon.app` was attached on 2026-10-16
-(`tofu apply -var prod_host=palicanon.app`, after palisearch released the
-apex); `www.palicanon.app` is the placeholder record below.
+Prod is served by the nginx container of the lsh-tech stack, not by a
+Worker: a `v*` tag builds the image (`deploy.yml`, job `image`), which is
+deployed by digest in `Lsh0x/lsh-tech`, `stacks/palicanon/prod`, on
+ssh.lsh.tech behind the lsh-tech tunnel. `palicanon.app` was attached to a
+Worker `www-prod` on 2026-10-16 (task 006); that custom domain was
+destroyed and the Worker is no longer uploaded (task 014). Nothing in
+`deploy.yml` checks `https://palicanon.app`: after the stack's deploy, run
+`scripts/deploy-check.sh https://palicanon.app index` by hand.
+`www.palicanon.app` is the placeholder record below.
 
 ### The www placeholder
 
@@ -98,7 +104,7 @@ apex); `www.palicanon.app` is the placeholder record below.
 answers for the host: a Redirect Rule only runs on a proxied record, and
 `100::` (the IPv6 discard prefix) is where the proxy has nothing to reach.
 The rule itself (`www` → `https://palicanon.app` + path, 301, query kept) is
-set in the dashboard (Rules, Redirect Rules; the token cannot), and answers
+a zone ruleset in `Lsh0x/palicanon` (not here), and answers
 before any origin. The orchestrator applies the record
 (`tofu plan`: 1 to add, `cloudflare_record.www`); output `www_record`.
 

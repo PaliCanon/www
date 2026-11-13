@@ -37,7 +37,6 @@ const workflow = parse(text('.github/workflows/deploy.yml'));
 const jobs: Record<string, Job> = workflow.jobs;
 const ENVS = {
   dev: { site: 'https://dev.palicanon.app', worker: 'www-dev' },
-  prod: { site: 'https://palicanon.app', worker: 'www-prod' },
 } as const;
 
 /**
@@ -72,7 +71,7 @@ function evaluate(expression: string | undefined, ctx: Record<string, unknown>):
   return Boolean(new Function(`return (${js});`)());
 }
 
-describe('wrangler.jsonc: static assets only, one Worker per env', () => {
+describe('wrangler.jsonc: static assets only, one Worker, www-dev (prod is the container, task 014)', () => {
   it('has no Worker script, only dist/ with 404.html for unknown paths', () => {
     expect(wrangler.main).toBeUndefined();
     expect(wrangler.assets).toEqual({
@@ -87,8 +86,9 @@ describe('wrangler.jsonc: static assets only, one Worker per env', () => {
     expect(wrangler.preview_urls).toBe(false);
   });
 
-  it('names www-dev and www-prod, and declares no route (the domains are tofu’s)', () => {
-    expect(Object.keys(wrangler.env).sort()).toEqual(['dev', 'prod']);
+  it('names www-dev only, and declares no route (the domain is tofu’s)', () => {
+    expect(Object.keys(wrangler.env)).toEqual(['dev']);
+    expect(text('wrangler.jsonc')).not.toContain('www-prod');
     for (const [env, { worker }] of Object.entries(ENVS)) {
       expect(wrangler.env[env].name).toBe(worker);
       expect(wrangler.env[env].routes ?? wrangler.env[env].route).toBeUndefined();
@@ -110,8 +110,8 @@ describe('deploy.yml: when it runs', () => {
     expect(workflow.permissions).toEqual({ contents: 'read' });
   });
 
-  it('has a dev job and a prod job, each deploying one at a time, never cancelled, and the image job', () => {
-    expect(Object.keys(jobs).sort()).toEqual(['dev', 'image', 'prod']);
+  it('has a dev job and the image job, no prod job; dev deploys one at a time, never cancelled', () => {
+    expect(Object.keys(jobs).sort()).toEqual(['dev', 'image']);
     for (const env of Object.keys(ENVS)) {
       expect(jobs[env].concurrency).toEqual({
         group: `deploy-${env}`,
@@ -121,21 +121,27 @@ describe('deploy.yml: when it runs', () => {
   });
 
   const cases = [
-    { event: 'push', ref: 'branch', dev: true, prod: false },
-    { event: 'push', ref: 'tag', dev: false, prod: true },
-    { event: 'workflow_dispatch', ref: 'branch', dev: true, prod: false },
-    { event: 'workflow_dispatch', ref: 'tag', dev: false, prod: true },
+    { event: 'push', ref: 'branch', dev: true, image: false },
+    { event: 'push', ref: 'tag', dev: false, image: true },
+    { event: 'workflow_dispatch', ref: 'branch', dev: true, image: false },
+    { event: 'workflow_dispatch', ref: 'tag', dev: false, image: true },
   ];
-  for (const { event, ref, dev, prod } of cases) {
-    it(`a ${event} on a ${ref} deploys ${dev ? 'dev' : 'prod'} only`, () => {
+  for (const { event, ref, dev, image } of cases) {
+    it(`a ${event} on a ${ref} ${dev ? 'deploys dev' : 'deploys no Worker and builds the image'}`, () => {
       const ctx = { 'github.event_name': event, 'github.ref_type': ref };
       expect(evaluate(jobs.dev.if, ctx)).toBe(dev);
-      expect(evaluate(jobs.prod.if, ctx)).toBe(prod);
+      expect(evaluate(jobs.image.if, ctx)).toBe(image);
     });
   }
+
+  it('uploads to no Worker on a tag: nothing but dev calls wrangler', () => {
+    expect(text('.github/workflows/deploy.yml')).not.toContain('--env prod');
+    for (const [name, job] of Object.entries(jobs))
+      if (name !== 'dev') expect(at(job, uses('cloudflare/wrangler-action')), name).toBe(-1);
+  });
 });
 
-describe('deploy.yml: both jobs build, test and upload', () => {
+describe('deploy.yml: dev builds, tests and uploads', () => {
   for (const [env, { site, worker }] of Object.entries(ENVS)) {
     const job = jobs[env];
     const build = () => job.steps[at(job, runs('npm run build'))];
@@ -185,24 +191,13 @@ describe('deploy.yml: both jobs build, test and upload', () => {
         expect(step.uses).toMatch(/@v\d+(\.\d+){0,2}$/);
     }
   });
-
-  it('uses one wrangler version in both jobs', () => {
-    const versions = [jobs.dev, jobs.prod].map(
-      (job) => job.steps[at(job, uses('cloudflare/wrangler-action'))].with?.wranglerVersion,
-    );
-    expect(new Set(versions).size).toBe(1);
-  });
 });
 
-describe('deploy.yml: dev is noindex, prod is not, both are checked', () => {
+describe('deploy.yml: dev is noindex and checked', () => {
   it('dev adds noindex to dist/_headers between the build and the upload', () => {
     const step = at(jobs.dev, runs('scripts/noindex.sh dist'));
     expect(step).toBeGreaterThan(at(jobs.dev, runs('npm run build')));
     expect(step).toBeLessThan(at(jobs.dev, uses('cloudflare/wrangler-action')));
-  });
-
-  it('prod deploys _headers as written: no noindex', () => {
-    expect(at(jobs.prod, runs('noindex'))).toBe(-1);
   });
 
   it('dev checks the host it was built for, noindex, after the upload', () => {
@@ -226,20 +221,6 @@ describe('deploy.yml: dev is noindex, prod is not, both are checked', () => {
       );
     });
   }
-
-  it('prod checks its host, index, after the upload (task 006)', () => {
-    const step = at(jobs.prod, runs('scripts/deploy-check.sh'));
-    const run = jobs.prod.steps[step].run ?? '';
-    expect(run).toContain(`scripts/deploy-check.sh ${ENVS.prod.site} index`);
-    expect(run).not.toContain('noindex');
-    expect(run).toContain('status=$?');
-    expect(step).toBeGreaterThan(at(jobs.prod, uses('cloudflare/wrangler-action')));
-  });
-
-  it('prod runs its check on every tag, with no input to skip it', () => {
-    const step = jobs.prod.steps[at(jobs.prod, runs('scripts/deploy-check.sh'))];
-    expect(step.if).toBeUndefined();
-  });
 
   for (const env of Object.keys(ENVS)) {
     it(`${env}'s check handles exit code 3 (Cloudflare challenge) as a warning, not a failure`, () => {
@@ -311,7 +292,11 @@ describe('deploy.yml: the image job (the container of task 013)', () => {
     expect(build).not.toHaveProperty('build-args');
   });
 
-  it('leaves the wrangler prod job as it was', () => {
-    expect(at(jobs.prod, uses('cloudflare/wrangler-action'))).toBeGreaterThan(0);
+  it('is the only thing a tag does: no Worker upload, the host is checked by hand', () => {
+    expect(at(image, uses('cloudflare/wrangler-action'))).toBe(-1);
+    expect(text('.github/workflows/deploy.yml')).toContain(
+      'scripts/deploy-check.sh https://palicanon.app index',
+    );
+    expect(text('.github/workflows/deploy.yml')).toContain('lsh-tech');
   });
 });

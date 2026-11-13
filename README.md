@@ -162,25 +162,27 @@ one fails the build with `file:line [rule] message`:
 
 ## Deploying
 
-Cloudflare Workers static assets, no Worker script (`wrangler.jsonc`):
-`.github/workflows/deploy.yml` builds and uploads. A push to main deploys
-dev, `www-dev` at https://dev.palicanon.app (SITE_URL of that build, every
+Dev is a Cloudflare Worker with static assets, no script (`wrangler.jsonc`):
+`.github/workflows/deploy.yml` builds and uploads on every push to main,
+`www-dev` at https://dev.palicanon.app (SITE_URL of that build, every
 response `X-Robots-Tag: noindex` through `scripts/noindex.sh`), then
-checks the host (`scripts/deploy-check.sh`); a `v*` tag deploys prod,
-`www-prod`, built for https://palicanon.app and indexable, then checks
-https://palicanon.app the same way (`index` form: no noindex, and
-`/support` and `/legal` end at a 200 on exactly their slash form
-(`/support/`, `/legal/`), `www.` is a 301 to the apex, `/daily.json` is a 404, the IndexNow key is
-served unchanged). Both forms check that `/acknowledgements`, `/terms` and
-`/privacy` answer 301 to search.palicanon.app and that the redirects,
-followed (at most 5), end at a 200 on that host. The response headers are
-`public/_headers`. The custom domains are in `infra/`
-(tofu, applied by hand: `infra/README.md`).
+checks the host (`scripts/deploy-check.sh`). Prod is the container (below),
+not a Worker (task 014): a `v*` tag builds the image only, which is deployed
+by digest in `Lsh0x/lsh-tech`, `stacks/palicanon/prod`, on ssh.lsh.tech.
+Nothing in the workflow checks https://palicanon.app, since the server is
+updated after it: run the `index` form by hand after that deploy (no
+noindex, and `/support` and `/legal` end at a 200 on exactly their slash
+form (`/support/`, `/legal/`), `www.` is a 301 to the apex, `/daily.json` is
+a 404, the IndexNow key is served unchanged). Both forms check that
+`/acknowledgements`, `/terms` and `/privacy` answer 301 to
+search.palicanon.app and that the redirects, followed (at most 5), end at a
+200 on that host. The response headers are `public/_headers`. The dev
+custom domain is in `infra/` (tofu, applied by hand: `infra/README.md`).
 
 `public/_redirects` sends the old site's `/acknowledgements`, `/terms` and
 `/privacy` to https://search.palicanon.app (301, absolute targets, both
 slash forms); `/support` and `/legal` are pages here. The home ignores `?q=`;
-`www` is the zone's Redirect Rules, set in the dashboard.
+`www` is a zone ruleset in `Lsh0x/palicanon`.
 `public/ea61cff5ec8386a25c60f8d2ea079010.txt` is the old site's IndexNow
 key, carried over unchanged so the search engines keep trusting the host.
 
@@ -192,7 +194,7 @@ laptop.
 ```
 bash scripts/deploy-check.test.sh                         # the check, over a stub curl
 scripts/deploy-check.sh https://dev.palicanon.app noindex # the live dev host
-scripts/deploy-check.sh https://palicanon.app index       # the live prod host
+scripts/deploy-check.sh https://palicanon.app index       # the live prod host, by hand after a deploy
 ```
 
 ## Container

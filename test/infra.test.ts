@@ -27,7 +27,7 @@ const attr = (body: string, name: string) =>
 
 const wranglerNames = (() => {
   const source = readFileSync(join(ROOT, 'wrangler.jsonc'), 'utf8');
-  return [...source.matchAll(/"(dev|prod)": \{ "name": "([^"]+)" \}/g)].map((m) => [m[1], m[2]]);
+  return [...source.matchAll(/"(dev)": \{ "name": "([^"]+)" \}/g)].map((m) => [m[1], m[2]]);
 })();
 const devSite = parse(
   readFileSync(join(ROOT, '.github/workflows/deploy.yml'), 'utf8'),
@@ -49,7 +49,7 @@ describe('infra/versions.tf', () => {
 });
 
 describe('infra/cloudflare.tf: the custom domains, and the www placeholder', () => {
-  it('declares no Worker script (wrangler owns www-dev and www-prod)', () => {
+  it('declares no Worker script (wrangler owns www-dev)', () => {
     expect(tf).not.toMatch(/resource\s+"cloudflare_workers_script"/);
     expect(tf).not.toMatch(/resource\s+"cloudflare_workers_route"/);
   });
@@ -86,12 +86,13 @@ describe('infra/cloudflare.tf: the custom domains, and the www placeholder', () 
     expect(attr(block('variable', 'dev_host'), 'default')).toBe(`"${new URL(devSite).host}"`);
   });
 
-  it('attaches prod only when prod_host is set (task 006), to the prod Worker', () => {
-    const prod = block('resource', 'cloudflare_workers_domain', 'prod');
-    expect(attr(prod, 'count')).toBe('var.prod_host == null ? 0 : 1');
-    expect(attr(prod, 'hostname')).toBe('var.prod_host');
-    expect(attr(prod, 'service')).toBe(`"${Object.fromEntries(wranglerNames).prod}"`);
-    expect(attr(block('variable', 'prod_host'), 'default')).toBe('null');
+  it('attaches no prod host: prod is served by the lsh-tech stack (task 014)', () => {
+    expect(tf).not.toContain('prod_host');
+    expect(tf).not.toContain('www-prod');
+    expect(block('resource', 'cloudflare_workers_domain', 'prod')).toBe('');
+    expect(
+      [...tf.matchAll(/resource\s+"cloudflare_workers_domain"\s+"([^"]+)"/g)].map((m) => m[1]),
+    ).toEqual(['dev']);
   });
 
   it('holds no secret and no token', () => {

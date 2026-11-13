@@ -1,9 +1,10 @@
 // Cloudflare Workers static assets, no Worker script: dist/ is all a Worker
 // receives, 404.html answers an unknown path, a page is served at its
-// trailing-slash address. One Worker per environment, always deployed with
-// `--env` (deploy.yml): wrangler owns www-dev and www-prod, tofu (infra/)
-// owns only their custom domains, so no route is declared here. No
-// workers.dev address and no preview URL: the custom domain is the only way in.
+// trailing-slash address. One Worker, www-dev, always deployed with `--env
+// dev` (deploy.yml): wrangler owns it, tofu (infra/) owns only its custom
+// domain, so no route is declared here. No workers.dev address and no preview
+// URL: the custom domain is the only way in. Prod is not a Worker: the nginx
+// container on ssh.lsh.tech serves palicanon.app (task 014).
 {
   "name": "www",
   "compatibility_date": "2026-10-14",
@@ -16,6 +17,5 @@
   "preview_urls": false,
   "env": {
     "dev": { "name": "www-dev" },
-    "prod": { "name": "www-prod" },
   },
 }
