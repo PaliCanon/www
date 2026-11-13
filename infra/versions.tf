@@ -17,6 +17,6 @@ terraform {
   }
 }
 
-# CLOUDFLARE_API_TOKEN comes from the environment (README, "Order"): zone
-# read and Workers custom domains. Nothing is read from a file here.
+# CLOUDFLARE_API_TOKEN comes from the environment (infra/README.md): zone
+# read and DNS edit. Nothing is read from a file here.
 provider "cloudflare" {}

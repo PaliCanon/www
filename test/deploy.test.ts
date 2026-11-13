@@ -1,21 +1,10 @@
-import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
 
 const ROOT = join(import.meta.dirname, '..');
 const text = (path: string) => readFileSync(join(ROOT, path), 'utf8');
-
-/** wrangler.jsonc: whole-line `//` comments and trailing commas allowed. */
-const jsonc = (source: string) =>
-  JSON.parse(
-    source
-      .split('\n')
-      .filter((line) => !line.trim().startsWith('//'))
-      .join('\n')
-      .replace(/,(\s*[}\]])/g, '$1'),
-  );
 
 interface Step {
   name?: string;
@@ -27,30 +16,12 @@ interface Step {
 }
 interface Job {
   if?: string;
-  concurrency?: { group: string; 'cancel-in-progress': boolean };
   permissions?: Record<string, string>;
   steps: Step[];
 }
 
-const wrangler = jsonc(text('wrangler.jsonc'));
 const workflow = parse(text('.github/workflows/deploy.yml'));
 const jobs: Record<string, Job> = workflow.jobs;
-const ENVS = {
-  dev: { site: 'https://dev.palicanon.app', worker: 'www-dev' },
-} as const;
-
-/**
- * Runs a step's `run:` as GitHub does (`bash -eo pipefail`), with the call of
- * `scripts/deploy-check.sh` replaced by a command that exits with `code`
- * (a stub file costs seconds on its first run); returns the step's exit code.
- */
-function runStep(run: string, code: number): number {
-  const script = 'scripts/deploy-check.sh';
-  const stubbed = run.replaceAll(script, "bash -c 'exit $STUB_EXIT' --");
-  expect(stubbed, 'the step calls the script').not.toBe(run);
-  const env = { ...process.env, STUB_EXIT: String(code), GITHUB_STEP_SUMMARY: '/dev/null' };
-  return spawnSync('bash', ['-eo', 'pipefail', '-c', stubbed], { env }).status ?? -1;
-}
 
 /** The index of the first step matching, -1 when none does. */
 const at = (job: Job, match: (step: Step) => boolean) => job.steps.findIndex(match);
@@ -71,180 +42,62 @@ function evaluate(expression: string | undefined, ctx: Record<string, unknown>):
   return Boolean(new Function(`return (${js});`)());
 }
 
-describe('wrangler.jsonc: static assets only, one Worker, www-dev (prod is the container, task 014)', () => {
-  it('has no Worker script, only dist/ with 404.html for unknown paths', () => {
-    expect(wrangler.main).toBeUndefined();
-    expect(wrangler.assets).toEqual({
-      directory: './dist',
-      not_found_handling: '404-page',
-      html_handling: 'auto-trailing-slash',
-    });
+describe('no dev environment, no Worker (task 015: prod is the container, task 014)', () => {
+  it('has no wrangler.jsonc and no wrangler dependency or script', () => {
+    expect(existsSync(join(ROOT, 'wrangler.jsonc'))).toBe(false);
+    const pkg = JSON.parse(text('package.json'));
+    const declared = JSON.stringify([pkg.scripts, pkg.dependencies, pkg.devDependencies]);
+    expect(declared).not.toContain('wrangler');
+    expect(text('package-lock.json')).not.toContain('wrangler');
   });
 
-  it('serves no workers.dev address and no preview URL', () => {
-    expect(wrangler.workers_dev).toBe(false);
-    expect(wrangler.preview_urls).toBe(false);
-  });
-
-  it('names www-dev only, and declares no route (the domain is tofu’s)', () => {
-    expect(Object.keys(wrangler.env)).toEqual(['dev']);
-    expect(text('wrangler.jsonc')).not.toContain('www-prod');
-    for (const [env, { worker }] of Object.entries(ENVS)) {
-      expect(wrangler.env[env].name).toBe(worker);
-      expect(wrangler.env[env].routes ?? wrangler.env[env].route).toBeUndefined();
+  it('names no dev host, no www-dev Worker and no Cloudflare secret in any workflow', () => {
+    for (const file of ['deploy.yml', 'seo.yml', 'ci.yml']) {
+      const source = text(`.github/workflows/${file}`);
+      expect(source, file).not.toContain('dev.palicanon.app');
+      expect(source, file).not.toContain('www-dev');
+      expect(source, file).not.toMatch(/wrangler/i);
+      expect(source, file).not.toContain('CLOUDFLARE_');
     }
-    expect(wrangler.routes ?? wrangler.route).toBeUndefined();
+  });
+
+  it('keeps no dev-only script: scripts/noindex.sh is gone', () => {
+    expect(existsSync(join(ROOT, 'scripts/noindex.sh'))).toBe(false);
   });
 });
 
 describe('deploy.yml: when it runs', () => {
-  it('runs on a push to main, a v* tag, and by hand with a check input', () => {
+  it('runs on a push to main, a v* tag, and by hand (no input)', () => {
     expect(workflow.on.push).toEqual({ branches: ['main'], tags: ['v*'] });
-    expect(workflow.on.workflow_dispatch.inputs.check).toMatchObject({
-      type: 'boolean',
-      default: true,
-    });
+    expect(workflow.on).toHaveProperty('workflow_dispatch');
+    expect(workflow.on.workflow_dispatch?.inputs).toBeUndefined();
   });
 
   it('reads the repository only', () => {
     expect(workflow.permissions).toEqual({ contents: 'read' });
   });
 
-  it('has a dev job and the image job, no prod job; dev deploys one at a time, never cancelled', () => {
-    expect(Object.keys(jobs).sort()).toEqual(['dev', 'image']);
-    for (const env of Object.keys(ENVS)) {
-      expect(jobs[env].concurrency).toEqual({
-        group: `deploy-${env}`,
-        'cancel-in-progress': false,
-      });
-    }
+  it('has the image job only: no dev job, no prod job', () => {
+    expect(Object.keys(jobs)).toEqual(['image']);
   });
 
   const cases = [
-    { event: 'push', ref: 'branch', dev: true, image: false },
-    { event: 'push', ref: 'tag', dev: false, image: true },
-    { event: 'workflow_dispatch', ref: 'branch', dev: true, image: false },
-    { event: 'workflow_dispatch', ref: 'tag', dev: false, image: true },
+    { event: 'push', ref: 'branch', image: false },
+    { event: 'push', ref: 'tag', image: true },
+    { event: 'workflow_dispatch', ref: 'branch', image: false },
+    { event: 'workflow_dispatch', ref: 'tag', image: true },
   ];
-  for (const { event, ref, dev, image } of cases) {
-    it(`a ${event} on a ${ref} ${dev ? 'deploys dev' : 'deploys no Worker and builds the image'}`, () => {
+  for (const { event, ref, image } of cases) {
+    it(`a ${event} on a ${ref} ${image ? 'builds the image' : 'does nothing'}`, () => {
       const ctx = { 'github.event_name': event, 'github.ref_type': ref };
-      expect(evaluate(jobs.dev.if, ctx)).toBe(dev);
       expect(evaluate(jobs.image.if, ctx)).toBe(image);
     });
   }
 
-  it('uploads to no Worker on a tag: nothing but dev calls wrangler', () => {
-    expect(text('.github/workflows/deploy.yml')).not.toContain('--env prod');
+  it('uploads to no Worker: nothing calls wrangler', () => {
     for (const [name, job] of Object.entries(jobs))
-      if (name !== 'dev') expect(at(job, uses('cloudflare/wrangler-action')), name).toBe(-1);
+      expect(at(job, uses('cloudflare/wrangler-action')), name).toBe(-1);
   });
-});
-
-describe('deploy.yml: dev builds, tests and uploads', () => {
-  for (const [env, { site, worker }] of Object.entries(ENVS)) {
-    const job = jobs[env];
-    const build = () => job.steps[at(job, runs('npm run build'))];
-
-    it(`${env}: checks out the full history (lastmod) without keeping the credential`, () => {
-      const checkout = job.steps[at(job, uses('actions/checkout'))];
-      expect(checkout.with).toMatchObject({ 'fetch-depth': 0, 'persist-credentials': false });
-      expect(job.steps[at(job, uses('actions/setup-node'))].with).toMatchObject({
-        'node-version-file': '.nvmrc',
-      });
-    });
-
-    it(`${env}: builds with SITE_URL ${site}, after npm ci`, () => {
-      expect(at(job, runs('npm ci'))).toBeGreaterThanOrEqual(0);
-      expect(at(job, runs('npm ci'))).toBeLessThan(at(job, runs('npm run build')));
-      expect(build().env).toEqual({ SITE_URL: site });
-    });
-
-    it(`${env}: tests dist/ as built, before anything changes it`, () => {
-      const tested = at(job, runs('npm run test:dist'));
-      expect(tested).toBeGreaterThan(at(job, runs('npm run build')));
-      expect(tested).toBeLessThan(at(job, uses('cloudflare/wrangler-action')));
-      if (env === 'dev') expect(tested).toBeLessThan(at(job, runs('scripts/noindex.sh')));
-    });
-
-    it(`${env}: tests dist/ with the SITE_URL it was built with (${site})`, () => {
-      const tested = job.steps[at(job, runs('npm run test:dist'))];
-      expect(tested.env?.SITE_URL).toBe(build().env?.SITE_URL);
-      expect(tested.env).toEqual({ SITE_URL: site });
-    });
-
-    it(`${env}: uploads to ${worker} with the two repository secrets and a pinned wrangler`, () => {
-      const step = job.steps[at(job, uses('cloudflare/wrangler-action'))];
-      expect(step.with).toEqual({
-        apiToken: '${{ secrets.CLOUDFLARE_API_TOKEN }}',
-        accountId: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}',
-        wranglerVersion: expect.stringMatching(/^\d+\.\d+\.\d+$/),
-        command: `deploy --env ${env}`,
-      });
-      expect(wrangler.env[env].name).toBe(worker);
-    });
-  }
-
-  it('pins every action to a release tag', () => {
-    for (const job of Object.values(jobs)) {
-      for (const step of job.steps.filter((s) => s.uses))
-        expect(step.uses).toMatch(/@v\d+(\.\d+){0,2}$/);
-    }
-  });
-});
-
-describe('deploy.yml: dev is noindex and checked', () => {
-  it('dev adds noindex to dist/_headers between the build and the upload', () => {
-    const step = at(jobs.dev, runs('scripts/noindex.sh dist'));
-    expect(step).toBeGreaterThan(at(jobs.dev, runs('npm run build')));
-    expect(step).toBeLessThan(at(jobs.dev, uses('cloudflare/wrangler-action')));
-  });
-
-  it('dev checks the host it was built for, noindex, after the upload', () => {
-    const step = at(jobs.dev, runs('scripts/deploy-check.sh'));
-    const run = jobs.dev.steps[step].run ?? '';
-    expect(run).toContain(`scripts/deploy-check.sh ${ENVS.dev.site} noindex`);
-    expect(run).toContain('status=$?');
-    expect(step).toBeGreaterThan(at(jobs.dev, uses('cloudflare/wrangler-action')));
-  });
-
-  const checkCases = [
-    { event: 'push', check: undefined, runs: true },
-    { event: 'workflow_dispatch', check: true, runs: true },
-    { event: 'workflow_dispatch', check: false, runs: false },
-  ];
-  for (const { event, check, runs: expected } of checkCases) {
-    it(`dev's check ${expected ? 'runs' : 'is skipped'} on a ${event}${check === undefined ? '' : ` with check: ${check}`}`, () => {
-      const step = jobs.dev.steps[at(jobs.dev, runs('scripts/deploy-check.sh'))];
-      expect(evaluate(step.if, { 'github.event_name': event, 'inputs.check': check })).toBe(
-        expected,
-      );
-    });
-  }
-
-  for (const env of Object.keys(ENVS)) {
-    it(`${env}'s check handles exit code 3 (Cloudflare challenge) as a warning, not a failure`, () => {
-      const step = jobs[env].steps[at(jobs[env], runs('scripts/deploy-check.sh'))];
-      expect(step.run).toContain('if [ "$status" = 3 ]');
-      expect(step.run).toContain('::warning::deploy-check: Cloudflare challenged');
-      expect(step.run).toContain('$GITHUB_STEP_SUMMARY');
-      expect(step.run).toContain('exit 0');
-      expect(step.run).toContain('exit "$status"');
-    });
-
-    it(`${env}'s check step exits with the script's status unless it is 3`, () => {
-      const step = jobs[env].steps[at(jobs[env], runs('scripts/deploy-check.sh'))];
-      const exits = [
-        { script: 0, step: 0 },
-        { script: 1, step: 1 },
-        { script: 2, step: 2 },
-        { script: 3, step: 0 },
-      ];
-      for (const { script, step: want } of exits) {
-        expect(runStep(step.run ?? '', script), `deploy-check exits ${script}`).toBe(want);
-      }
-    });
-  }
 });
 
 describe('deploy.yml: the image job (the container of task 013)', () => {

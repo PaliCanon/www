@@ -1,10 +1,9 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { parse } from 'yaml';
 
 // infra/ read as text: the shape `tofu validate` cannot check (who owns
-// what, the names shared with wrangler.jsonc and deploy.yml).
+// what: nothing here serves a Worker, task 015).
 const ROOT = join(import.meta.dirname, '..');
 const INFRA = join(ROOT, 'infra');
 const read = (file: string) =>
@@ -25,14 +24,6 @@ function block(kind: string, ...labels: string[]): string {
 const attr = (body: string, name: string) =>
   body.match(new RegExp(`^\\s*${name}\\s*=\\s*(.+)$`, 'm'))?.[1].trim();
 
-const wranglerNames = (() => {
-  const source = readFileSync(join(ROOT, 'wrangler.jsonc'), 'utf8');
-  return [...source.matchAll(/"(dev)": \{ "name": "([^"]+)" \}/g)].map((m) => [m[1], m[2]]);
-})();
-const devSite = parse(
-  readFileSync(join(ROOT, '.github/workflows/deploy.yml'), 'utf8'),
-).jobs.dev.steps.find((step: { run?: string }) => step.run === 'npm run build').env.SITE_URL;
-
 describe('infra/versions.tf', () => {
   it('keeps its own state: the shared bucket, prefix www', () => {
     const backend = block('backend', 'gcs');
@@ -48,16 +39,21 @@ describe('infra/versions.tf', () => {
   });
 });
 
-describe('infra/cloudflare.tf: the custom domains, and the www placeholder', () => {
-  it('declares no Worker script (wrangler owns www-dev)', () => {
-    expect(tf).not.toMatch(/resource\s+"cloudflare_workers_script"/);
-    expect(tf).not.toMatch(/resource\s+"cloudflare_workers_route"/);
+describe('infra/cloudflare.tf: the www placeholder, and nothing else', () => {
+  it('declares no Worker, no route and no custom domain (no dev, prod is the container)', () => {
+    expect(tf).not.toMatch(/resource\s+"cloudflare_workers_/);
+    expect(tf).not.toContain('www-dev');
+    expect(tf).not.toContain('www-prod');
+    expect(tf).not.toContain('dev_host');
+    expect(tf).not.toContain('prod_host');
+    expect(tf).not.toContain('dev.palicanon.app');
   });
 
-  it('holds one DNS record, the www placeholder (a Workers domain creates its own)', () => {
+  it('declares the zone data source and one resource, the www record', () => {
     expect(
-      [...tf.matchAll(/resource\s+"cloudflare_record"\s+"([^"]+)"/g)].map((m) => m[1]),
-    ).toEqual(['www']);
+      [...tf.matchAll(/^resource\s+"([^"]+)"\s+"([^"]+)"/gm)].map((m) => `${m[1]}.${m[2]}`),
+    ).toEqual(['cloudflare_record.www']);
+    expect(block('data', 'cloudflare_zone', 'site')).not.toBe('');
   });
 
   it('www is a proxied AAAA 100:: with no origin behind it (the zone Redirect Rule answers, task 006)', () => {
@@ -71,28 +67,15 @@ describe('infra/cloudflare.tf: the custom domains, and the www placeholder', () 
     expect(attr(www, 'count')).toBeUndefined();
   });
 
-  it('outputs the www record next to the attached hosts', () => {
-    expect(read('outputs.tf')).toContain('cloudflare_record.www');
+  it('outputs the www record only', () => {
+    const outputs = read('outputs.tf');
+    expect(outputs).toContain('cloudflare_record.www');
+    expect(outputs).not.toContain('cloudflare_workers_domain');
+    expect([...outputs.matchAll(/^output\s+"([^"]+)"/gm)].map((m) => m[1])).toEqual(['www_record']);
   });
 
-  it('attaches the dev host to the dev Worker of wrangler.jsonc', () => {
-    const dev = block('resource', 'cloudflare_workers_domain', 'dev');
-    expect(attr(dev, 'hostname')).toBe('var.dev_host');
-    expect(attr(dev, 'service')).toBe(`"${Object.fromEntries(wranglerNames).dev}"`);
-    expect(attr(dev, 'count')).toBeUndefined();
-  });
-
-  it('dev_host is the host the dev build is made for', () => {
-    expect(attr(block('variable', 'dev_host'), 'default')).toBe(`"${new URL(devSite).host}"`);
-  });
-
-  it('attaches no prod host: prod is served by the lsh-tech stack (task 014)', () => {
-    expect(tf).not.toContain('prod_host');
-    expect(tf).not.toContain('www-prod');
-    expect(block('resource', 'cloudflare_workers_domain', 'prod')).toBe('');
-    expect(
-      [...tf.matchAll(/resource\s+"cloudflare_workers_domain"\s+"([^"]+)"/g)].map((m) => m[1]),
-    ).toEqual(['dev']);
+  it('keeps the variables of the zone only: no dev host, no account of a Worker', () => {
+    expect([...tf.matchAll(/^variable\s+"([^"]+)"/gm)].map((m) => m[1])).toEqual(['zone']);
   });
 
   it('holds no secret and no token', () => {

@@ -4,6 +4,5 @@ dist
 coverage
 .task
 .a2m
-.wrangler
 infra
 .github

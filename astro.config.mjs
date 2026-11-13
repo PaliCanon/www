@@ -13,7 +13,7 @@ import { siteUrl } from './src/lib/url.ts';
 const contentRoot = fileURLToPath(new URL(`${contentDir()}/`, import.meta.url));
 
 export default defineConfig({
-  // The origin of the build: https://palicanon.app, https://dev.palicanon.app.
+  // The origin of the build: https://palicanon.app, or the one SITE_URL names.
   site: siteUrl(),
   output: 'static',
   trailingSlash: 'always',

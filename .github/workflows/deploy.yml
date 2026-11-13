@@ -1,20 +1,14 @@
-# The deploy of the showcase. A push to main deploys dev to Cloudflare Workers
-# static assets (wrangler.jsonc): www-dev, served at https://dev.palicanon.app,
-# every response noindex, then the host is checked.
-# Prod is the container, not a Worker (task 014): a v* tag builds the image
-# (job `image`, task 013), and the image is deployed by digest in
-# Lsh0x/lsh-tech, stacks/palicanon/prod, on ssh.lsh.tech behind the lsh-tech
-# tunnel. The prod Worker www-prod is gone. Nothing here checks palicanon.app,
-# since the server is updated after this workflow: run
+# The deploy of the showcase. Nothing here deploys a Worker: there is no dev
+# environment (task 015) and prod is the container, not a Worker (task 014).
+# A v* tag builds the image (job `image`, task 013), and the image is deployed
+# by digest in Lsh0x/lsh-tech, stacks/palicanon/prod, on ssh.lsh.tech behind
+# the lsh-tech tunnel. A push to main, and a run by hand on a branch, start
+# the workflow and run no job. Nothing here checks palicanon.app, since the
+# server is updated after this workflow: run
 # `scripts/deploy-check.sh https://palicanon.app index` by hand after that
 # deploy (`index`: no noindex, and the old site's URLs redirect to the search).
-# By hand (workflow_dispatch): a branch deploys dev; on a tag nothing deploys
-# a Worker, and the image job runs as on a push. `check: false` skips dev's
-# host check, for the first upload, before tofu has attached
-# dev.palicanon.app (infra/README.md, "Order").
 # The full history is fetched (fetch-depth: 0): a page's lastmod is the date
-# of the last commit of its file. test:dist runs with the build's SITE_URL:
-# the suite reads the canonical origin from it. The dev domain is tofu's (infra/).
+# of the last commit of its file.
 name: Deploy
 
 on:
@@ -22,58 +16,11 @@ on:
     branches: [main]
     tags: ['v*']
   workflow_dispatch:
-    inputs:
-      check:
-        description: Check the dev host after the upload
-        type: boolean
-        default: true
 
 permissions:
   contents: read
 
 jobs:
-  dev:
-    if: github.ref_type != 'tag'
-    runs-on: ubuntu-latest
-    concurrency:
-      group: deploy-dev
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-      - run: npm ci
-      - run: npm run build
-        env:
-          SITE_URL: https://dev.palicanon.app
-      - run: npm run test:dist
-        env:
-          SITE_URL: https://dev.palicanon.app
-      - run: scripts/noindex.sh dist
-      - uses: cloudflare/wrangler-action@v4.1.3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          wranglerVersion: 4.151.0
-          command: deploy --env dev
-      - if: github.event_name != 'workflow_dispatch' || inputs.check
-        run: |
-          set +e
-          scripts/deploy-check.sh https://dev.palicanon.app noindex
-          status=$?
-          set -e
-          if [ "$status" = 3 ]; then
-            echo "::warning::deploy-check: Cloudflare challenged the runner; re-run scripts/deploy-check.sh by hand"
-            echo "deploy-check: challenged, re-run by hand" >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
-          exit "$status"
-
   # The image of the showcase for ssh.lsh.tech (Dockerfile, task 013), on a
   # tag only: the stack (Lsh0x/lsh-tech) runs it by the tag this job prints.
   # Content-addressed as learn-pali's: the tag is a hash of the tracked inputs'
@@ -110,7 +57,7 @@ jobs:
         id: vars
         run: |
           set -euo pipefail
-          HASH=$(git ls-files -s -- . ':(exclude).github' ':(exclude).task' ':(exclude)infra' ':(exclude)*.md' ':(exclude)wrangler.jsonc' | sha256sum | cut -c1-16)
+          HASH=$(git ls-files -s -- . ':(exclude).github' ':(exclude).task' ':(exclude)infra' ':(exclude)*.md' | sha256sum | cut -c1-16)
           IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/palicanon/www"
           echo "image_hash=$IMAGE:h-$HASH" >> "$GITHUB_OUTPUT"
           echo "www: input hash h-$HASH"

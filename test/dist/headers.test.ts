@@ -42,7 +42,7 @@ describe('dist/_headers', () => {
     expect(invalid).toEqual([]);
   });
 
-  it('sets no Content-Security-Policy (the page meta holds it) and no X-Robots-Tag (dev adds it)', () => {
+  it('sets no Content-Security-Policy (the page meta holds it) and no X-Robots-Tag', () => {
     for (const path of ['/', '/_astro/x.css']) {
       expect(headersOf(path).has('content-security-policy')).toBe(false);
       expect(headersOf(path).has('x-robots-tag')).toBe(false);
