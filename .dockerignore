@@ -1,0 +1,9 @@
+node_modules
+dist
+.astro
+coverage
+.task
+.a2m
+.wrangler
+infra
+.github

@@ -1,0 +1,100 @@
+# The showcase, as Cloudflare Workers static assets served it (wrangler.jsonc:
+# not_found_handling 404-page, html_handling auto-trailing-slash), plus the
+# access log. Two layers of generation, in this order:
+#   1. image build: scripts/nginx-conf.mjs replaces its three marker lines
+#      (the maps, the headers, the redirects) from public/_headers and
+#      public/_redirects;
+#   2. container start: the official image's envsubst (/etc/nginx/templates,
+#      only the WWW_* variables, NGINX_ENVSUBST_FILTER) fills ${WWW_ENV},
+#      ${WWW_SHA} and ${WWW_DEPLOYMENT_ENV}, so the image does not depend on
+#      the git ref. Their values go into a JSON string: no quote, backslash
+#      or dollar in them.
+
+#@MAPS@
+
+# The path of the request, without its query string: the query is never
+# logged (privacy). $request_uri is the request as received, so an internal
+# redirect to the 404 page does not change it.
+map $request_uri $www_route {
+    default "";
+    "~^(?<www_path>[^?]*)" $www_path;
+}
+
+# $request_time is seconds with a millisecond ("0.003", "12.500"): an
+# integer of milliseconds, without leading zero (valid JSON).
+map $request_time $www_duration_ms {
+    default 0;
+    "~^0\.0*(\d+)$" $1;
+    "~^([1-9]\d*)\.(\d{3})$" $1$2;
+}
+
+map $status $www_level {
+    default INFO;
+    "~^5" ERROR;
+}
+
+# One JSON line per request, flat keys. No address, user agent or referer.
+log_format www escape=json
+    '{"timestamp":"$time_iso8601","event.name":"http.request.completed",'
+    '"severity":"$www_level","level":"$www_level",'
+    '"service.namespace":"palicanon","service.name":"www",'
+    '"service.version":"${WWW_ENV}","service.commit":"${WWW_SHA}",'
+    '"deployment.environment.name":"${WWW_DEPLOYMENT_ENV}","runtime":"server",'
+    '"http.route":"$www_route","http.request.method":"$request_method",'
+    '"http.response.status_code":$status,"duration_ms":$www_duration_ms,'
+    '"bytes":$body_bytes_sent}';
+
+server {
+  listen 8080 default_server;
+  server_name _;
+  root /usr/share/nginx/html;
+  server_tokens off;
+  charset utf-8;
+  # A relative Location, as Cloudflare answers (nginx would add :8080).
+  absolute_redirect off;
+  access_log /var/log/nginx/access.log www;
+  error_log /var/log/nginx/error.log warn;
+
+  # _headers: every status, the 404 page and the redirects included. No
+  # location below sets a header, so all inherit these.
+  #@HEADERS@
+
+  # The liveness probe: not logged (a probe every few seconds is no traffic).
+  location = /healthz {
+    access_log off;
+    default_type text/plain;
+    return 200 "ok\n";
+  }
+
+  # _redirects: answered before any file, as Cloudflare does.
+  #@REDIRECTS@
+
+  # not_found_handling 404-page: /404.html with status 404.
+  error_page 404 /404.html;
+  location = /404.html {
+    internal;
+  }
+
+  # html_handling auto-trailing-slash: a page is served at /foo/ (foo/index.html),
+  # its other addresses redirect there with a 307, the query kept. The captures
+  # are whole segments without control characters: no header injection through
+  # a decoded path, no "//host" target.
+  location ~ "^(?<www_dir>(?:/[^/\x00-\x1f]+)*)/index\.html$" {
+    return 307 $www_dir/$is_args$args;
+  }
+  location ~ "^(?<www_file>(?:/[^/\x00-\x1f]+)+)\.html$" {
+    return 307 $www_file$is_args$args;
+  }
+  location ~ "/$" {
+    try_files ${uri}index.html =404;
+  }
+  location / {
+    try_files $uri $uri.html @www_dir;
+  }
+  location @www_dir {
+    if (-f $document_root$uri/index.html) {
+      return 307 $uri/$is_args$args;
+    }
+    return 404;
+  }
+}

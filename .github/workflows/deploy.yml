@@ -10,6 +10,8 @@
 # The full history is fetched (fetch-depth: 0): a page's lastmod is the date
 # of the last commit of its file. test:dist runs with the build's SITE_URL:
 # the suite reads the canonical origin from it. The custom domains are tofu's (infra/).
+# A v* tag also builds the container image (job `image`, task 013) that
+# ssh.lsh.tech will serve in place of the prod Worker.
 name: Deploy
 
 on:
@@ -108,3 +110,70 @@ jobs:
             exit 0
           fi
           exit "$status"
+
+  # The image of the showcase for ssh.lsh.tech (Dockerfile, task 013), on a
+  # tag only: the stack (Lsh0x/lsh-tech) runs it by the tag this job prints.
+  # Content-addressed as learn-pali's: the tag is a hash of the tracked inputs'
+  # blob ids (not the docs, the task files, the workflows or infra/, which do
+  # not shape the image), built only when that tag is missing, so a release
+  # whose sources did not change reuses the image. The release is the
+  # container's environment (WWW_ENV, WWW_SHA), not a build argument. The
+  # build runs the same build and test:dist as the prod job above, with the
+  # full history in the context (lastmod). Needs the repository variables
+  # WIF_PROVIDER, DEPLOYER_SA and GCP_PROJECT (README.md, "Container").
+  image:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      REGION: europe-west1
+    steps:
+      # persist-credentials: false: the context holds .git, and a persisted
+      # token would sit in .git/config, readable there.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.DEPLOYER_SA }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Compute the input hash and image refs
+        id: vars
+        run: |
+          set -euo pipefail
+          HASH=$(git ls-files -s -- . ':(exclude).github' ':(exclude).task' ':(exclude)infra' ':(exclude)*.md' ':(exclude)wrangler.jsonc' | sha256sum | cut -c1-16)
+          IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/palicanon/www"
+          echo "image_hash=$IMAGE:h-$HASH" >> "$GITHUB_OUTPUT"
+          echo "www: input hash h-$HASH"
+
+      - name: Check whether that image already exists
+        id: check-image
+        run: |
+          set -euo pipefail
+          if gcloud artifacts docker images describe "${{ steps.vars.outputs.image_hash }}" \
+            --project "${{ vars.GCP_PROJECT }}" --quiet >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "www: ${{ steps.vars.outputs.image_hash }} already built, skipped"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: docker/setup-buildx-action@v3
+        if: steps.check-image.outputs.exists != 'true'
+      - uses: docker/build-push-action@v6
+        if: steps.check-image.outputs.exists != 'true'
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.vars.outputs.image_hash }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: The image to run
+        run: echo "www image ${{ steps.vars.outputs.image_hash }}" | tee -a "$GITHUB_STEP_SUMMARY"

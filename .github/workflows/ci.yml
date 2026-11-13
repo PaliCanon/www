@@ -38,3 +38,18 @@ jobs:
           args: --offline --no-progress --root-dir "${{ github.workspace }}/dist" "dist/**/*.html"
           fail: true
       - run: npm audit --audit-level=high
+
+  # The container image (Dockerfile, task 013): builds it, runs it, and checks
+  # what it serves against Cloudflare's behaviour (scripts/container-test.sh).
+  # The build runs the site's build and test:dist inside the image.
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - run: bash scripts/container-test.sh

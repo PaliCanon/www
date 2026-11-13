@@ -195,6 +195,49 @@ scripts/deploy-check.sh https://dev.palicanon.app noindex # the live dev host
 scripts/deploy-check.sh https://palicanon.app index       # the live prod host
 ```
 
+## Container
+
+The showcase also runs as a container, for ssh.lsh.tech (task 013): nginx
+serves what Cloudflare Workers static assets serve, and its access log goes
+to Grafana. The `Dockerfile` builds the site (`npm run build` then
+`npm run test:dist`, SITE_URL https://palicanon.app) and serves `dist/` on
+port 8080, as the non-root user 101 (`nginxinc/nginx-unprivileged`, pinned).
+
+- Behaviour: `docker/www.conf.template` (`not_found_handling: 404-page`,
+  `html_handling: auto-trailing-slash`: `/foo/` is the page, `/foo`,
+  `/foo/index.html` and `/foo.html` answer a 307 with a relative `Location`,
+  the query kept). `scripts/nginx-conf.mjs` writes the `_headers` and
+  `_redirects` rules into that template at image build, so
+  `public/_headers` and `public/_redirects` stay the single source (neither
+  is served). No compression and no cache policy beyond `_headers`.
+- Run-time environment, no build argument (the image depends on its sources,
+  not on the git ref): `WWW_ENV` (the release, the log's `service.version`),
+  `WWW_SHA` (`service.commit`), `WWW_DEPLOYMENT_ENV` (`prod`), each without a
+  quote, backslash or `$`. The container writes its config at start (envsubst
+  of `docker/www.conf.template`) and nginx its temp files under `/tmp`: a
+  read-only root needs `/etc/nginx/conf.d` and `/tmp` writable.
+- `GET /healthz` answers 200 `ok` and is not logged.
+- The access log, one JSON line per request on stdout, flat keys:
+  `timestamp`, `event.name` (`http.request.completed`), `severity` and
+  `level` (INFO, ERROR from a 5xx), `service.namespace` (`palicanon`),
+  `service.name` (`www`), `service.version`, `service.commit`,
+  `deployment.environment.name`, `runtime` (`server`), `http.route` (the path,
+  never the query string), `http.request.method`,
+  `http.response.status_code`, `duration_ms`, `bytes`. No address, user agent
+  or referer. The error log is on stderr from warn up.
+- CI: `ci.yml` runs `scripts/container-test.sh` (needs docker); on a `v*` tag
+  `deploy.yml`'s `image` job pushes
+  `europe-west1-docker.pkg.dev/<GCP_PROJECT>/palicanon/www:h-<hash of the
+  tracked inputs>` when that tag is missing. It needs the repository variables
+  `WIF_PROVIDER`, `DEPLOYER_SA` and `GCP_PROJECT` (the `github-deployer`
+  workload identity of the platform, as learn-pali's), and the workload
+  identity must accept this repository.
+
+```
+bash scripts/container-test.sh       # build, run, check (docker)
+docker run --rm -p 8080:8080 -e WWW_ENV=dev -e WWW_SHA=local -e WWW_DEPLOYMENT_ENV=dev www-container-test
+```
+
 ## Licence
 
 CC-BY-NC-4.0 (`LICENSE`).
