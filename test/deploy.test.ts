@@ -100,18 +100,18 @@ describe('deploy.yml: when it runs', () => {
   });
 });
 
-describe('deploy.yml: the image job (the container of task 013)', () => {
+describe('deploy.yml: the image job (the container of task 013, on GHCR since task 016)', () => {
   const image = jobs.image;
   const step = (match: (s: Step) => boolean) => image.steps[at(image, match)];
   const missing = (s: Step) => s.if === "steps.check-image.outputs.exists != 'true'";
 
-  it('runs on a tag only, in a job that may ask for the identity token', () => {
+  it('runs on a tag only, and may write a package but asks for no identity token', () => {
     for (const [ref, want] of [
       ['tag', true],
       ['branch', false],
     ] as const)
       expect(evaluate(image.if, { 'github.ref_type': ref })).toBe(want);
-    expect(image.permissions).toEqual({ contents: 'read', 'id-token': 'write' });
+    expect(image.permissions).toEqual({ contents: 'read', packages: 'write' });
   });
 
   it('checks out the full history (lastmod) without keeping the credential', () => {
@@ -121,32 +121,66 @@ describe('deploy.yml: the image job (the container of task 013)', () => {
     });
   });
 
-  it('authenticates with the workload identity of the repository variables', () => {
-    expect(step(uses('google-github-actions/auth')).with).toEqual({
-      workload_identity_provider: '${{ vars.WIF_PROVIDER }}',
-      service_account: '${{ vars.DEPLOYER_SA }}',
+  it('logs in to ghcr.io as the actor with the workflow token', () => {
+    expect(step(uses('docker/login-action')).with).toEqual({
+      registry: 'ghcr.io',
+      username: '${{ github.actor }}',
+      password: '${{ secrets.GITHUB_TOKEN }}',
     });
   });
 
-  it('tags europe-west1-docker.pkg.dev/<project>/palicanon/www with a hash of the inputs', () => {
+  it('uses no GCP: no auth, no gcloud, no Artifact Registry, no repository variable', () => {
+    const yml = text('.github/workflows/deploy.yml');
+    expect(at(image, uses('google-github-actions/auth'))).toBe(-1);
+    expect(at(image, uses('google-github-actions/setup-gcloud'))).toBe(-1);
+    for (const gone of ['gcloud', 'docker.pkg.dev', 'id-token', 'run.app'])
+      expect(yml).not.toContain(gone);
+    expect(yml).not.toMatch(/\$\{\{\s*vars\./);
+  });
+
+  it('tags ghcr.io/palicanon/www with a hash of the inputs', () => {
     const run = step(runs('git ls-files -s')).run ?? '';
-    expect(run).toContain('palicanon/www"');
-    expect(run).toContain('${{ vars.GCP_PROJECT }}');
+    expect(run).toContain('IMAGE="ghcr.io/palicanon/www"');
     expect(run).toContain(':h-$HASH');
     expect(run).not.toMatch(/github\.(sha|ref)/);
   });
 
-  it('builds and pushes only when the tag is missing, with no build argument', () => {
-    expect(step(runs('docker images describe')).run ?? '').toContain('exists=false');
-    for (const match of [uses('docker/setup-buildx-action'), uses('docker/build-push-action')])
-      expect(missing(step(match))).toBe(true);
+  it('builds and pushes only when the tag is missing, with the hash and release tags', () => {
+    expect(step(runs('buildx imagetools inspect')).run ?? '').toContain('exists=false');
+    expect(missing(step(uses('docker/build-push-action')))).toBe(true);
+    expect(at(image, uses('docker/setup-buildx-action'))).toBeLessThan(
+      at(image, runs('buildx imagetools inspect')),
+    );
     const build = step(uses('docker/build-push-action')).with ?? {};
-    expect(build).toMatchObject({ push: true, tags: '${{ steps.vars.outputs.image_hash }}' });
+    expect(build).toMatchObject({ push: true });
+    expect(String(build.tags)).toContain('${{ steps.vars.outputs.image_hash }}');
+    expect(String(build.tags)).toContain('${{ steps.vars.outputs.image }}:${{ github.ref_name }}');
     expect(build).not.toHaveProperty('build-args');
   });
 
-  it('is the only thing a tag does: no Worker upload, the host is checked by hand', () => {
+  it('links the package to the repository with the source label', () => {
+    expect(String(step(uses('docker/build-push-action')).with?.labels)).toContain(
+      'org.opencontainers.image.source=https://github.com/${{ github.repository }}',
+    );
+  });
+
+  it('puts the release tag on an image that already exists', () => {
+    const retag = step(runs('buildx imagetools create'));
+    expect(retag.if).toBe("steps.check-image.outputs.exists == 'true'");
+    expect(retag.run).toContain('${{ github.ref_name }}');
+  });
+
+  it('prints the digest and the h- tag in the step summary', () => {
+    const summary = step(runs('GITHUB_STEP_SUMMARY')).run ?? '';
+    expect(summary).toContain('imagetools inspect');
+    expect(summary).toContain('Manifest.Digest');
+    expect(summary).toContain('@$DIGEST');
+    expect(summary).toContain('steps.vars.outputs.image_hash');
+  });
+
+  it('is the only thing a tag does: no Cloud Run, no Worker, the host is checked by hand', () => {
     expect(at(image, uses('cloudflare/wrangler-action'))).toBe(-1);
+    expect(text('.github/workflows/deploy.yml')).not.toMatch(/gcloud run|run\.app|traffic/i);
     expect(text('.github/workflows/deploy.yml')).toContain(
       'scripts/deploy-check.sh https://palicanon.app index',
     );

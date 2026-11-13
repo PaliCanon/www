@@ -17,7 +17,8 @@ the nginx container of the lsh-tech stack. One resource is left.
 ## Prod (tasks 006, 013, 014)
 
 Prod is served by the nginx container of the lsh-tech stack, not by a
-Worker: a `v*` tag builds the image (`deploy.yml`, job `image`), which is
+Worker: a `v*` tag builds the image (`deploy.yml`, job `image`, pushed to
+`ghcr.io/palicanon/www`, task 016), which is
 deployed by digest in `Lsh0x/lsh-tech`, `stacks/palicanon/prod`, on
 ssh.lsh.tech behind the lsh-tech tunnel. Nothing in `deploy.yml` checks
 `https://palicanon.app`: after the stack's deploy, run

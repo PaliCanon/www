@@ -164,7 +164,7 @@ one fails the build with `file:line [rule] message`:
 
 There is no dev environment and no Worker: nothing in `.github/workflows`
 deploys a Worker. Prod is the container (below): a `v*` tag builds the image
-(`.github/workflows/deploy.yml`, job `image`), which is deployed by digest in
+(`.github/workflows/deploy.yml`, job `image`, pushed to `ghcr.io/palicanon/www`), which is deployed by digest in
 `Lsh0x/lsh-tech`, `stacks/palicanon/prod`, on ssh.lsh.tech. Nothing in the
 workflow checks https://palicanon.app, since the server is updated after it:
 run the `index` form by hand after that deploy (no noindex, and `/support`
@@ -222,12 +222,16 @@ port 8080, as the non-root user 101 (`nginxinc/nginx-unprivileged`, pinned).
   `http.response.status_code`, `duration_ms`, `bytes`. No address, user agent
   or referer. The error log is on stderr from warn up.
 - CI: `ci.yml` runs `scripts/container-test.sh` (needs docker); on a `v*` tag
-  `deploy.yml`'s `image` job pushes
-  `europe-west1-docker.pkg.dev/<GCP_PROJECT>/palicanon/www:h-<hash of the
-  tracked inputs>` when that tag is missing. It needs the repository variables
-  `WIF_PROVIDER`, `DEPLOYER_SA` and `GCP_PROJECT` (the `github-deployer`
-  workload identity of the platform, as learn-pali's), and the workload
-  identity must accept this repository.
+  `deploy.yml`'s `image` job pushes `ghcr.io/palicanon/www:h-<hash of the
+  tracked inputs>` and `ghcr.io/palicanon/www:<release tag>` when the `h-`
+  tag is missing on GHCR (a release whose sources did not change only gets
+  the release tag), and prints the digest (`ghcr.io/palicanon/www@sha256:…`)
+  and the `h-` tag in the job summary. It logs in with the workflow token
+  (`packages: write`) and needs no cloud account and no repository variable;
+  the image carries the `org.opencontainers.image.source` label, which links
+  the package to this repository. Prod runs on ssh.lsh.tech: the stack
+  (`Lsh0x/lsh-tech`, `stacks/palicanon/prod`) is updated by hand from that
+  digest, and runs the image by digest.
 
 ```
 bash scripts/container-test.sh       # build, run, check (docker)
