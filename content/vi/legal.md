@@ -17,6 +17,8 @@ Trang web được phục vụ bởi Cloudflare.
 
 Trang này không đặt cookie và không thu thập dữ liệu cá nhân.
 
+Để biết toàn văn thông báo về quyền riêng tư, xem trang [Quyền riêng tư](/vi/privacy/).
+
 ### Learn: đồng bộ tiến độ của bạn với Google Drive
 
 Người dùng Learn có thể tùy chọn đồng bộ hóa tiến độ của họ với Google Drive của riêng họ. Sự đồng bộ này chỉ xảy ra khi bạn đăng nhập bằng Google. Phạm vi được giới hạn trong một thư mục ẩn (`drive.appdata`) mà chỉ PaliCanon có thể truy cập. Tiến độ của bạn được lưu trữ trong thư mục này ở cùng định dạng với tính năng Xuất.

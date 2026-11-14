@@ -17,6 +17,8 @@ The site is served by Cloudflare.
 
 This site sets no cookie and collects no personal data.
 
+For the full privacy notice, see the [Privacy](/privacy/) page.
+
 ### Learn: syncing your progress with Google Drive
 
 Learn users can optionally sync their progress with their own Google Drive. This sync only happens when you sign in with Google. The scope is limited to a hidden folder (`drive.appdata`) that only PaliCanon can access. Your progress is stored in this folder in the same format as the Export feature.

@@ -15,7 +15,7 @@ Le site est servi par Cloudflare.
 
 ## Vie privée
 
-Ce site ne dépose aucun cookie et ne collecte aucune donnée personnelle.
+Ce site ne dépose aucun cookie et ne collecte aucune donnée personnelle. Pour le détail de ce qui est traité, voir la page [Confidentialité](/fr/privacy/).
 
 ### Learn : synchroniser sa progression avec Google Drive
 
