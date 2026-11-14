@@ -11,11 +11,11 @@ palicanon.app is published by Thibault Rivière, for the PaliCanon project, a fr
 
 ## Hosting
 
-The site is served from a server operated by the publisher himself, behind Cloudflare, Inc. (USA), which provides the domain name, the network proxy and the tunnel to that server.
+The site is hosted in France, in the European Union. Cloudflare, Inc. (USA) provides the domain name and the network protection in front of it.
 
 ## Privacy
 
-PaliCanon has no accounts, no advertising and no third-party tracking. The sites keep a few preferences (language, theme, …) in cookies and in your browser's storage, and keep what is searched, with no identifier, for 30 days. Cloudflare, which sits in front of the sites, sees every request. For the full list and the details, see the [Privacy](/privacy/) page.
+PaliCanon complies with the GDPR. It has no accounts, no advertising and no third-party tracking. The sites keep a few preferences (language, theme, …) in cookies and in your browser's storage, and keep what is searched, with no identifier, for 30 days. Cloudflare, which sits in front of the sites, sees every request. For the full list and the details, see the [Privacy](/privacy/) page.
 
 ### Learn: syncing your progress with Google Drive
 

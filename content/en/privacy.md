@@ -13,13 +13,13 @@ This is the privacy notice required by the General Data Protection Regulation (G
 | --- | --- | --- | --- |
 | Search queries: the text typed (lower-cased, at most 200 characters), the language and mode of the search, the number of results, and the time. No IP address, no country and no identifier are attached. | Improving the search: seeing what readers look for, what finds nothing, which spellings and Pāli terms are used. | Legitimate interest (6.1.f): running and improving a free public service, with data that cannot be linked to a person. | 30 days. Counts of searches, with no text, are kept without time limit. |
 | Logs of PaliCanon's own servers: time, method, page, status code, duration. No IP address, no user agent, no cookie. | Keeping the Service running and watching its health. | Legitimate interest (6.1.f). | Without time limit; they say nothing about you. |
-| What Cloudflare sees of each request, and a per-minute copy of it kept by the publisher: IP address, country, page, browser and operating system, and security events. | Security, abuse prevention, understanding traffic. | Legitimate interest (6.1.f). | By Cloudflare, under its own policy; the publisher's copy, without time limit. |
+| What Cloudflare sees of each request, and a copy of it kept by the publisher: IP address, country, page, browser and operating system, and security events. | Security, abuse prevention, understanding traffic. | Legitimate interest (6.1.f). | By Cloudflare, under its own policy. In the publisher's copy, IP addresses and security events are deleted after 90 days; traffic counts, which carry no address, are kept without time limit. |
 
 Please do not type personal information — yours or anyone else's — into the search box: queries are kept for 30 days, and they are kept anonymous only because nothing identifying is attached to them.
 
 ## 2. Recipients and transfers
 
-The site is served from a server operated by the publisher himself, behind Cloudflare, Inc. (USA), which provides the domain name, the network proxy and the tunnel to that server. Cloudflare acts as a processor under its standard data processing terms, which include the European Commission's standard contractual clauses for transfers outside the EU. If you turn on Learn's sync with Google Drive, Google (Google Ireland Limited) processes your sign-in and your progress file, only on your action, as described in the [Legal notice](/legal/). No data is sold or shared with anyone else.
+The site is hosted in France, in the European Union. Cloudflare, Inc. (USA) provides the domain name and the network protection in front of it. Cloudflare acts as a processor under its standard data processing terms, which include the European Commission's standard contractual clauses for transfers outside the EU. If you turn on Learn's sync with Google Drive, Google (Google Ireland Limited) processes your sign-in and your progress file, only on your action, as described in the [Legal notice](/legal/). No data is sold or shared with anyone else.
 
 ## 3. What stays in your browser
 

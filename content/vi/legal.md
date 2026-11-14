@@ -11,11 +11,11 @@ palicanon.app do Thibault Rivière xuất bản, cho dự án PaliCanon, một d
 
 ## Lưu trữ
 
-Trang web được phục vụ từ một máy chủ do chính đơn vị xuất bản vận hành, đứng sau Cloudflare, Inc. (Hoa Kỳ), bên cung cấp tên miền, proxy mạng và đường hầm đến máy chủ đó.
+Trang web được lưu trữ tại Pháp, trong Liên minh châu Âu. Cloudflare, Inc. (Hoa Kỳ) cung cấp tên miền và lớp bảo vệ mạng đặt phía trước trang web.
 
 ## Quyền riêng tư
 
-PaliCanon không có tài khoản, không quảng cáo và không có công cụ theo dõi của bên thứ ba. Các trang web lưu vài tùy chọn (ngôn ngữ, giao diện, …) trong cookie và trong bộ nhớ của trình duyệt, và giữ nội dung được tìm kiếm, không kèm mã định danh, trong 30 ngày. Cloudflare, đứng trước các trang web, thấy mọi yêu cầu. Để biết danh sách đầy đủ và chi tiết, xem trang [Quyền riêng tư](/vi/privacy/).
+PaliCanon tuân thủ GDPR. PaliCanon không có tài khoản, không quảng cáo và không có công cụ theo dõi của bên thứ ba. Các trang web lưu vài tùy chọn (ngôn ngữ, giao diện, …) trong cookie và trong bộ nhớ của trình duyệt, và giữ nội dung được tìm kiếm, không kèm mã định danh, trong 30 ngày. Cloudflare, đứng trước các trang web, thấy mọi yêu cầu. Để biết danh sách đầy đủ và chi tiết, xem trang [Quyền riêng tư](/vi/privacy/).
 
 ### Learn: đồng bộ tiến độ của bạn với Google Drive
 
