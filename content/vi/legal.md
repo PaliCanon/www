@@ -11,7 +11,7 @@ palicanon.app do Thibault Rivière xuất bản, cho dự án PaliCanon, một d
 
 ## Lưu trữ
 
-Trang web được phục vụ từ một máy chủ do chính đơn vị xuất bản vận hành, đứng sau Cloudflare, Inc. (Hoa Kỳ), bên cung cấp tên miền, proxy mạng và đường hầm đến máy chủ đó.
+Trang web được phục vụ từ một máy chủ do chính đơn vị xuất bản vận hành, đặt tại Pháp, đứng sau Cloudflare, Inc. (Hoa Kỳ), bên cung cấp tên miền, proxy mạng và đường hầm đến máy chủ đó.
 
 ## Quyền riêng tư
 

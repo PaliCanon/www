@@ -45,6 +45,20 @@ describe('the legal pages agree with each other and with the facts', () => {
     expect(text).toMatch(/30 (days|jours|ngày)/);
   });
 
+  it.each(LANGS)('the IP addresses are deleted after 90 days, not kept forever (%s)', (lang) => {
+    const text = page(lang, 'privacy');
+    expect(text).toMatch(/90 (days|jours|ngày)/);
+    expect(text).not.toMatch(
+      /copy, without time limit|l’éditeur, sans limite|bản sao của đơn vị xuất bản được giữ vô thời hạn/,
+    );
+  });
+
+  it.each(LANGS)('legal and privacy say the server is in France (%s)', (lang) => {
+    for (const name of ['legal', 'privacy']) {
+      expect(page(lang, name)).toMatch(/in France|en France|tại Pháp/);
+    }
+  });
+
   it.each(LANGS)('no page names Google Cloud or cloud hosting (%s)', (lang) => {
     for (const name of ['legal', 'privacy', 'support']) {
       expect(page(lang, name)).not.toMatch(/google cloud|cloud hosting|hébergement cloud|đám mây/i);

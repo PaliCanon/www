@@ -11,7 +11,7 @@ palicanon.app est publié par Thibault Rivière, pour le projet PaliCanon, un pr
 
 ## Hébergement
 
-Le site est servi depuis un serveur exploité par l’éditeur lui-même, derrière Cloudflare, Inc. (États-Unis), qui fournit le nom de domaine, le proxy réseau et le tunnel vers ce serveur.
+Le site est servi depuis un serveur exploité par l’éditeur lui-même, situé en France, derrière Cloudflare, Inc. (États-Unis), qui fournit le nom de domaine, le proxy réseau et le tunnel vers ce serveur.
 
 ## Vie privée
 

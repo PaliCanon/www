@@ -11,7 +11,7 @@ palicanon.app is published by Thibault Rivière, for the PaliCanon project, a fr
 
 ## Hosting
 
-The site is served from a server operated by the publisher himself, behind Cloudflare, Inc. (USA), which provides the domain name, the network proxy and the tunnel to that server.
+The site is served from a server operated by the publisher himself, located in France, behind Cloudflare, Inc. (USA), which provides the domain name, the network proxy and the tunnel to that server.
 
 ## Privacy
 
