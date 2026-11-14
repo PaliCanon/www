@@ -53,6 +53,14 @@ describe('the legal pages agree with each other and with the facts', () => {
     );
   });
 
+  it.each(LANGS)('no page describes how the server is reached (%s)', (lang) => {
+    const detail =
+      /tunnel|đường hầm|operated by the publisher|exploité par l’éditeur|do chính đơn vị xuất bản vận hành/i;
+    for (const name of ['legal', 'privacy', 'support', 'terms']) {
+      expect(page(lang, name)).not.toMatch(detail);
+    }
+  });
+
   it.each(LANGS)('legal and privacy say the server is in France (%s)', (lang) => {
     for (const name of ['legal', 'privacy']) {
       expect(page(lang, name)).toMatch(/in France|en France|tại Pháp/);

@@ -11,11 +11,11 @@ palicanon.app est publié par Thibault Rivière, pour le projet PaliCanon, un pr
 
 ## Hébergement
 
-Le site est servi depuis un serveur exploité par l’éditeur lui-même, situé en France, derrière Cloudflare, Inc. (États-Unis), qui fournit le nom de domaine, le proxy réseau et le tunnel vers ce serveur.
+Le site est hébergé en France, dans l’Union européenne. Cloudflare, Inc. (États-Unis) fournit le nom de domaine et la protection réseau placée devant lui.
 
 ## Vie privée
 
-PaliCanon n’a pas de comptes, ni publicité, ni pistage par des tiers. Les sites gardent quelques préférences (langue, thème, …) dans des cookies et dans le stockage de votre navigateur, et conservent 30 jours ce qui est recherché, sans aucun identifiant. Cloudflare, qui se trouve devant les sites, voit chaque requête. Pour la liste complète et le détail, voir la page [Confidentialité](/fr/privacy/).
+PaliCanon respecte le RGPD. Il n’a pas de comptes, ni publicité, ni pistage par des tiers. Les sites gardent quelques préférences (langue, thème, …) dans des cookies et dans le stockage de votre navigateur, et conservent 30 jours ce qui est recherché, sans aucun identifiant. Cloudflare, qui se trouve devant les sites, voit chaque requête. Pour la liste complète et le détail, voir la page [Confidentialité](/fr/privacy/).
 
 ### Learn : synchroniser sa progression avec Google Drive
 
