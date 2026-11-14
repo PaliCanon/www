@@ -56,6 +56,27 @@ describe('the chrome strings', () => {
     expect(STRINGS.vi.back).toBe('Về trang chủ');
   });
 
+  it('name the footer links as the search did (task 017)', () => {
+    expect(STRINGS.en.footer).toEqual({
+      acknowledgements: 'Acknowledgements',
+      terms: 'Terms',
+      privacy: 'Privacy',
+      support: 'Support',
+    });
+    expect(STRINGS.fr.footer).toEqual({
+      acknowledgements: 'Crédits',
+      terms: 'Conditions',
+      privacy: 'Confidentialité',
+      support: 'Soutenir',
+    });
+    expect(STRINGS.vi.footer).toEqual({
+      acknowledgements: 'Tri ân',
+      terms: 'Điều khoản',
+      privacy: 'Quyền riêng tư',
+      support: 'Ủng hộ',
+    });
+  });
+
   it('link the services to https sites', () => {
     for (const href of Object.values(SERVICE_LINKS)) expect(href).toMatch(/^https:\/\//);
     expect(SERVICE_LINKS.viz).toBe('https://map.palicanon.app');

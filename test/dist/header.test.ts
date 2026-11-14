@@ -107,11 +107,11 @@ describe('the back link of every page but the home', () => {
 describe('the footer of every page', () => {
   for (const file of htmlFiles()) {
     const { lang } = pageOf(file);
-    it(`${file}: the wordmark and the legal notice, its one link`, () => {
+    it(`${file}: the wordmark and the legal notice, its first link (the pages follow: footer.test.ts)`, () => {
       const footer = between(read(file), /<footer\b/, '</footer>');
       expect(footer).toContain('>PaliCanon<');
       const links = [...footer.matchAll(/<a\b[^>]*>([^<]*)<\/a>/g)];
-      expect(links).toHaveLength(1);
+      expect(links).toHaveLength(5);
       expect(links[0][0]).toContain(`href="${pagePath(lang, 'legal')}"`);
       expect(links[0][1].trim()).toBe(STRINGS[lang].legal);
       expect(footer).not.toContain('hreflang');

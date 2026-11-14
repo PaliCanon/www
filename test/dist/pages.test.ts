@@ -51,11 +51,14 @@ describe('every page', () => {
 
 // T1: a drawing sits beside every masthead (PAGE_DRAWINGS, Base.astro), the
 // 404's lotus included. Not on these: a home opens with its own lotus and has
-// no masthead, and a legal page is plain by design (no drawing).
+// no masthead, and a legal page (legal, acknowledgements, terms, privacy) is
+// plain by design (no drawing).
 const DRAWING = /<svg\b[^>]*class="[^"]*\bmasthead__drawing\b/;
 const NO_DRAWING = [
   ...LANGS.map((lang) => fileOf(pagePath(lang, 'index'))),
-  ...LANGS.map((lang) => fileOf(pagePath(lang, 'legal'))),
+  ...LANGS.flatMap((lang) =>
+    ['legal', 'acknowledgements', 'terms', 'privacy'].map((key) => fileOf(pagePath(lang, key))),
+  ),
 ];
 
 describe('a drawing beside every masthead but the legal pages', () => {

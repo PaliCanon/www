@@ -4,12 +4,10 @@
 # unknown path (404), and one /_astro/ asset found in the home page, each
 # with the headers of public/_headers. `noindex` (dev) requires
 # X-Robots-Tag: noindex on every response, `index` (prod) refuses it.
-# Both forms check the old site's URLs (task 006): /terms, /privacy and
-# /acknowledgements answer 301 to the same path on search.palicanon.app,
-# and their redirects, followed (at most 5), end at a 200 on that host.
-# `index` also checks the rest of the cutover: /support and /legal end at
-# a 200 on exactly <origin>/support/ and <origin>/legal/ once redirects are
-# followed, www.<host>/x?a=1 is a 301 to <host>/x?a=1, /daily.json is a 404, and the
+# Both forms check the old site's pages (tasks 006 and 017), which live on
+# this host: /acknowledgements, /terms, /privacy, /support and /legal end at
+# a 200 on exactly <origin>/<page>/ once redirects are followed (at most 5).
+# `index` also checks the rest of the cutover: www.<host>/x?a=1 is a 301 to <host>/x?a=1, /daily.json is a 404, and the
 # IndexNow key file is served unchanged (the bytes of
 # public/ea61cff5ec8386a25c60f8d2ea079010.txt).
 # Every failure is listed; the exit code is 1 if there was one.
@@ -141,23 +139,6 @@ is_301() {
   got=$(header location)
 }
 
-# moved <path>: a 301 to the search, same path, whose redirects end at a
-# 200 on the search's host.
-moved() {
-  is_301 "$1" "$1" || return 0
-  if [ "$got" != "$search$1" ]; then
-    fail "$1: location is '$got' (want '$search$1')"
-    return 0
-  fi
-  fetch_final "$1"
-  if [ "$status" != 200 ]; then
-    fail "$1: redirect target answers $status (want 200)"
-  elif [[ $final != "$search"/* ]]; then
-    fail "$1: ends at $final (want $search$1)"
-  fi
-}
-
-
 # www_to_apex: www.<host>/x?a=1 is a 301 to <host>/x?a=1, path and query kept.
 www_to_apex() {
   local www=${origin/\/\//\/\/www.}
@@ -192,10 +173,8 @@ key() {
   fi
 }
 
-search=https://search.palicanon.app
-for old in /acknowledgements /terms /privacy; do moved "$old"; done
+for page in /acknowledgements /terms /privacy /support /legal; do stays "$page"; done
 if [ "$robots" = index ]; then
-  for page in /support /legal; do stays "$page"; done
   www_to_apex
   gone /daily.json
   key

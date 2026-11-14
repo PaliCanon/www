@@ -167,18 +167,18 @@ deploys a Worker. Prod is the container (below): a `v*` tag builds the image
 (`.github/workflows/deploy.yml`, job `image`, pushed to `ghcr.io/palicanon/www`), which is deployed by digest in
 `Lsh0x/lsh-tech`, `stacks/palicanon/prod`, on ssh.lsh.tech. Nothing in the
 workflow checks https://palicanon.app, since the server is updated after it:
-run the `index` form by hand after that deploy (no noindex, and `/support`
-and `/legal` end at a 200 on exactly their slash form (`/support/`,
-`/legal/`), `www.` is a 301 to the apex, `/daily.json` is a 404, the IndexNow
-key is served unchanged). Both forms check that `/acknowledgements`, `/terms`
-and `/privacy` answer 301 to search.palicanon.app and that the redirects,
-followed (at most 5), end at a 200 on that host. The response headers are
+run the `index` form by hand after that deploy (no noindex, `www.` is a 301
+to the apex, `/daily.json` is a 404, the IndexNow key is served unchanged).
+Both forms check that `/acknowledgements`, `/terms`, `/privacy`, `/support`
+and `/legal` end at a 200 on exactly their slash form (`/terms/`, ...) on
+this host, redirects followed (at most 5). The response headers are
 `public/_headers`. `infra/` (tofu, applied by hand: `infra/README.md`) holds
 only the `www.palicanon.app` placeholder record.
 
-`public/_redirects` sends the old site's `/acknowledgements`, `/terms` and
-`/privacy` to https://search.palicanon.app (301, absolute targets, both
-slash forms); `/support` and `/legal` are pages here. The home ignores `?q=`;
+`public/_redirects` holds no rule: no old URL leaves the host. The old
+site's `/acknowledgements`, `/terms`, `/privacy`, `/support` and `/legal` are
+pages here, in en, fr and vi (`/privacy/`, `/fr/privacy/`, `/vi/privacy/`),
+linked from the footer. The home ignores `?q=`;
 `www` is a zone ruleset in `Lsh0x/palicanon`.
 `public/ea61cff5ec8386a25c60f8d2ea079010.txt` is the old site's IndexNow
 key, carried over unchanged so the search engines keep trusting the host.
