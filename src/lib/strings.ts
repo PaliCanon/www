@@ -21,6 +21,9 @@ export interface Strings {
   /** The gold button under a home scene's text, to the scene's page (user check 9). */
   sceneButton: Record<HomeSection, string>;
   legal: string;
+  /** The footer's links to the old site's pages (task 017), and the name of their navigation. */
+  footer: { acknowledgements: string; terms: string; privacy: string; support: string };
+  footerNav: string;
   blogTitle: string;
   blogDescription: string;
   blogEmpty: string;
@@ -58,6 +61,13 @@ export const STRINGS: Record<Lang, Strings> = {
       learn: 'Discover Learn Pāli',
     },
     legal: 'Legal notice',
+    footer: {
+      acknowledgements: 'Acknowledgements',
+      terms: 'Terms',
+      privacy: 'Privacy',
+      support: 'Support',
+    },
+    footerNav: 'Legal and support',
     blogTitle: 'Blog',
     blogDescription: 'News and guides from PaliCanon.',
     blogEmpty: 'No post yet.',
@@ -86,6 +96,13 @@ export const STRINGS: Record<Lang, Strings> = {
       learn: 'Découvrir Apprendre le pāli',
     },
     legal: 'Mentions légales',
+    footer: {
+      acknowledgements: 'Crédits',
+      terms: 'Conditions',
+      privacy: 'Confidentialité',
+      support: 'Soutenir',
+    },
+    footerNav: 'Informations légales et soutien',
     blogTitle: 'Blog',
     blogDescription: 'Les nouvelles et les guides de PaliCanon.',
     blogEmpty: 'Aucun article pour le moment.',
@@ -114,6 +131,13 @@ export const STRINGS: Record<Lang, Strings> = {
       learn: 'Khám phá Học Pāli',
     },
     legal: 'Thông tin pháp lý',
+    footer: {
+      acknowledgements: 'Tri ân',
+      terms: 'Điều khoản',
+      privacy: 'Quyền riêng tư',
+      support: 'Ủng hộ',
+    },
+    footerNav: 'Thông tin pháp lý và ủng hộ',
     blogTitle: 'Blog',
     blogDescription: 'Tin tức và hướng dẫn từ PaliCanon.',
     blogEmpty: 'Chưa có bài viết nào.',

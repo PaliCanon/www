@@ -8,7 +8,7 @@ export type Lang = (typeof LANGS)[number];
 export const DEFAULT_LANG: Lang = 'en';
 
 /**
- * The eight pages that exist in every language: `content/<lang>/<page>.md`.
+ * The eleven pages that exist in every language: `content/<lang>/<page>.md`.
  * `index` is the home page's opening.
  */
 export const MAIN_PAGES = [
@@ -20,6 +20,9 @@ export const MAIN_PAGES = [
   'about',
   'support',
   'legal',
+  'acknowledgements',
+  'terms',
+  'privacy',
 ] as const;
 
 /** One of the {@link MAIN_PAGES}. */

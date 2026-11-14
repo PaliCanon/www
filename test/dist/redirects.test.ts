@@ -1,17 +1,16 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { LANGS } from '../../src/lib/languages';
+import { pagePath } from '../../src/lib/url';
 import { exists, read } from './helpers';
 
-// N4, task 006: the old site's URLs that now live on the search. Workers
-// static assets read dist/_redirects; the showcase serves /support/ and
-// /legal/ itself, so no rule sends them away. Design v4's N4 wording:
-// "/support and /legal keep html_handling's 307 to their slash form
-// (same-host normalisation, like every page); N4's 301 rule is for paths that
-// leave the host".
-const SEARCH = 'https://search.palicanon.app';
-const PATHS = ['acknowledgements', 'terms', 'privacy'];
+// N4, task 006, changed by task 017: palicanon.app is canonical for the old
+// site's pages (acknowledgements, terms, privacy, support, legal), so no rule
+// of dist/_redirects leaves the host any more. Workers static assets read
+// dist/_redirects; the pages are files of dist.
 const KEY = 'ea61cff5ec8386a25c60f8d2ea079010.txt';
+const PAGES = ['acknowledgements', 'terms', 'privacy', 'support', 'legal'];
 
 interface Rule {
   from: string;
@@ -29,32 +28,38 @@ const rules: Rule[] = exists('_redirects')
       })
   : [];
 
-describe('dist/_redirects: the old URLs go to the search', () => {
-  it('holds exactly one 301 per old URL and slash form, and nothing else', () => {
-    const expected = PATHS.flatMap((path) => [
-      { from: `/${path}`, to: `${SEARCH}/${path}`, status: '301' },
-      { from: `/${path}/`, to: `${SEARCH}/${path}`, status: '301' },
-    ]);
-    expect(rules).toEqual(expected);
+describe('dist/_redirects: no old URL leaves the host', () => {
+  it('has no rule that sends a path to another host', () => {
+    expect(rules.filter((rule) => /^https?:\/\//.test(rule.to))).toEqual([]);
   });
 
-  it('every target is an absolute https URL', () => {
-    expect(rules.length).toBeGreaterThan(0);
-    for (const { to } of rules) expect(to).toMatch(/^https:\/\/[^/]+\//);
+  it('has no rule at all for the pages the site serves, in any language', () => {
+    for (const lang of LANGS) {
+      for (const key of PAGES) {
+        const path = pagePath(lang, key);
+        const bare = path.slice(0, -1);
+        expect(
+          rules.filter((rule) => rule.from === path || rule.from === bare),
+          path,
+        ).toEqual([]);
+      }
+    }
   });
 
-  it('no rule that leaves the host for a path the site serves', () => {
-    const leavesTheHost = (rule: Rule) => /^https?:\/\//.test(rule.to);
-    for (const served of ['/', '/support', '/support/', '/legal', '/legal/']) {
-      expect(
-        rules.filter((rule) => rule.from === served && leavesTheHost(rule)),
-        served,
-      ).toEqual([]);
-    }
-    for (const lang of ['fr', 'vi']) {
-      expect(rules.filter((rule) => rule.from.startsWith(`/${lang}`) && leavesTheHost(rule))).toEqual([]);
-    }
+  it('never mentions the search host', () => {
+    expect(exists('_redirects') ? read('_redirects') : '').not.toContain('search.palicanon.app');
   });
+});
+
+describe('the old pages are pages of dist, in every language', () => {
+  for (const lang of LANGS) {
+    for (const key of PAGES) {
+      const path = pagePath(lang, key);
+      it(`${path} is served as dist${path}index.html`, () => {
+        expect(exists(`${path.slice(1)}index.html`)).toBe(true);
+      });
+    }
+  }
 });
 
 describe('the IndexNow key of the old site', () => {

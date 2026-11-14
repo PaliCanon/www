@@ -15,7 +15,13 @@ import { effectiveHeaders, parseHeaders } from './headers-rules';
 // the redirects are exact locations.
 
 const headersText = readFileSync('public/_headers', 'utf8');
-const redirectsText = readFileSync('public/_redirects', 'utf8');
+// public/_redirects holds no rule since task 017 (no old URL leaves the host):
+// the parser and the renderer are tested on a sample of the old six lines.
+const redirectsText = ['acknowledgements', 'terms', 'privacy']
+  .flatMap((slug) =>
+    [`/${slug}`, `/${slug}/`].map((from) => `${from} https://elsewhere.test/${slug} 301`),
+  )
+  .join('\n');
 
 /** What the generated maps give a path: the table, read the way nginx reads the maps. */
 function served(text: string, pathname: string): Map<string, string> {
@@ -99,7 +105,7 @@ describe('renderHeaders: nginx directives', () => {
 });
 
 describe('redirects', () => {
-  it('parses the six lines of public/_redirects, both slash forms', () => {
+  it('parses a six-line file, both slash forms', () => {
     const redirects = parseRedirects(redirectsText);
     expect(redirects).toHaveLength(6);
     expect(redirects.map((r: { from: string }) => r.from)).toContain('/terms');
@@ -112,10 +118,18 @@ describe('redirects', () => {
     for (const slug of ['acknowledgements', 'terms', 'privacy']) {
       for (const from of [`/${slug}`, `/${slug}/`]) {
         expect(conf).toContain(
-          `location = ${from} {\n    return 301 https://search.palicanon.app/${slug};\n  }`,
+          `location = ${from} {\n    return 301 https://elsewhere.test/${slug};\n  }`,
         );
       }
     }
+  });
+
+  it('reads the real public/_redirects (comments only) and renders it to no location', () => {
+    const text = readFileSync('public/_redirects', 'utf8');
+    expect(parseRedirects(text)).toEqual([]);
+    expect(renderRedirects(text)).toBe('');
+    const out = renderConf('x\n#@MAPS@\n  #@HEADERS@\n  #@REDIRECTS@\ny\n', headersText, text);
+    expect(out).not.toMatch(/^\s*location\s/m);
   });
 
   it('defaults to 302 like Cloudflare, skips comments and blank lines', () => {

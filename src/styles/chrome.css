@@ -470,6 +470,13 @@ button.langs__button:hover {
   color: var(--display-ink);
 }
 
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 1.5rem;
+}
+
 .site-footer__legal {
   display: inline-block;
   padding: 0.625rem 0;

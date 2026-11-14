@@ -1,6 +1,7 @@
 ---
-// The footer: the PALICANON wordmark and the legal notice, under a thin
-// line; centred on a phone, in one row from md up.
+// The footer: the PALICANON wordmark, and under a thin line the legal notice
+// and the old site's pages (Acknowledgements, Terms, Privacy, Support) in the
+// page's language; centred on a phone, in one row from md up.
 import type { Lang } from '../lib/languages';
 import { STRINGS } from '../lib/strings';
 import { pagePath } from '../lib/url';
@@ -10,13 +11,22 @@ interface Props {
 }
 
 const { lang } = Astro.props;
+const t = STRINGS[lang];
+const pages = ['acknowledgements', 'terms', 'privacy', 'support'] as const;
 ---
 
 <footer class="site-footer">
   <div class="site-footer__inner">
     <p class="site-footer__brand">PaliCanon</p>
-    <a href={pagePath(lang, 'legal')} class="site-footer__legal">
-      {STRINGS[lang].legal}
-    </a>
+    <nav class="site-footer__links" aria-label={t.footerNav}>
+      <a href={pagePath(lang, 'legal')} class="site-footer__legal">
+        {t.legal}
+      </a>
+      {pages.map((key) => (
+        <a href={pagePath(lang, key)} class="site-footer__legal">
+          {t.footer[key]}
+        </a>
+      ))}
+    </nav>
   </div>
 </footer>

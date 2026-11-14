@@ -131,21 +131,18 @@ good_site() {
   respond missing 404 '<html>not found</html>' "${page[@]}"
   respond "$ASSET" 200 'body{}' 'content-type: text/css' "${SECURITY[@]}" \
     'cache-control: public, max-age=31536000, immutable' ${robots[@]+"${robots[@]}"}
-  # The old site's URLs (task 006): three move to the search (both forms).
+  # The old site's pages live here (task 017), both forms: each is a 307 to
+  # its slash form, then a 200 on this host.
   local old
-  for old in acknowledgements terms privacy; do
-    respond "/$old" 301 '' "location: $SEARCH/$old"
-    respond "search/$old" 200 '<html>the search</html>' "${SECURITY[@]}"
+  for old in acknowledgements terms privacy support legal; do
+    respond "/$old" 307 '' "location: /$old/"
+    respond "/$old/" 200 "$html" "${page[@]}"
   done
-  # The rest of the cutover (index form): two pages stay here, www goes to
-  # the apex, the old feed is gone, and the IndexNow key is served unchanged.
+  # The rest of the cutover (index form): www goes to the apex, the old feed
+  # is gone, and the IndexNow key is served unchanged.
   if [ "$1" = index ]; then
     respond 'www/x?a=1' 301 '' "location: $ORIGIN/x?a=1"
     respond "/$KEY" 200 "$(cat "$KEYFILE")" 'content-type: text/plain'
-    respond /support 307 '' 'location: /support/'
-    respond /support/ 200 "$html" "${page[@]}"
-    respond /legal 307 '' 'location: /legal/'
-    respond /legal/ 200 "$html" "${page[@]}"
   fi
 }
 
@@ -260,76 +257,28 @@ good_site index
 respond "$ASSET" 200 'body{}' "${SECURITY[@]}" 'cache-control: public, max-age=31536000, immutable' 'x-robots-tag: noindex'
 expect 'prod: an asset with x-robots-tag noindex fails' 1 "$ASSET: x-robots-tag is 'noindex'" -- "$ORIGIN" index
 
-# The old URLs (index form only, task 006): 301 to the search, same path.
-for old in acknowledgements terms privacy; do
-  good_site index
-  respond "/$old" 301 '' 'location: https://elsewhere.test/'
-  expect "prod: /$old redirecting elsewhere fails" 1 "/$old: location is 'https://elsewhere.test/'" -- "$ORIGIN" index
-
-  good_site index
-  respond "/$old" 301 ''
-  expect "prod: /$old with no location fails" 1 "/$old: location is ''" -- "$ORIGIN" index
-
-  good_site index
-  respond "/$old" 200 '<html>old page</html>' "${SECURITY[@]}"
-  expect "prod: /$old answering 200 fails" 1 "/$old: status 200 (want 301)" -- "$ORIGIN" index
-
-  good_site index
-  respond "/$old" 307 '' "location: $SEARCH/$old"
-  expect "prod: /$old with a 307 instead of a 301 fails" 1 "/$old: status 307 (want 301)" -- "$ORIGIN" index
-done
-
-# The pages that stay here end at 200 once the redirects are followed.
-for page in support legal; do
-  good_site index
-  respond "/$page/" 404 '<html>not found</html>'
-  expect "prod: /$page ending at 404 fails" 1 "/$page: ends at 404 (want 200)" -- "$ORIGIN" index
-
-  good_site index
-  respond "/$page" 301 '' "location: $SEARCH/$page"
-  respond "search/$page" 200 '<html>the search</html>' "${SECURITY[@]}"
-  expect "prod: /$page sent to the search fails" 1 "/$page: ends at $SEARCH/$page" -- "$ORIGIN" index
-
-  # Exactly its slash form, not any page of this host.
-  good_site index
-  respond "/$page" 307 '' "location: /$page/index.html"
-  respond "/$page/index.html" 200 "<html></html>"
-  expect "prod: /$page ending at /$page/index.html fails" 1 \
-    "/$page: ends at $ORIGIN/$page/index.html (want $ORIGIN/$page/)" -- "$ORIGIN" index
-done
-
-# A 301 is followed to a final 200 (both forms).
+# The old site's pages are pages of this host (task 017), both forms: each
+# ends at a 200 on exactly its slash form, never on the search.
 for form in index noindex; do
-  good_site $form
-  rm -r "$SITE/search_terms"
-  expect "$form: /terms redirecting to a 404 fails" 1 '/terms: redirect target answers 404' -- "$ORIGIN" $form
+  for page in acknowledgements terms privacy support legal; do
+    good_site $form
+    respond "/$page/" 404 '<html>not found</html>'
+    expect "$form: /$page ending at 404 fails" 1 "/$page: ends at 404 (want 200)" -- "$ORIGIN" $form
 
-  good_site $form
-  respond /terms 301 '' "location: $SEARCH/terms"
-  respond search/terms 301 '' "location: $SEARCH/terms"
-  expect "$form: /terms in a redirect loop fails" 1 '/terms: redirect target answers 000' -- "$ORIGIN" $form
-  expect "$form: /terms in a redirect loop stops after 5 redirects" 1 \
-    'Maximum (5) redirects followed' -- "$ORIGIN" $form
+    good_site $form
+    respond "/$page" 301 '' "location: $SEARCH/$page"
+    respond "search/$page" 200 '<html>the search</html>' "${SECURITY[@]}"
+    expect "$form: /$page sent to the search fails" 1 "/$page: ends at $SEARCH/$page" -- "$ORIGIN" $form
 
-  # The final 200 must be on the search's host (H1).
+    # Exactly its slash form, not any page of this host.
+    good_site $form
+    respond "/$page" 307 '' "location: /$page/index.html"
+    respond "/$page/index.html" 200 "<html></html>"
+    expect "$form: /$page ending at /$page/index.html fails" 1 \
+      "/$page: ends at $ORIGIN/$page/index.html (want $ORIGIN/$page/)" -- "$ORIGIN" $form
+  done
   good_site $form
-  respond search/terms 301 '' 'location: https://elsewhere.test/terms'
-  respond elsewhere.test/terms 200 '<html>elsewhere</html>'
-  expect "$form: /terms ending at 200 on another host fails" 1 \
-    "/terms: ends at https://elsewhere.test/terms (want $SEARCH/terms)" -- "$ORIGIN" $form
-
-  # Five redirects are within the cap: /terms, then four on the search (H2).
-  good_site $form
-  respond search/terms 301 '' "location: $SEARCH/hop2"
-  respond search/hop2 301 '' "location: $SEARCH/hop3"
-  respond search/hop3 301 '' "location: $SEARCH/hop4"
-  respond search/hop4 301 '' "location: $SEARCH/hop5"
-  respond search/hop5 200 '<html>the search</html>' "${SECURITY[@]}"
-  expect "$form: /terms after exactly 5 redirects passes" 0 "deploy-check: OK $ORIGIN" -- "$ORIGIN" $form
-
-  good_site $form
-  respond /privacy 200 '<html>old page</html>' "${SECURITY[@]}"
-  expect "$form: the old URLs are asserted" 1 '/privacy: status 200 (want 301)' -- "$ORIGIN" $form
+  expect "$form: the five old pages passing is OK" 0 "deploy-check: OK $ORIGIN" -- "$ORIGIN" $form
 done
 
 # A redirect loop on a page that stays also fails, curl stopped by the

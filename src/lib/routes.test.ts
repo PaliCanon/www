@@ -9,7 +9,7 @@ const find = (routes: ReturnType<typeof buildRoutes>, path: string) =>
 describe('buildRoutes', () => {
   it('makes a route per page, plus a blog index per language', () => {
     const routes = buildRoutes(pages, []);
-    expect(routes).toHaveLength(24 + 3);
+    expect(routes).toHaveLength(33 + 3);
     expect(routes.filter((r) => r.kind === 'blog-index').map((r) => r.path)).toEqual([
       '/blog/',
       '/fr/blog/',

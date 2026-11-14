@@ -6,11 +6,13 @@ const sections = LANGS.flatMap((l) => HOME_SECTIONS.map((s) => `${l}/home/${s}`)
 const all = [...LANGS.flatMap((l) => MAIN_PAGES.map((p) => `${l}/${p}`)), ...sections];
 
 describe('checkCompleteness', () => {
-  it('accepts the 8 main pages and the 4 home sections in en, fr and vi', () => {
-    expect(MAIN_PAGES).toHaveLength(8);
+  it('accepts the 11 main pages and the 4 home sections in en, fr and vi', () => {
+    expect(MAIN_PAGES).toHaveLength(11);
     expect(MAIN_PAGES).toContain('viz');
+    // task 017: the old site's pages are pages of this site
+    for (const page of ['acknowledgements', 'terms', 'privacy']) expect(MAIN_PAGES).toContain(page);
     expect(HOME_SECTIONS).toEqual(['teaching', 'search', 'viz', 'learn']);
-    expect(all).toHaveLength(36);
+    expect(all).toHaveLength(45);
     expect(checkCompleteness(all)).toEqual([]);
   });
 
