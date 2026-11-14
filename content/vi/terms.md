@@ -19,7 +19,7 @@ Sử dụng Dịch vụ nghĩa là chấp nhận các điều khoản này. Bạ
 
 ## 3. Kinh văn và sở hữu trí tuệ
 
-Các bài kinh thuộc phạm vi công cộng và từ điển theo giấy phép CC BY-NC 4.0, như được nêu chi tiết trong [Tri ân](/vi/acknowledgements/). Bản thân Dịch vụ — công cụ tìm kiếm, giao diện, chỉ mục và tên gọi — là tài sản của Bên phát hành. Bạn được dùng Dịch vụ để tra cứu cá nhân, phi thương mại. Việc trích xuất hàng loạt kết quả bằng phương tiện tự động, sao chép Dịch vụ, hoặc sử dụng API của Dịch vụ bên ngoài trang web công khai đều cần có sự cho phép trước bằng văn bản của Bên phát hành.
+Các bản dịch tiếng Anh và văn bản Pāli của các bài kinh thuộc phạm vi công cộng, các bản dịch khác vẫn thuộc về dịch giả của chúng, và từ điển theo giấy phép CC BY-NC 4.0, như được nêu chi tiết trong [Tri ân](/vi/acknowledgements/). Bản thân Dịch vụ — công cụ tìm kiếm, giao diện, chỉ mục và tên gọi — là tài sản của Bên phát hành. Bạn được dùng Dịch vụ để tra cứu cá nhân, phi thương mại. Việc trích xuất hàng loạt kết quả bằng phương tiện tự động, sao chép Dịch vụ, hoặc sử dụng API của Dịch vụ bên ngoài trang web công khai đều cần có sự cho phép trước bằng văn bản của Bên phát hành.
 
 ## 4. Tính sẵn có và trách nhiệm
 
@@ -31,4 +31,4 @@ Bạn đồng ý không làm gián đoạn Dịch vụ, không gửi lưu lượ
 
 Các điều khoản này chịu sự điều chỉnh của pháp luật nơi Bên phát hành cư trú, không ảnh hưởng đến các quy định bắt buộc về bảo vệ người tiêu dùng tại quốc gia của bạn. Bên phát hành có thể cập nhật các điều khoản; ngày ghi bên dưới là ngày của phiên bản hiện hành, và việc tiếp tục sử dụng sau khi có thay đổi được xem là chấp nhận thay đổi đó.
 
-*Cập nhật lần cuối: 2026-10-01.*
+*Cập nhật lần cuối: 2026-11-14.*

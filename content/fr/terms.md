@@ -19,7 +19,7 @@ Utiliser le Service vaut acceptation des présentes conditions. Vous pouvez cess
 
 ## 3. Textes et propriété intellectuelle
 
-Les suttas sont dans le domaine public et le dictionnaire est sous licence CC BY-NC 4.0, comme détaillé dans les [Remerciements](/fr/acknowledgements/). Le Service lui-même — son moteur de recherche, son interface, ses index et son nom — est la propriété de l’Éditeur. Vous pouvez l’utiliser pour une consultation personnelle et non commerciale. L’extraction automatisée en masse des résultats, la reproduction du Service ou l’utilisation de son API en dehors du site public nécessitent l’autorisation écrite préalable de l’Éditeur.
+Les traductions anglaises et le texte pāli des suttas sont dans le domaine public, les autres traductions restent à leurs traducteurs, et le dictionnaire est sous licence CC BY-NC 4.0, comme détaillé dans les [Remerciements](/fr/acknowledgements/). Le Service lui-même — son moteur de recherche, son interface, ses index et son nom — est la propriété de l’Éditeur. Vous pouvez l’utiliser pour une consultation personnelle et non commerciale. L’extraction automatisée en masse des résultats, la reproduction du Service ou l’utilisation de son API en dehors du site public nécessitent l’autorisation écrite préalable de l’Éditeur.
 
 ## 4. Disponibilité et responsabilité
 
@@ -31,4 +31,4 @@ Vous vous engagez à ne pas perturber le Service, à ne pas envoyer de trafic ab
 
 Les présentes conditions sont régies par le droit du lieu de résidence de l’Éditeur, sans préjudice des protections impératives accordées aux consommateurs par votre propre pays. L’Éditeur peut les mettre à jour ; la date ci-dessous est celle de la version en vigueur, et la poursuite de l’utilisation après une modification vaut acceptation de celle-ci.
 
-*Dernière mise à jour : 2026-10-01.*
+*Dernière mise à jour : 2026-11-14.*
