@@ -17,7 +17,7 @@ Using the Service means accepting these terms. You may stop using the Service at
 
 ## 3. Texts and intellectual property
 
-The suttas are in the public domain and the dictionary is under CC BY-NC 4.0, as detailed in [Acknowledgements](/acknowledgements/). The Service itself — its search engine, interface, indexes and name — is the property of the Publisher. You may use it for personal, non-commercial consultation. Automated bulk extraction of results, reproduction of the Service, or use of its API outside the public site requires the Publisher's prior written permission.
+The English translations and the Pāli text of the suttas are in the public domain, the other translations remain their translators’, and the dictionary is under CC BY-NC 4.0, as detailed in [Acknowledgements](/acknowledgements/). The Service itself — its search engine, interface, indexes and name — is the property of the Publisher. You may use it for personal, non-commercial consultation. Automated bulk extraction of results, reproduction of the Service, or use of its API outside the public site requires the Publisher's prior written permission.
 
 ## 4. Availability and liability
 
@@ -29,4 +29,4 @@ You agree not to disrupt the Service, to send abusive or automated traffic, or t
 
 These terms are governed by the law of the Publisher's place of residence, without prejudice to mandatory consumer protections of your own country. The Publisher may update them; the date below is that of the current version, and continued use after a change constitutes acceptance of it.
 
-*Last updated 2026-10-01.*
+*Last updated 2026-11-14.*
