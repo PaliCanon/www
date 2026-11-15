@@ -131,6 +131,12 @@ not installed locally. The local `infra/.terraform/` cache became untracked
 after upstream removed the infrastructure module; it is preserved and not
 part of this change.
 
+Hosted CI passed the container build and Lighthouse. The full-page axe pass
+identified low contrast during the opening copy's opacity animation and on
+blog-list dates inheriting the apps' light-theme subtle color. The opening
+now moves without fading its text or actions; subtle text uses the showcase's
+muted token. The accepted artwork, palette and final layout are unchanged.
+
 Review outcome: no merge-blocking issue found in the local diff review.
 The user's visual approval covers the final screenshots and selected map
 view. No broader architecture or unrelated dependency update was added.

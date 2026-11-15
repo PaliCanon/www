@@ -24,6 +24,7 @@ body.showcase {
   --ps-heading: var(--showcase-ink);
   --ps-ink: var(--showcase-text);
   --ps-muted: var(--showcase-muted);
+  --ps-subtle: var(--showcase-muted);
   --ps-gold-text: var(--showcase-gold);
   --hl: var(--showcase-gold);
   --hl-hover: #f3e0b6;
@@ -620,7 +621,6 @@ body.showcase {
   }
   @keyframes opening-arrive {
     from {
-      opacity: 0;
       transform: translateY(12px);
     }
   }
