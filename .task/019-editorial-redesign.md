@@ -1,6 +1,6 @@
 # 019 — Editorial showcase redesign
 
-status: review
+status: ready-to-merge
 rank: 2
 level: small
 
@@ -119,7 +119,26 @@ destinations are unchanged.
   masthead-presence checks now accept the decorative photograph as well as
   the drawings retained on informational pages.
 
-Checks ran with the available Node 26.8.1; the repository requests Node 24.21.
+Final merge checks ran with the repository's Node 24.21.0 after rebasing on
+`a7e3d228e646ae47f3f4f79aa2a98762a52e202f`; implementation revision
+`4a81b51192db91eda4c8af84f226aa9ae96e9ce1`. `npm ci`, full Prettier and
+ESLint, Astro check, unit coverage, fixture builds, the production build and
+generated-page tests passed. There are 368 unit tests after upstream removed
+the eight obsolete infrastructure tests. `npm audit --audit-level=high`
+passed; ten moderate tooling vulnerabilities remain in the existing
+dependency tree. Container and browser audits run in hosted CI; Docker is
+not installed locally. The local `infra/.terraform/` cache became untracked
+after upstream removed the infrastructure module; it is preserved and not
+part of this change.
+
+Review outcome: no merge-blocking issue found in the local diff review.
+The user's visual approval covers the final screenshots and selected map
+view. No broader architecture or unrelated dependency update was added.
+Retro: the user's screenshots established the approved composition; reuse
+the real product images, keep decoration separate, and inspect the served
+CSS after restarting Astro when visual changes appear stale.
+
+Earlier design checks used the available Node 26.8.1.
 The browser access host is unavailable (no browser surfaces), so visual
 desktop/mobile inspection and interactive browser validation remain unverified.
 Existing CSS tests encode parts of the previous presentation; they do not
