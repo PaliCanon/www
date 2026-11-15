@@ -13,11 +13,11 @@
 // - A slider opens on the middle card, `(n - 1) >> 1`: the third of five,
 //   the second of four, the first of two. Its previous and next buttons (only
 //   rendered with more than one card) appear, scroll by one card and the
-//   list's gap (read from the list's CSS once and again on resize; 16 when
-//   unstyled), and are disabled at the first and the last card (slider.ts),
-//   refreshed on scroll and on resize.
+//   list's gap (read from CSS again on resize; 16 when unstyled). Repeated
+//   sets on either side let buttons, keyboard and swipes loop continuously.
+//   When scrolling settles, recenter on the matching original card.
 
-import { buttonsState, middleOf } from '../lib/slider';
+import { buttonsState, loopIndex, middleOf } from '../lib/slider';
 
 const header = document.querySelector<HTMLElement>('.site-header');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -31,7 +31,7 @@ const mayHide = (bar: HTMLElement) =>
 
 function follow(): void {
   const y = scrollY;
-  if (header) {
+  if (header && !document.body.classList.contains('showcase')) {
     if (!glassByCss) header.toggleAttribute('data-scrolled', y > 4 * rem);
     if (y < lastY || y <= innerHeight) header.removeAttribute('data-hidden');
     else if (y > lastY && mayHide(header)) header.setAttribute('data-hidden', '');
@@ -49,42 +49,94 @@ for (const slider of document.querySelectorAll<HTMLElement>('[data-slider]')) {
   const card = cards[0];
   const buttons = slider.querySelectorAll<HTMLButtonElement>('[data-step]');
   const list = slider.querySelector<HTMLElement>('.slider__list');
+  if (!track || !list || !card) continue;
+  const count = cards.length;
+  const looping = count > 1;
+  // Decorative copies provide the same neighbours on both sides of a wrap.
+  // Keep only the original list items exposed to assistive technology.
+  const copies = () =>
+    Array.from(cards, (original) => {
+      const copy = original.cloneNode(true) as HTMLElement;
+      copy.setAttribute('aria-hidden', 'true');
+      copy.inert = true;
+      return copy;
+    });
+  if (looping) {
+    list.prepend(...copies());
+    list.append(...copies());
+  }
   /** The gap between cards, read from the list (slider.css --card-gap; 16 when unstyled). */
   const readGap = () => (list ? parseFloat(getComputedStyle(list).columnGap) || 16 : 16);
   let gap = readGap();
+  let cardWidth = card.getBoundingClientRect().width;
   /** One card's step: its width and the gap, read once and again on resize. */
-  const stepSize = () => (card?.offsetWidth ?? 0) + gap;
+  const stepSize = () => cardWidth + gap;
   /** The card in the centre now. */
-  const current = () => (track && stepSize() > 0 ? Math.round(track.scrollLeft / stepSize()) : 0);
-  /** Disables previous on the first card and next on the last. */
-  const refresh = () => {
-    const state = buttonsState(current(), cards.length);
-    for (const button of buttons) {
-      button.disabled = Number(button.dataset.step) < 0 ? !state.previous : !state.next;
-    }
+  const current = () => Math.round(track.scrollLeft / stepSize());
+  const central = (index: number) => (looping ? count + loopIndex(index, count) : 0);
+  let target = central(middleOf(count));
+  let moving = false;
+  let pointerDown = false;
+  let settleTimer: ReturnType<typeof setTimeout>;
+  /** Reset to the same photograph with identical neighbours, without animating. */
+  const settle = () => {
+    clearTimeout(settleTimer);
+    if (pointerDown) return;
+    target = central(current());
+    moving = false;
+    if (current() !== target) track.scrollTo({ left: target * stepSize(), behavior: 'instant' });
   };
-  // The middle card, `(n - 1) >> 1`: the third of five, the second of four,
-  // the first of two.
-  const middle = cards[middleOf(cards.length)];
-  if (track && middle) {
-    track.scrollLeft = middle.offsetLeft - (track.clientWidth - middle.offsetWidth) / 2;
-  }
+  const scheduleSettle = () => {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(settle, 180);
+  };
+  const move = (direction: number) => {
+    if (!looping) return;
+    clearTimeout(settleTimer);
+    if (!moving) settle();
+    target = Math.max(0, Math.min(count * 3 - 1, target + direction));
+    moving = true;
+    track.scrollTo({ left: target * stepSize(), behavior: reduced ? 'instant' : 'smooth' });
+    if (reduced) settle();
+  };
+  track.scrollTo({ left: target * stepSize(), behavior: 'instant' });
+  const state = buttonsState(count);
   for (const button of buttons) {
     button.hidden = false;
-    button.addEventListener('click', () => {
-      const step = Number(button.dataset.step) * stepSize();
-      track?.scrollBy({ left: step, behavior: reduced ? 'auto' : 'smooth' });
-    });
+    button.disabled = Number(button.dataset.step) < 0 ? !state.previous : !state.next;
+    button.addEventListener('click', () => move(Number(button.dataset.step)));
   }
-  refresh();
-  track?.addEventListener('scroll', refresh, { passive: true });
-  // A rotation changes the card width with no scroll event. The centre card
-  // is not recomputed: the reader's position is theirs.
+  track.addEventListener('keydown', (event) => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    move(event.key === 'ArrowLeft' ? -1 : 1);
+  });
+  track.addEventListener('pointerdown', () => {
+    pointerDown = true;
+    moving = false;
+    clearTimeout(settleTimer);
+  });
+  const release = () => {
+    if (!pointerDown) return;
+    pointerDown = false;
+    scheduleSettle();
+  };
+  addEventListener('pointerup', release, { passive: true });
+  addEventListener('pointercancel', release, { passive: true });
+  track.addEventListener('wheel', () => (moving = false), { passive: true });
+  // The timer also supports browsers without scrollend.
+  track.addEventListener('scroll', scheduleSettle, { passive: true });
+  track.addEventListener('scrollend', settle);
+  // Keep the same photograph after a rotation changes the card width.
   addEventListener(
     'resize',
     () => {
+      const index = current();
       gap = readGap();
-      refresh();
+      cardWidth = card.getBoundingClientRect().width;
+      target = central(index);
+      moving = false;
+      track.scrollTo({ left: target * stepSize(), behavior: 'instant' });
     },
     { passive: true },
   );

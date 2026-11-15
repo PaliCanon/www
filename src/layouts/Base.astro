@@ -6,20 +6,25 @@
 // masthead card (h1 and lede) and its text. A project page's closing
 // service link moves into its masthead as the gold pill (user check 12):
 // centred under the lede on a phone, from 48rem on the right, under the
-// drawing, level with the lede (page.css). A page with a slider (the
-// Tipiṭaka app's screenshots) shows it after its text (user check 8: the
+// drawing, level with the lede (page.css). Each project page shows its
+// screenshot slider after its text (user check 8: the
 // description first).
 import Drawing from '../components/Drawing.astro';
 import type { DrawingName } from '../components/drawings';
 import Footer from '../components/Footer.astro';
 import Head from '../components/Head.astro';
 import Header from '../components/Header.astro';
+import HeroVisual from '../components/HeroVisual.astro';
+import BotanicalVisual from '../components/BotanicalVisual.astro';
+import ExploreNav from '../components/ExploreNav.astro';
 import Slider from '../components/Slider.astro';
 import type { ScreensProject } from '../data/screens';
+import { PRODUCT_ARTWORK } from '../data/botanical';
 import type { Lang } from '../lib/languages';
 import { getEntry } from 'astro:content';
 import { SECTION_PAGES } from '../lib/home';
 import { STRINGS } from '../lib/strings';
+import { pagePath } from '../lib/url';
 import { dressTitle, splitClosingLink, splitHome, splitMasthead } from './split';
 import '../styles/global.css';
 
@@ -55,15 +60,21 @@ const PAGE_DRAWINGS: Record<string, DrawingName> = {
 const pageDrawing = PAGE_DRAWINGS[pageKey.split('/')[0]];
 /** A project page, one a home scene leads to: its service link shows as a pill in the masthead (chrome.css). */
 const projectPage = (Object.values(SECTION_PAGES) as string[]).includes(pageKey);
+const pageArtwork = projectPage ? PRODUCT_ARTWORK[pageKey as ScreensProject] : undefined;
 /** The pages with a slider of their project's screenshots, shown after the text. */
-const PAGE_SLIDERS: Record<string, ScreensProject> = { tipitaka: 'tipitaka' };
+const PAGE_SLIDERS: Record<string, ScreensProject> = {
+  tipitaka: 'tipitaka',
+  search: 'search',
+  viz: 'viz',
+  learn: 'learn',
+};
 const slider = PAGE_SLIDERS[pageKey];
 const body = projectPage ? splitClosingLink(page?.body ?? '') : { text: page?.body, link: '' };
 ---
 
 <html lang={lang}>
   <Head title={title} description={description} />
-  <body class:list={[home ? 'is-home' : 'is-page']}>
+  <body class:list={['showcase', home ? 'is-home' : 'is-page']}>
     <a href="#main" class="skip-link">
       {STRINGS[lang].skip}
     </a>
@@ -71,21 +82,37 @@ const body = projectPage ? splitClosingLink(page?.body ?? '') : { text: page?.bo
     {home ? (
       <main id="main" class="home">
         <div class="opening">
-          <Drawing name="lotus" class="opening__lotus" />
           <div class="opening__text">
             <Fragment set:html={home.opening} />
+            <div class="opening__actions">
+              <a href={pagePath(lang, 'search')} class="pill pill--gold">
+                {STRINGS[lang].sceneButton.search}
+              </a>
+              <a href={pagePath(lang, 'about')} class="opening__about">
+                {STRINGS[lang].nav.about}
+              </a>
+            </div>
           </div>
-          <Drawing name="lotus" class="opening__lotus opening__lotus--small" />
+          <HeroVisual />
         </div>
+        <ExploreNav lang={lang} />
         <Fragment set:html={home.sections} />
       </main>
     ) : (
       <main id="main" class="page">
-        <div class="masthead">
+        <div class="masthead" data-photographic={pageArtwork ? true : undefined}>
+          {pageArtwork && (
+            <BotanicalVisual
+              kind={pageArtwork}
+              class="masthead__art"
+              sizes="100vw"
+              loading="eager"
+            />
+          )}
           <div class="masthead__text">
             <Fragment set:html={page?.masthead} />
           </div>
-          {pageDrawing && <Drawing name={pageDrawing} class="masthead__drawing" />}
+          {pageDrawing && !pageArtwork && <Drawing name={pageDrawing} class="masthead__drawing" />}
           {body.link && (
             <div class="masthead__link">
               <Fragment set:html={body.link} />

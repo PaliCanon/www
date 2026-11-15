@@ -1,0 +1,31 @@
+---
+// Decorative photographic companions to the home lotus, never product imagery.
+import { Picture } from 'astro:assets';
+import { BOTANICAL_ART, type BotanicalKind } from '../data/botanical';
+
+interface Props {
+  kind: BotanicalKind;
+  class?: string;
+  sizes?: string;
+  loading?: 'eager' | 'lazy';
+}
+
+const {
+  kind,
+  class: className,
+  sizes = '(min-width: 64rem) 50vw, 100vw',
+  loading = 'lazy',
+} = Astro.props;
+---
+
+<div class:list={['botanical-art', className]} aria-hidden="true">
+  <Picture
+    src={BOTANICAL_ART[kind]}
+    formats={['avif', 'webp']}
+    fallbackFormat="webp"
+    widths={[480, 800, 1280]}
+    sizes={sizes}
+    alt=""
+    loading={loading}
+  />
+</div>

@@ -4,6 +4,6 @@ description: "Read, search and learn the Pāli Canon, the oldest Buddhist script
 highlight: "suffering"
 ---
 
-# PaliCanon, the end of suffering
+# PaliCanon, The end of suffering
 
 PaliCanon gathers free tools to read, search and learn the Pāli Canon, the oldest collection of the Buddha's teachings.

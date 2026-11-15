@@ -1,0 +1,31 @@
+---
+// Direct, translated entry points to the four tools, available without JS.
+import type { Lang } from '../lib/languages';
+import { STRINGS } from '../lib/strings';
+import { pagePath } from '../lib/url';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tools = ['tipitaka', 'search', 'viz', 'learn'] as const;
+const verbs = {
+  en: ['Read', 'Search', 'Explore', 'Learn'],
+  fr: ['Lire', 'Chercher', 'Explorer', 'Apprendre'],
+  vi: ['Đọc', 'Tìm kiếm', 'Khám phá', 'Học'],
+}[lang];
+---
+
+<nav class="explore-nav" aria-label="PaliCanon">
+  {tools.map((key, index) => (
+    <a href={pagePath(lang, key)}>
+      <span class="explore-nav__copy">
+        <span class="explore-nav__verb">{verbs[index]}</span>
+        <span class="explore-nav__name">{STRINGS[lang].nav[key]}</span>
+      </span>
+      <svg class="explore-nav__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M5 12h14m-5-5 5 5-5 5" />
+      </svg>
+    </a>
+  ))}
+</nav>

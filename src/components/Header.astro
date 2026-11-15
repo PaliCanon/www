@@ -1,6 +1,5 @@
 ---
-// The bar: the lotus and name link home at the left, the language toggle at
-// the right; no page links (each home scene leads to its page). Every page
+// The bar: the brand, project navigation and language toggle. Every page
 // but the home starts the bar with a round back link, a chevron to the
 // language's home (user check 14): a plain link, no history.back, so it
 // works with no JavaScript and from a page opened directly. The bar
@@ -22,6 +21,8 @@ interface Props {
 }
 
 const { lang, pageKey, available, back = false } = Astro.props;
+const links = ['tipitaka', 'search', 'viz', 'learn', 'about'] as const;
+const menuLabel = { en: 'Menu', fr: 'Menu', vi: 'Danh mục' }[lang];
 ---
 
 <header class="site-header">
@@ -47,6 +48,27 @@ const { lang, pageKey, available, back = false } = Astro.props;
       />
       <span class="brand__name">PaliCanon</span>
     </a>
+    <nav class="primary-nav" aria-label={menuLabel}>
+      {links.map((key) => (
+        <a href={pagePath(lang, key)} aria-current={pageKey === key ? 'page' : undefined}>
+          {STRINGS[lang].nav[key]}
+        </a>
+      ))}
+    </nav>
     <LanguageSwitch lang={lang} pageKey={pageKey} available={available} />
+    <details class="mobile-nav">
+      <summary aria-label={menuLabel}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </summary>
+      <nav aria-label={menuLabel}>
+        {links.map((key) => (
+          <a href={pagePath(lang, key)} aria-current={pageKey === key ? 'page' : undefined}>
+            {STRINGS[lang].nav[key]}
+          </a>
+        ))}
+      </nav>
+    </details>
   </div>
 </header>

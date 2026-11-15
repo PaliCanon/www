@@ -1,11 +1,11 @@
 ---
-// The visual of a home scene: a slider where the project has one (the
-// search's and the map's screenshots), otherwise the
-// section's line drawing, sticky beside the scene's text and traced as the
-// scene scrolls (motion.css).
+// Each home scene pairs one real product screenshot with its botanical
+// photograph. The full screenshot galleries live on the product pages.
 import type { HomeSection, Lang } from '../lib/languages';
-import Drawing from './Drawing.astro';
-import Slider from './Slider.astro';
+import { Picture } from 'astro:assets';
+import { CAPTIONS, SCREENS } from '../data/screens';
+import { PRODUCT_ARTWORK } from '../data/botanical';
+import BotanicalVisual from './BotanicalVisual.astro';
 
 interface Props {
   section: HomeSection;
@@ -13,16 +13,23 @@ interface Props {
 }
 
 const { section, lang } = Astro.props;
-const DRAWING = { teaching: 'leaves', learn: 'hand' } as const;
+const project = section === 'teaching' ? 'tipitaka' : section;
+const screenshot = { teaching: 1, search: 1, viz: 0, learn: 2 }[section];
 ---
 
 <div class="stage">
   <div class="stage__glow" aria-hidden="true"></div>
-  {section === 'search' || section === 'viz' ? (
-    <Slider project={section} lang={lang} />
-  ) : (
-    <div class="art">
-      <Drawing name={DRAWING[section]} class="art__drawing" />
+  <div class="reader-stage" data-project={project}>
+    <BotanicalVisual kind={PRODUCT_ARTWORK[project]} />
+    <div class="reader-stage__phone">
+      <Picture
+        src={SCREENS[project][screenshot]}
+        formats={['avif', 'webp']}
+        widths={[554]}
+        sizes="440px"
+        alt={CAPTIONS[project][lang][screenshot]}
+        loading="lazy"
+      />
     </div>
-  )}
+  </div>
 </div>

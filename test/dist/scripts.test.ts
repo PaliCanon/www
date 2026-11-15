@@ -36,8 +36,8 @@ describe('the motion fallback module is gone', () => {
 
 // R1 (review round 2): a slider's step reads the gap from its list
 // (slider.css --card-gap), never a copied 16; a rotation changes the card
-// width with no scroll event, so the ends' state refreshes on resize too.
-describe("the slider's step and ends' state", () => {
+// width with no scroll event, so the step refreshes on resize too.
+describe("the slider's responsive step", () => {
   const html = read('index.html');
   const src = /<script\b[^>]*\bsrc="\/([^"]*)"/.exec(html)?.[1] ?? '';
   const module = read(src);
@@ -61,7 +61,7 @@ describe("the slider's step and ends' state", () => {
     expect(slider).not.toMatch(/columnGap\)\s*\|\|\s*0\b/);
   });
 
-  it('refreshes the ends on resize', () => {
+  it('refreshes the step on resize', () => {
     expect(slider).toMatch(/addEventListener\([`"']resize[`"']/);
   });
 });

@@ -1,8 +1,8 @@
 /* A project's screenshots: tall cards in a native horizontal scroll that
    snaps each card to the centre. The centre card is in full colour, its
    neighbours smaller and grey (motion.css); round previous and next buttons
-   in dark glass sit at the sides once story.ts runs, each dimmed at its
-   end. */
+   in dark glass sit at the sides once story.ts runs, looping in both
+   directions. */
 
 .slider {
   --card-w: clamp(260px, 25vw, 480px);
@@ -119,7 +119,7 @@
   background: rgb(32 38 46 / 0.85);
 }
 
-/* The first card's previous, the last card's next (story.ts). */
+/* Defensive state for a slider with fewer than two cards (story.ts). */
 .slider__button:disabled {
   opacity: 0.4;
   cursor: default;
