@@ -61,7 +61,7 @@ describe('the sliders work with no JavaScript', () => {
         expect(scene).toContain('class="botanical-art" aria-hidden="true"');
         const caption = section === 'viz'
           ? CAPTIONS.viz[lang][0]
-          : CAPTIONS[project][lang][section === 'learn' ? 2 : 1];
+          : CAPTIONS[project][lang][{ teaching: 0, search: 1, learn: 2 }[section]];
         expect(scene).toContain(`alt="${caption}"`);
       }
     }

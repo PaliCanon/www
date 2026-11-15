@@ -1,11 +1,14 @@
 ---
 // Each home scene pairs one real product screenshot with its botanical
 // photograph. The full screenshot galleries live on the product pages.
+// The Tipiṭaka app's screenshots are store images (a phone on a table, with
+// copy): its scene shows the home screen cut out of the first one.
 import type { HomeSection, Lang } from '../lib/languages';
 import { Picture } from 'astro:assets';
 import { CAPTIONS, SCREENS } from '../data/screens';
 import { PRODUCT_ARTWORK } from '../data/botanical';
 import BotanicalVisual from './BotanicalVisual.astro';
+import tipitakaHome from '../assets/screens/tipitaka/home-screen.jpg';
 
 interface Props {
   section: HomeSection;
@@ -14,7 +17,8 @@ interface Props {
 
 const { section, lang } = Astro.props;
 const project = section === 'teaching' ? 'tipitaka' : section;
-const screenshot = { teaching: 1, search: 1, viz: 0, learn: 2 }[section];
+const screenshot = { teaching: 0, search: 1, viz: 0, learn: 2 }[section];
+const image = section === 'teaching' ? tipitakaHome : SCREENS[project][screenshot];
 ---
 
 <div class="stage">
@@ -23,7 +27,7 @@ const screenshot = { teaching: 1, search: 1, viz: 0, learn: 2 }[section];
     <BotanicalVisual kind={PRODUCT_ARTWORK[project]} />
     <div class="reader-stage__phone">
       <Picture
-        src={SCREENS[project][screenshot]}
+        src={image}
         formats={['avif', 'webp']}
         widths={[554]}
         sizes="440px"
