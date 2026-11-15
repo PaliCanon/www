@@ -89,7 +89,7 @@ describe('renderHeaders: nginx directives', () => {
 
   it('maps whether each rule matches, then each header over the combination', () => {
     expect(maps).toContain('map $uri $www_rule0 {');
-    expect(maps).toContain('map "$www_rule0$www_rule1" $www_header0 {');
+    expect(maps).toContain('map "$www_rule0$www_rule1$www_rule2$www_rule3" $www_header0 {');
     expect(maps).toContain('"~^/_astro/.*$"');
   });
 
@@ -99,7 +99,7 @@ describe('renderHeaders: nginx directives', () => {
   });
 
   it('takes every value from the file', () => {
-    expect(maps).toContain('"11" "public, max-age=31536000, immutable"');
+    expect(maps).toContain('"1100" "public, max-age=31536000, immutable"');
     expect(maps).toContain('"camera=(), microphone=(), geolocation=()"');
   });
 });
