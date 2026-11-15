@@ -46,13 +46,12 @@ describe(`the ${prod ? 'prod' : 'default'} build (${origin})`, () => {
     expect(read('robots.txt')).toMatch(/User-agent: \*\nAllow: \/\n/);
   });
 
-  it('is built with no noindex: dist/_headers sets no X-Robots-Tag, no page says noindex', () => {
-    const lines = read('_headers')
-      .split('\n')
-      .filter((line) => !line.trim().startsWith('#'));
-    expect(lines.join('\n').toLowerCase()).not.toContain('x-robots-tag');
+  it('is built with no noindex: only the crawler files carry X-Robots-Tag, no page says noindex', () => {
     const { rules } = parseHeaders(read('_headers'));
-    for (const path of PATHS) expect(effectiveHeaders(rules, path).has('x-robots-tag'), path).toBe(false);
+    const crawlerFiles = ['/sitemap.xml', '/robots.txt'];
+    for (const path of PATHS.filter((p) => !crawlerFiles.includes(p))) {
+      expect(effectiveHeaders(rules, path).has('x-robots-tag'), path).toBe(false);
+    }
     for (const file of pages) expect(headOf(file), file).not.toMatch(/<meta name="robots"[^>]*noindex/);
   });
 

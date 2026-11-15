@@ -50,6 +50,14 @@ describe('dist/_headers', () => {
   });
 });
 
+describe('the crawler files are read, never indexed as pages', () => {
+  for (const path of ['/sitemap.xml', '/robots.txt']) {
+    it(path, () => {
+      expect(headersOf(path).get('x-robots-tag')).toBe('noindex');
+    });
+  }
+});
+
 describe('every response carries the security headers', () => {
   for (const path of [...PAGES, `/_astro/${astroFiles[0]}`]) {
     it(path, () => {
