@@ -7,6 +7,7 @@
 @import './slider.css';
 @import './page.css';
 @import './motion.css';
+@import './showcase.css';
 
 /* Pages cross-fade (cross-document view transitions, no JavaScript); the bar
    and the masthead card carry their names across pages (chrome.css,

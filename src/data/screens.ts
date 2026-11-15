@@ -13,6 +13,11 @@ import vizCluster from '../assets/screens/viz/cluster.jpg';
 import vizMeaning from '../assets/screens/viz/meaning.jpg';
 import vizParallels from '../assets/screens/viz/parallels.jpg';
 import vizPhone from '../assets/screens/viz/phone.jpg';
+import learnHome from '../assets/screens/learn/home.jpg';
+import learnTerms from '../assets/screens/learn/terms.jpg';
+import learnMeaning from '../assets/screens/learn/meaning.jpg';
+import learnAnswer from '../assets/screens/learn/answer.jpg';
+import learnRecall from '../assets/screens/learn/recall.jpg';
 import type { Lang } from '../lib/languages';
 
 /**
@@ -22,17 +27,42 @@ import type { Lang } from '../lib/languages';
  * (`app/public/support/`, `app/src/pages/content_{en,fr,vi}.rs`, the
  * SearchBlock and AppBlock alts), copied at search-front 6d370b4. The map's
  * (user check 11) were captured from the map run locally, 2026-10-16, and
- * scaled to 554 x 1200 like the others.
+ * scaled to 554 x 1200 like the others. Learn's screenshots and translated
+ * captions were copied from search-front's support page at 95e1f44.
  */
-export type ScreensProject = 'search' | 'tipitaka' | 'viz';
+export type ScreensProject = 'search' | 'tipitaka' | 'viz' | 'learn';
 
 export const SCREENS: Record<ScreensProject, ImageMetadata[]> = {
   search: [searchHome, searchResults, searchWords, searchFrench, searchDark],
   tipitaka: [appMain, appReader, appSearch, appGraph, appNotes],
   viz: [vizParallels, vizMeaning, vizCluster, vizPhone],
+  learn: [learnHome, learnTerms, learnMeaning, learnAnswer, learnRecall],
 };
 
 export const CAPTIONS: Record<ScreensProject, Record<Lang, string[]>> = {
+  learn: {
+    en: [
+      'The home of Learn Pāli',
+      'Adding new terms to the deck',
+      'A card asking the meaning of a Pāli word',
+      'The answer, with a line from a sutta',
+      'A sutta line with a word to find',
+    ],
+    fr: [
+      'L’accueil d’Apprendre le pāli',
+      'L’ajout de nouveaux termes au jeu',
+      'Une carte qui demande le sens d’un mot pāli',
+      'La réponse, avec une ligne d’un sutta',
+      'Une ligne de sutta dont il faut retrouver un mot',
+    ],
+    vi: [
+      'Trang chủ của phần học tiếng Pāli',
+      'Thêm từ mới vào bộ thẻ',
+      'Một thẻ hỏi nghĩa của một từ Pāli',
+      'Đáp án, kèm một dòng kinh',
+      'Một dòng kinh có từ cần tìm',
+    ],
+  },
   search: {
     en: [
       "The search's home",

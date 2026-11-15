@@ -49,11 +49,12 @@ describe('every page', () => {
   }
 });
 
-// T1: a drawing sits beside every masthead (PAGE_DRAWINGS, Base.astro), the
+// A photographic or drawn visual accompanies each masthead, the
 // 404's lotus included. Not on these: a home opens with its own lotus and has
 // no masthead, and a legal page (legal, acknowledgements, terms, privacy) is
 // plain by design (no drawing).
 const DRAWING = /<svg\b[^>]*class="[^"]*\bmasthead__drawing\b/;
+const PHOTOGRAPH = /<div class="botanical-art masthead__art" aria-hidden="true">/;
 const NO_DRAWING = [
   ...LANGS.map((lang) => fileOf(pagePath(lang, 'index'))),
   ...LANGS.flatMap((lang) =>
@@ -61,14 +62,15 @@ const NO_DRAWING = [
   ),
 ];
 
-describe('a drawing beside every masthead but the legal pages', () => {
+describe('a visual beside every masthead but the legal pages', () => {
   it('the exceptions are pages of dist', () => {
     for (const file of NO_DRAWING) expect(exists(file), file).toBe(true);
   });
 
   for (const file of htmlFiles().filter((f) => !NO_DRAWING.includes(f))) {
-    it(`${file}: has its masthead drawing`, () => {
-      expect(read(file)).toMatch(DRAWING);
+    it(`${file}: has its masthead visual`, () => {
+      const html = read(file);
+      expect(DRAWING.test(html) || PHOTOGRAPH.test(html)).toBe(true);
     });
   }
 

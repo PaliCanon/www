@@ -34,14 +34,19 @@ describe('the header of every page', () => {
     const header = between(html, /<header\b/, '</header>');
     const others = availableOf(key).filter((l) => l !== lang);
 
-    it(`${file}: the brand (after the back link, but on a home) and the language toggle only, no page links, no Menu pill`, () => {
+    it(`${file}: the brand, translated project navigation and language links`, () => {
       const links = anchors(header).filter((a) => !a.includes('class="back"'));
       expect(links[0]).toContain(`href="${pagePath(lang, 'index')}"`);
-      expect(links.slice(1).every((a) => a.includes('hreflang='))).toBe(true);
-      expect(links).toHaveLength(1 + others.length);
-      expect(header).not.toContain('popovertarget="menu"');
-      expect(header).not.toContain('id="menu"');
-      expect(header).not.toContain('aria-current="page"');
+      const languageLinks = links.filter((a) => a.includes('hreflang='));
+      expect(languageLinks).toHaveLength(others.length);
+      for (const target of ['tipitaka', 'search', 'viz', 'learn', 'about']) {
+        const navLinks = links.filter((a) => a.includes(`href="${pagePath(lang, target)}"`));
+        expect(navLinks, `${target} in desktop and mobile navigation`).toHaveLength(2);
+        for (const link of navLinks) {
+          expect(link.includes('aria-current="page"')).toBe(target === key);
+        }
+      }
+      expect(header).toContain('<details class="mobile-nav">');
     });
 
     it(`${file}: a toggle button showing ${LANGUAGE_NAMES[lang]}, opening the list of the others`, () => {
@@ -50,7 +55,7 @@ describe('the header of every page', () => {
       expect(button?.[2]).toMatch(new RegExp(`<span[^>]*lang="${lang}"[^>]*>${LANGUAGE_NAMES[lang]}</span>`));
       expect(button?.[2]).toContain(`>${t.language}`);
       expect(button?.[2]).toMatch(/<svg\b[^>]*aria-hidden="true"/);
-      const list = /<nav\b([^>]*)>([\s\S]*?)<\/nav>/.exec(header);
+      const list = /<nav\b([^>]*id="langs"[^>]*)>([\s\S]*?)<\/nav>/.exec(header);
       expect(list?.[1]).toContain('id="langs"');
       expect(list?.[1]).toMatch(/\spopover(\s|>|=|$)/);
       expect(list?.[1]).toContain(`aria-label="${t.language}"`);
@@ -121,7 +126,7 @@ describe('the footer of every page', () => {
 
 describe('the slider images', () => {
   for (const [lang, page] of [
-    ['en', 'index'],
+    ['en', 'search'],
     ['vi', 'tipitaka'],
   ] as const) {
     it(`${lang}/${page}: every card but the first loads lazily, each with its size`, () => {

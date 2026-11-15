@@ -112,7 +112,7 @@ describe('the teaching scene', () => {
 
 describe('the opening: "PaliCanon," on its own line (user check 4)', () => {
   const OPENINGS = {
-    en: 'the end of <mark>suffering</mark>',
+    en: 'The end of <mark>suffering</mark>',
     fr: 'la fin de la <mark>souffrance</mark>',
     vi: 'chấm dứt <mark>khổ đau</mark>',
   } as const;

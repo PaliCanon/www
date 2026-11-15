@@ -58,8 +58,12 @@ describe('the four project pages: the service link as the gold pill in the masth
     }
   }
 
-  it('/tipitaka/ keeps its slider, in every language', () => {
-    for (const lang of LANGS) expect(read(fileOf(lang, 'tipitaka'))).toContain('data-slider');
+  it('each project page has its screenshot gallery, in every language', () => {
+    for (const lang of LANGS) {
+      for (const page of Object.keys(SERVICES)) {
+        expect(read(fileOf(lang, page)).match(/data-slider/g)).toHaveLength(1);
+      }
+    }
   });
 
   it('no other page moves a link into its masthead (an inline link in a sentence stays a link)', () => {

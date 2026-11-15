@@ -4,7 +4,7 @@
 // focus), so it works with no JavaScript. The card in the centre is in full
 // colour, its neighbours smaller and grey (motion.css). With more than one
 // card, story.ts shows the previous and next buttons, makes them scroll by
-// one card and disables each at its end.
+// one card and loops from the last photograph to the first in both directions.
 import { Picture } from 'astro:assets';
 import { CAPTIONS, SCREENS, SLIDER_WORDS, type ScreensProject } from '../data/screens';
 import type { Lang } from '../lib/languages';

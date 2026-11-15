@@ -4,7 +4,7 @@ import { pagePath } from '../../src/lib/url';
 import { read } from './helpers';
 
 // User check 11: "Pour la map, tu peux faire des screenshots en carrousel
-// aussi ?" The map scene's slider shows four screenshots of the map, like
+// aussi ?" The map page's slider shows four screenshots of the map, like
 // the other projects (the two drawn cards of check 7 are gone).
 const CAPTIONS = {
   en: [
@@ -35,14 +35,14 @@ const WORDS = {
 const unescape = (html: string) =>
   html.replaceAll('&#39;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&');
 const sceneOf = (lang: (typeof LANGS)[number]) => {
-  const html = read(`${pagePath(lang, 'index').slice(1)}index.html`);
-  const start = html.indexOf('data-home-section="viz"');
-  return html.slice(start, html.indexOf('</section>', start));
+  const html = read(`${pagePath(lang, 'viz').slice(1)}index.html`);
+  const start = html.indexOf('data-slider');
+  return html.slice(start, html.indexOf('</main>', start));
 };
 const slidesOf = (scene: string) =>
   [...scene.matchAll(/<li class="slide">([\s\S]*?)<\/li>/g)].map((m) => m[1]);
 
-describe('the map scene: a slider of four screenshots (user check 11)', () => {
+describe('the map page: a slider of four screenshots', () => {
   for (const lang of LANGS) {
     describe(lang, () => {
       const scene = sceneOf(lang);

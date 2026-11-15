@@ -22,9 +22,10 @@ const sliderOf = (html: string) => {
 describe('the sliders work with no JavaScript', () => {
   for (const lang of LANGS) {
     for (const [project, page, where, section] of [
-      ['search', 'index', 'the home', 'search'],
-      ['viz', 'index', 'the home', 'viz'],
+      ['search', 'search', 'the search page', undefined],
+      ['viz', 'viz', 'the map page', undefined],
       ['tipitaka', 'tipitaka', 'the Tipiṭaka page', undefined],
+      ['learn', 'learn', 'the learning page', undefined],
     ] as const) {
       it(`${lang}, ${where}: a focusable named region of ${project} cards, each captioned`, () => {
         const html = scopeOf(read(fileOf(pagePath(lang, page))), section);
@@ -49,13 +50,20 @@ describe('the sliders work with no JavaScript', () => {
     }
   }
 
-  it('the search and the map have a slider; the teaching and learn keep their drawing', () => {
-    const html = read('index.html');
-    expect(html.match(/data-slider/g) ?? []).toHaveLength(2);
-    for (const section of ['search', 'viz']) expect(scopeOf(html, section)).toContain('data-slider');
-    for (const section of ['teaching', 'learn']) {
-      expect(scopeOf(html, section)).not.toContain('data-slider');
-      expect(scopeOf(html, section)).toContain('class="art"');
+  it('the home has four static product photographs and no carousel', () => {
+    for (const lang of LANGS) {
+      const html = read(fileOf(pagePath(lang, 'index')));
+      expect(html).not.toContain('data-slider');
+      for (const section of ['teaching', 'search', 'viz', 'learn'] as const) {
+        const scene = unescape(scopeOf(html, section));
+        const project = section === 'teaching' ? 'tipitaka' : section;
+        expect(scene).toContain('class="reader-stage__phone"');
+        expect(scene).toContain('class="botanical-art" aria-hidden="true"');
+        const caption = section === 'viz'
+          ? CAPTIONS.viz[lang][0]
+          : CAPTIONS[project][lang][section === 'learn' ? 2 : 1];
+        expect(scene).toContain(`alt="${caption}"`);
+      }
     }
   });
 });

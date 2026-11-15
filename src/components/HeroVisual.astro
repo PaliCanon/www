@@ -1,0 +1,17 @@
+---
+// Symbolic brand artwork; product screenshots remain in the tool sections.
+import { Picture } from 'astro:assets';
+import lotusPond from '../assets/lotus-pond-v2.png';
+---
+
+<div class="hero-art" aria-hidden="true">
+  <Picture
+    src={lotusPond}
+    formats={['avif', 'webp']}
+    widths={[640, 960, 1536]}
+    sizes="100vw"
+    alt=""
+    loading="eager"
+    fetchpriority="high"
+  />
+</div>
