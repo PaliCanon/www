@@ -172,8 +172,9 @@ to the apex, `/daily.json` is a 404, the IndexNow key is served unchanged).
 Both forms check that `/acknowledgements`, `/terms`, `/privacy`, `/support`
 and `/legal` end at a 200 on exactly their slash form (`/terms/`, ...) on
 this host, redirects followed (at most 5). The response headers are
-`public/_headers`. `infra/` (tofu, applied by hand: `infra/README.md`) holds
-only the `www.palicanon.app` placeholder record.
+`public/_headers`. The `www.palicanon.app` placeholder record and the
+www → apex redirect live with the rest of the zone in Lsh0x/lsh-tech
+(stack `palicanon/prod`).
 
 `public/_redirects` holds no rule: no old URL leaves the host. The old
 site's `/acknowledgements`, `/terms`, `/privacy`, `/support` and `/legal` are
