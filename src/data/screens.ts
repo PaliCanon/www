@@ -1,5 +1,5 @@
 import type { ImageMetadata } from 'astro';
-import searchDark from '../assets/screens/search/dark.jpg';
+import searchLight from '../assets/screens/search/light.jpg';
 import searchFrench from '../assets/screens/search/french.jpg';
 import searchHome from '../assets/screens/search/home.jpg';
 import searchResults from '../assets/screens/search/results.jpg';
@@ -23,17 +23,17 @@ import type { Lang } from '../lib/languages';
 /**
  * The screenshots of the services that have them, in the order of their
  * captions, and the slider's own words. Team-owned data, not the author's
- * copy: the images and the captions come from search-front's Support page
- * (`app/public/support/`, `app/src/pages/content_{en,fr,vi}.rs`, the
- * SearchBlock and AppBlock alts), copied at search-front 6d370b4. The map's
- * (user check 11) were captured from the map run locally, 2026-10-16, and
- * scaled to 554 x 1200 like the others. Learn's screenshots and translated
- * captions were copied from search-front's support page at 95e1f44.
+ * copy. Search v0.1.16, Map v0.2.10 and Learn v0.1.26 were captured from
+ * their production sites on 2026-11-15, at 390 × 844 CSS pixels / 2×.
+ * Learn uses a separate browser profile and real cards, with no fabricated
+ * progress. Dark is the primary theme; Search also shows its light theme.
+ * Tipiṭaka's original images remain from search-front 6d370b4's Support page
+ * (`app/public/support/` and the AppBlock alts in `content_{en,fr,vi}.rs`).
  */
 export type ScreensProject = 'search' | 'tipitaka' | 'viz' | 'learn';
 
 export const SCREENS: Record<ScreensProject, ImageMetadata[]> = {
-  search: [searchHome, searchResults, searchWords, searchFrench, searchDark],
+  search: [searchHome, searchResults, searchWords, searchFrench, searchLight],
   tipitaka: [appMain, appReader, appSearch, appGraph, appNotes],
   viz: [vizParallels, vizMeaning, vizCluster, vizPhone],
   learn: [learnHome, learnTerms, learnMeaning, learnAnswer, learnRecall],
@@ -69,21 +69,21 @@ export const CAPTIONS: Record<ScreensProject, Record<Lang, string[]>> = {
       'Results for a question',
       'Results by exact words',
       'A search in French',
-      'The dark theme',
+      'The light theme',
     ],
     fr: [
       'L’accueil de la recherche',
       'Résultats pour une question',
       'Résultats par mots exacts',
       'Une recherche en français',
-      'Le thème sombre',
+      'Le thème clair',
     ],
     vi: [
       'Trang chủ của công cụ tìm kiếm',
       'Kết quả cho một câu hỏi',
       'Kết quả theo từ chính xác',
       'Một lượt tìm bằng tiếng Pháp',
-      'Giao diện tối',
+      'Giao diện sáng',
     ],
   },
   tipitaka: {
@@ -113,19 +113,19 @@ export const CAPTIONS: Record<ScreensProject, Record<Lang, string[]>> = {
     en: [
       'The parallels view, after SuttaCentral',
       'The meaning view, by embeddings',
-      'A sutta and its closest neighbours',
+      'A sutta and its parallel passages',
       'The collections and the similarity threshold',
     ],
     fr: [
       'La vue des parallèles, d’après SuttaCentral',
       'La vue par le sens, par embeddings',
-      'Un sutta et ses plus proches voisins',
+      'Un sutta et ses passages parallèles',
       'Les collections et le seuil de similarité',
     ],
     vi: [
       'Cách nhìn theo kinh tương đương, theo SuttaCentral',
       'Cách nhìn theo ý nghĩa, bằng embeddings',
-      'Một bài kinh và những bài gần nhất',
+      'Một bài kinh và các đoạn kinh tương đương',
       'Các bộ kinh và ngưỡng tương đồng',
     ],
   },

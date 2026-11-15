@@ -10,19 +10,19 @@ const CAPTIONS = {
   en: [
     'The parallels view, after SuttaCentral',
     'The meaning view, by embeddings',
-    'A sutta and its closest neighbours',
+    'A sutta and its parallel passages',
     'The collections and the similarity threshold',
   ],
   fr: [
     'La vue des parallèles, d’après SuttaCentral',
     'La vue par le sens, par embeddings',
-    'Un sutta et ses plus proches voisins',
+    'Un sutta et ses passages parallèles',
     'Les collections et le seuil de similarité',
   ],
   vi: [
     'Cách nhìn theo kinh tương đương, theo SuttaCentral',
     'Cách nhìn theo ý nghĩa, bằng embeddings',
-    'Một bài kinh và những bài gần nhất',
+    'Một bài kinh và các đoạn kinh tương đương',
     'Các bộ kinh và ngưỡng tương đồng',
   ],
 } as const;
