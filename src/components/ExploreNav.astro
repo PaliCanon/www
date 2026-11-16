@@ -1,5 +1,5 @@
 ---
-// Direct, translated entry points to the four tools, available without JS.
+// Direct, translated entry points to the five tools, available without JS.
 import type { Lang } from '../lib/languages';
 import { STRINGS } from '../lib/strings';
 import { pagePath } from '../lib/url';
@@ -8,11 +8,11 @@ interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const tools = ['tipitaka', 'search', 'viz', 'learn'] as const;
+const tools = ['tipitaka', 'search', 'viz', 'learn', 'audio'] as const;
 const verbs = {
-  en: ['Read', 'Search', 'Explore', 'Learn'],
-  fr: ['Lire', 'Chercher', 'Explorer', 'Apprendre'],
-  vi: ['Đọc', 'Tìm kiếm', 'Khám phá', 'Học'],
+  en: ['Read', 'Search', 'Explore', 'Learn', 'Listen'],
+  fr: ['Lire', 'Chercher', 'Explorer', 'Apprendre', 'Écouter'],
+  vi: ['Đọc', 'Tìm kiếm', 'Khám phá', 'Học', 'Nghe'],
 }[lang];
 ---
 

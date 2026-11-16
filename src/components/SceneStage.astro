@@ -17,7 +17,8 @@ interface Props {
 
 const { section, lang } = Astro.props;
 const project = section === 'teaching' ? 'tipitaka' : section;
-const screenshot = { teaching: 0, search: 1, viz: 0, learn: 2 }[section];
+const screenshot = { teaching: 0, search: 1, viz: 0, learn: 2, audio: 0 }[section];
+// Audio has no screenshot yet: its scene is the botanical photograph alone.
 const image = section === 'teaching' ? tipitakaHome : SCREENS[project][screenshot];
 ---
 
@@ -25,15 +26,17 @@ const image = section === 'teaching' ? tipitakaHome : SCREENS[project][screensho
   <div class="stage__glow" aria-hidden="true"></div>
   <div class="reader-stage" data-project={project}>
     <BotanicalVisual kind={PRODUCT_ARTWORK[project]} />
-    <div class="reader-stage__phone">
-      <Picture
-        src={image}
-        formats={['avif', 'webp']}
-        widths={[554]}
-        sizes="440px"
-        alt={CAPTIONS[project][lang][screenshot]}
-        loading="lazy"
-      />
-    </div>
+    {image && (
+      <div class="reader-stage__phone">
+        <Picture
+          src={image}
+          formats={['avif', 'webp']}
+          widths={[554]}
+          sizes="440px"
+          alt={CAPTIONS[project][lang][screenshot]}
+          loading="lazy"
+        />
+      </div>
+    )}
   </div>
 </div>

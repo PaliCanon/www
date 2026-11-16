@@ -19,6 +19,10 @@ When PaliCanon is used in French or Vietnamese, sutta titles come from the trans
 
 Pāli word meanings come from the **Digital Pāḷi Dictionary** by Bhikkhu Bodhirasa, [digitalpalidictionary.github.io](https://digitalpalidictionary.github.io), licensed [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). PaliCanon is non-commercial and reproduces the entries unchanged; any further use of the dictionary data must respect that licence.
 
+## The voice
+
+The audio narrates Bhikkhu Sujato's English translation, published by [SuttaCentral](https://suttacentral.net) under the Creative Commons CC0 dedication (see above). The voice is synthetic, generated with **Chatterbox** by **Resemble AI**, which is released under the MIT licence.
+
 ## With gratitude
 
 To Bhikkhu Sujato, for translating the Sutta Piṭaka and giving it to everyone; to Bhikkhu Bodhirasa, for the dictionary; to the SuttaCentral team, for publishing and maintaining the texts; and to the Dhamma Society's Mahāsaṅgīti project, for the Pāli edition.

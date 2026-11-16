@@ -205,12 +205,13 @@ describe('a valid fixture site', () => {
     expect(htmlIn(out).length).toBeGreaterThan(30);
   });
 
-  it('shows the four sections on each home, in order, with the map page built', () => {
+  it('shows the five sections on each home, in order, with the map and audio pages built', () => {
     for (const home of ['index.html', 'fr/index.html', 'vi/index.html']) {
       const seen = [...html(home).matchAll(/data-home-section="([a-z]+)"/g)].map((m) => m[1]);
-      expect(seen).toEqual(['teaching', 'search', 'viz', 'learn']);
+      expect(seen).toEqual(['teaching', 'search', 'viz', 'learn', 'audio']);
     }
     expect(existsSync(join(out, 'viz/index.html'))).toBe(true);
+    expect(existsSync(join(out, 'audio/index.html'))).toBe(true);
     expect(html('index.html')).toContain('<mark>Viz</mark>');
     expect(html('index.html')).not.toContain('<mark>Learn');
   });

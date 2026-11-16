@@ -11,6 +11,7 @@ export interface Strings {
     search: string;
     viz: string;
     learn: string;
+    audio: string;
     tipitaka: string;
     about: string;
     support: string;
@@ -48,6 +49,7 @@ export const STRINGS: Record<Lang, Strings> = {
       search: 'Search',
       viz: 'Map',
       learn: 'Learn Pāli',
+      audio: 'Audio',
       tipitaka: 'Tipiṭaka app',
       about: 'About',
       support: 'Support',
@@ -59,6 +61,7 @@ export const STRINGS: Record<Lang, Strings> = {
       search: 'Discover the search',
       viz: 'Discover the map',
       learn: 'Discover Learn Pāli',
+      audio: 'Discover the audio',
     },
     legal: 'Legal notice',
     footer: {
@@ -83,6 +86,7 @@ export const STRINGS: Record<Lang, Strings> = {
       search: 'Recherche',
       viz: 'Carte',
       learn: 'Apprendre le pāli',
+      audio: 'Audio',
       tipitaka: 'Appli Tipiṭaka',
       about: 'À propos',
       support: 'Soutenir',
@@ -94,6 +98,7 @@ export const STRINGS: Record<Lang, Strings> = {
       search: 'Découvrir la recherche',
       viz: 'Découvrir la carte',
       learn: 'Découvrir Apprendre le pāli',
+      audio: "Découvrir l'audio",
     },
     legal: 'Mentions légales',
     footer: {
@@ -118,6 +123,7 @@ export const STRINGS: Record<Lang, Strings> = {
       search: 'Tìm kiếm',
       viz: 'Bản đồ',
       learn: 'Học Pāli',
+      audio: 'Âm thanh',
       tipitaka: 'Ứng dụng Tipiṭaka',
       about: 'Giới thiệu',
       support: 'Ủng hộ',
@@ -129,6 +135,7 @@ export const STRINGS: Record<Lang, Strings> = {
       search: 'Khám phá tìm kiếm',
       viz: 'Khám phá bản đồ',
       learn: 'Khám phá Học Pāli',
+      audio: 'Khám phá âm thanh',
     },
     legal: 'Thông tin pháp lý',
     footer: {
@@ -151,5 +158,6 @@ export const SERVICE_LINKS = {
   search: 'https://search.palicanon.app',
   viz: 'https://map.palicanon.app',
   learn: 'https://learn.palicanon.app',
+  audio: 'https://audio.palicanon.app',
   tipitaka: 'https://apps.apple.com/app/id6760995639',
 } as const;

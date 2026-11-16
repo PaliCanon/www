@@ -289,7 +289,7 @@ body.showcase {
 /* A compact typographic directory, with generous touch targets. */
 .explore-nav {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   width: calc(100% - 2 * var(--gutter));
   max-width: var(--showcase-width);
   margin: 0 auto;
@@ -476,6 +476,10 @@ body.showcase {
   border: 1px solid var(--showcase-line);
   border-radius: 0.75rem;
   background: var(--hero-ground);
+}
+/* A scene with no screenshot (Audio) is the photograph alone: give it a height. */
+.reader-stage:not(:has(.reader-stage__phone)) {
+  min-height: 28rem;
 }
 .reader-stage .botanical-art img {
   object-position: 75% center;

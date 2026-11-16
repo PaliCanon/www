@@ -39,7 +39,7 @@ describe('the header of every page', () => {
       expect(links[0]).toContain(`href="${pagePath(lang, 'index')}"`);
       const languageLinks = links.filter((a) => a.includes('hreflang='));
       expect(languageLinks).toHaveLength(others.length);
-      for (const target of ['tipitaka', 'search', 'viz', 'learn', 'about']) {
+      for (const target of ['tipitaka', 'search', 'viz', 'learn', 'audio', 'about']) {
         const navLinks = links.filter((a) => a.includes(`href="${pagePath(lang, target)}"`));
         expect(navLinks, `${target} in desktop and mobile navigation`).toHaveLength(2);
         for (const link of navLinks) {

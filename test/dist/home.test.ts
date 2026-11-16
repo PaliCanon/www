@@ -19,13 +19,13 @@ const unescape = (html: string) =>
 const homeOf = (lang: (typeof LANGS)[number]) =>
   read(`${pagePath(lang, 'index').slice(1)}index.html`);
 /** Each scene's own page, presenting the project with its link: the whole scene leads there (user check 6). */
-const PAGES = { teaching: 'tipitaka', search: 'search', viz: 'viz', learn: 'learn' } as const;
+const PAGES = { teaching: 'tipitaka', search: 'search', viz: 'viz', learn: 'learn', audio: 'audio' } as const;
 const READ_MORE = { en: 'read more', fr: 'en savoir plus', vi: 'xem thêm' } as const;
 /** The scene's gold button (user check 9), to the same page as its title. */
 const BUTTONS = {
-  en: { teaching: 'Discover the app', search: 'Discover the search', viz: 'Discover the map', learn: 'Discover Learn Pāli' },
-  fr: { teaching: "Découvrir l'app", search: 'Découvrir la recherche', viz: 'Découvrir la carte', learn: 'Découvrir Apprendre le pāli' },
-  vi: { teaching: 'Khám phá ứng dụng', search: 'Khám phá tìm kiếm', viz: 'Khám phá bản đồ', learn: 'Khám phá Học Pāli' },
+  en: { teaching: 'Discover the app', search: 'Discover the search', viz: 'Discover the map', learn: 'Discover Learn Pāli', audio: 'Discover the audio' },
+  fr: { teaching: "Découvrir l'app", search: 'Découvrir la recherche', viz: 'Découvrir la carte', learn: 'Découvrir Apprendre le pāli', audio: "Découvrir l'audio" },
+  vi: { teaching: 'Khám phá ứng dụng', search: 'Khám phá tìm kiếm', viz: 'Khám phá bản đồ', learn: 'Khám phá Học Pāli', audio: 'Khám phá âm thanh' },
 } as const;
 
 describe('the home page of each language', () => {
@@ -38,10 +38,10 @@ describe('the home page of each language', () => {
         expect(html.indexOf('<h1')).toBeLessThan(html.indexOf('data-home-section='));
       });
 
-      it('shows the four sections in the fixed order', () => {
+      it('shows the five sections in the fixed order', () => {
         const seen = [...html.matchAll(/data-home-section="([a-z]+)"/g)].map((m) => m[1]);
         expect(seen).toEqual([...HOME_SECTIONS]);
-        expect(seen).toEqual(['teaching', 'search', 'viz', 'learn']);
+        expect(seen).toEqual(['teaching', 'search', 'viz', 'learn', 'audio']);
       });
 
       for (const section of HOME_SECTIONS) {
@@ -94,6 +94,26 @@ describe('the home page of each language', () => {
           expect(block.indexOf('step--link')).toBeGreaterThan(block.indexOf('class="steps"'));
         });
       }
+    });
+  }
+});
+
+describe('the directory under the opening (explore-nav)', () => {
+  const VERBS = {
+    en: ['Read', 'Search', 'Explore', 'Learn', 'Listen'],
+    fr: ['Lire', 'Chercher', 'Explorer', 'Apprendre', 'Écouter'],
+    vi: ['Đọc', 'Tìm kiếm', 'Khám phá', 'Học', 'Nghe'],
+  } as const;
+  for (const lang of LANGS) {
+    it(`${lang}: five entries, Audio last, each to its page`, () => {
+      const html = homeOf(lang);
+      const nav = /<nav class="explore-nav"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? '';
+      const hrefs = [...nav.matchAll(/<a href="([^"]*)"/g)].map((m) => m[1]);
+      expect(hrefs).toEqual(
+        ['tipitaka', 'search', 'viz', 'learn', 'audio'].map((p) => pagePath(lang, p)),
+      );
+      const verbs = [...nav.matchAll(/explore-nav__verb">([^<]*)</g)].map((m) => m[1]);
+      expect(verbs).toEqual([...VERBS[lang]]);
     });
   }
 });

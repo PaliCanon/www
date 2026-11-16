@@ -38,6 +38,7 @@ describe('sectionIds', () => {
       'fr/home/search',
       'fr/home/viz',
       'fr/home/learn',
+      'fr/home/audio',
     ]);
   });
 
@@ -75,6 +76,8 @@ describe('scenePath', () => {
     expect(scenePath('fr', 'search')).toBe('/fr/search/');
     expect(scenePath('vi', 'viz')).toBe('/vi/viz/');
     expect(scenePath('en', 'learn')).toBe('/learn/');
+    expect(scenePath('en', 'audio')).toBe('/audio/');
+    expect(scenePath('vi', 'audio')).toBe('/vi/audio/');
   });
 });
 

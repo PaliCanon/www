@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { LANGS } from '../../src/lib/languages';
 import { CAPTIONS } from '../../src/data/screens';
 import { pagePath } from '../../src/lib/url';
-import { htmlFiles, read } from './helpers';
+import { builtRules, htmlFiles, of, plain, read, value } from './helpers';
 
 const fileOf = (path: string) => `${path.slice(1)}index.html`;
 const unescape = (html: string) =>
@@ -50,10 +50,13 @@ describe('the sliders work with no JavaScript', () => {
     }
   }
 
-  it('the home has four static product photographs and no carousel', () => {
+  it('the home has four static product photographs and no carousel; Audio has no screenshot and shows its botanical photograph alone', () => {
     for (const lang of LANGS) {
       const html = read(fileOf(pagePath(lang, 'index')));
       expect(html).not.toContain('data-slider');
+      const audio = unescape(scopeOf(html, 'audio'));
+      expect(audio).toContain('class="botanical-art" aria-hidden="true"');
+      expect(audio).not.toContain('reader-stage__phone');
       for (const section of ['teaching', 'search', 'viz', 'learn'] as const) {
         const scene = unescape(scopeOf(html, section));
         const project = section === 'teaching' ? 'tipitaka' : section;
@@ -94,4 +97,11 @@ describe('a slider has buttons only where there is somewhere to go (F1)', () => 
       }
     });
   }
+});
+
+describe('a scene with no phone (Audio) is still a stage, not a strip', () => {
+  it('the stage without a phone keeps a height of its own, so the photograph shows', () => {
+    const stage = of('.reader-stage:not(:has(.reader-stage__phone))', builtRules().filter(plain));
+    expect(stage.map((r) => value(r.body, 'min-height'))).toEqual(['28rem']);
+  });
 });

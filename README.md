@@ -19,9 +19,11 @@ per page. A page's path is its address:
 | Home, section 2: the search | `content/en/home/search.md` | `content/fr/home/search.md` | `content/vi/home/search.md` |
 | Home, section 3: the map (viz) | `content/en/home/viz.md` | `content/fr/home/viz.md` | `content/vi/home/viz.md` |
 | Home, section 4: learning Pāli | `content/en/home/learn.md` | `content/fr/home/learn.md` | `content/vi/home/learn.md` |
+| Home, section 5: the audio | `content/en/home/audio.md` | `content/fr/home/audio.md` | `content/vi/home/audio.md` |
 | The search | `content/en/search.md` → `/search/` | `content/fr/search.md` → `/fr/search/` | `content/vi/search.md` → `/vi/search/` |
 | The map of the Canon | `content/en/viz.md` → `/viz/` | `content/fr/viz.md` | `content/vi/viz.md` |
 | Learning Pāli | `content/en/learn.md` | `content/fr/learn.md` | `content/vi/learn.md` |
+| Audio, the narrated suttas (no slider: no screenshot yet) | `content/en/audio.md` → `/audio/` | `content/fr/audio.md` | `content/vi/audio.md` |
 | The Tipiṭaka app | `content/en/tipitaka.md` | `content/fr/tipitaka.md` | `content/vi/tipitaka.md` |
 | The project | `content/en/about.md` | `content/fr/about.md` | `content/vi/about.md` |
 | Support | `content/en/support.md` | `content/fr/support.md` | `content/vi/support.md` |
@@ -144,16 +146,16 @@ one fails the build with `file:line [rule] message`:
 - no raw HTML;
 - the content folder exists and holds Markdown (`content-missing`,
   `content-empty`);
-- the 8 main pages exist in `en`, `fr` and `vi`; no other page name (a
+- the 12 main pages exist in `en`, `fr` and `vi`; no other page name (a
   `blog.md` is refused: `blog/` is the folder of the posts);
 - a home section has `title`, and optionally `eyebrow` and `highlight` (a part
   of the title, copied exactly: otherwise `highlight-not-in-title`); no
-  description; the 4 sections (`teaching`, `search`, `viz`, `learn`) exist in
+  description; the 5 sections (`teaching`, `search`, `viz`, `learn`, `audio`) exist in
   every language and no other name is a section. They are shown on the home
   page, after `index.md`, in that order, each scene (its title, the whole
   card and a gold button under its text) leading to its project page: the
   teaching to the Tipiṭaka app page, the others to the search,
-  map and learning pages. On those four pages, the last paragraph, when it
+  map, learning and audio pages. On those five pages, the last paragraph, when it
   holds only one link (the link to the app or the service), shows as a gold
   button at the top, in the page's header card: centred under its first
   paragraph on a phone, beside it on the right, under the drawing, on a

@@ -19,4 +19,6 @@ export const PRODUCT_ARTWORK: Record<ScreensProject, BotanicalKind> = {
   search: 'dew',
   viz: 'pond',
   learn: 'bodhi',
+  // Ripples on dark water stand for sound; Map's pond photograph is reused (no sixth drawing exists).
+  audio: 'pond',
 };

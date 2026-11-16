@@ -19,6 +19,10 @@ Khi PaliCanon được dùng bằng tiếng Pháp hoặc tiếng Việt, tên ki
 
 Nghĩa của các từ Pāli lấy từ **Digital Pāḷi Dictionary** của Tỳ-kheo Bodhirasa, [digitalpalidictionary.github.io](https://digitalpalidictionary.github.io), theo giấy phép [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). PaliCanon phi thương mại và giữ nguyên các mục từ; mọi việc sử dụng dữ liệu từ điển về sau đều phải tôn trọng giấy phép đó.
 
+## Giọng đọc
+
+Phần âm thanh đọc bản dịch tiếng Anh của Tỳ-kheo Sujato, do [SuttaCentral](https://suttacentral.net) xuất bản theo tuyên bố Creative Commons CC0 (xem ở trên). Giọng đọc là giọng tổng hợp, tạo bằng **Chatterbox** của **Resemble AI**, phát hành theo giấy phép MIT.
+
 ## Với lòng biết ơn
 
 Xin tri ân Tỳ-kheo Sujato, đã dịch Tạng Kinh (Sutta Piṭaka) và trao tặng cho mọi người; Tỳ-kheo Bodhirasa, vì bộ từ điển; nhóm SuttaCentral, đã xuất bản và gìn giữ kinh văn; và dự án Mahāsaṅgīti của Dhamma Society, vì ấn bản Pāli.

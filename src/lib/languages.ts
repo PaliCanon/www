@@ -8,7 +8,7 @@ export type Lang = (typeof LANGS)[number];
 export const DEFAULT_LANG: Lang = 'en';
 
 /**
- * The eleven pages that exist in every language: `content/<lang>/<page>.md`.
+ * The twelve pages that exist in every language: `content/<lang>/<page>.md`.
  * `index` is the home page's opening.
  */
 export const MAIN_PAGES = [
@@ -16,6 +16,7 @@ export const MAIN_PAGES = [
   'search',
   'viz',
   'learn',
+  'audio',
   'tipitaka',
   'about',
   'support',
@@ -29,10 +30,10 @@ export const MAIN_PAGES = [
 export type MainPage = (typeof MAIN_PAGES)[number];
 
 /**
- * The four sections of the home page, in the order they are shown, after the
+ * The five sections of the home page, in the order they are shown, after the
  * opening of `index.md`: `content/<lang>/home/<section>.md`.
  */
-export const HOME_SECTIONS = ['teaching', 'search', 'viz', 'learn'] as const;
+export const HOME_SECTIONS = ['teaching', 'search', 'viz', 'learn', 'audio'] as const;
 
 /** One of the {@link HOME_SECTIONS}. */
 export type HomeSection = (typeof HOME_SECTIONS)[number];

@@ -14,7 +14,10 @@ const SERVICES = {
   search: 'https://search.palicanon.app',
   viz: 'https://map.palicanon.app',
   learn: 'https://learn.palicanon.app',
+  audio: 'https://audio.palicanon.app',
 } as const;
+/** The pages with a screenshot gallery: Audio has no screenshot yet, so no slider. */
+const WITH_SLIDER = ['tipitaka', 'search', 'viz', 'learn'] as const;
 const fileOf = (lang: (typeof LANGS)[number], page: string) =>
   `${pagePath(lang, page).slice(1)}index.html`;
 /** The masthead card, and what follows it up to the end of the main. */
@@ -38,7 +41,7 @@ const rules = builtRules();
 const PILL = /^\.masthead__link p:has\(>\s*a:only-child\)\s*>\s*a$/;
 const PILL_HOVER = /^\.masthead__link p:has\(>\s*a:only-child\)\s*>\s*a:hover$/;
 
-describe('the four project pages: the service link as the gold pill in the masthead', () => {
+describe('the five project pages: the service link as the gold pill in the masthead', () => {
   for (const lang of LANGS) {
     for (const [page, href] of Object.entries(SERVICES)) {
       it(`${lang}/${page}: the one link to ${href} sits under the lede, none after the masthead`, () => {
@@ -60,9 +63,11 @@ describe('the four project pages: the service link as the gold pill in the masth
 
   it('each project page has its screenshot gallery, in every language', () => {
     for (const lang of LANGS) {
-      for (const page of Object.keys(SERVICES)) {
+      for (const page of WITH_SLIDER) {
         expect(read(fileOf(lang, page)).match(/data-slider/g)).toHaveLength(1);
       }
+      // No screenshot of Audio exists: nothing stands in for it.
+      expect(read(fileOf(lang, 'audio'))).not.toContain('data-slider');
     }
   });
 

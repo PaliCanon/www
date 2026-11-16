@@ -15,13 +15,14 @@ describe('sourceFiles', () => {
     expect(sourceFiles(at('/blog/welcome/'), 'content')).toEqual(['content/en/blog/welcome.md']);
   });
 
-  it('adds the four sections to the home page', () => {
+  it('adds the five sections to the home page', () => {
     expect(sourceFiles(at('/vi/'), 'content')).toEqual([
       'content/vi/index.md',
       'content/vi/home/teaching.md',
       'content/vi/home/search.md',
       'content/vi/home/viz.md',
       'content/vi/home/learn.md',
+      'content/vi/home/audio.md',
     ]);
   });
 

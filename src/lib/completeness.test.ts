@@ -6,13 +6,14 @@ const sections = LANGS.flatMap((l) => HOME_SECTIONS.map((s) => `${l}/home/${s}`)
 const all = [...LANGS.flatMap((l) => MAIN_PAGES.map((p) => `${l}/${p}`)), ...sections];
 
 describe('checkCompleteness', () => {
-  it('accepts the 11 main pages and the 4 home sections in en, fr and vi', () => {
-    expect(MAIN_PAGES).toHaveLength(11);
+  it('accepts the 12 main pages and the 5 home sections in en, fr and vi', () => {
+    expect(MAIN_PAGES).toHaveLength(12);
     expect(MAIN_PAGES).toContain('viz');
+    expect(MAIN_PAGES).toContain('audio');
     // task 017: the old site's pages are pages of this site
     for (const page of ['acknowledgements', 'terms', 'privacy']) expect(MAIN_PAGES).toContain(page);
-    expect(HOME_SECTIONS).toEqual(['teaching', 'search', 'viz', 'learn']);
-    expect(all).toHaveLength(45);
+    expect(HOME_SECTIONS).toEqual(['teaching', 'search', 'viz', 'learn', 'audio']);
+    expect(all).toHaveLength(51);
     expect(checkCompleteness(all)).toEqual([]);
   });
 
@@ -73,11 +74,11 @@ describe('checkCompleteness', () => {
     expect(v[0].message).toContain('viz');
   });
 
-  it('fails on a home section that is none of the four', () => {
+  it('fails on a home section that is none of the five', () => {
     const v = checkCompleteness([...all, 'en/home/extra']);
     expect(v.map((x) => x.rule)).toEqual(['unknown-section']);
     expect(v[0].file).toBe('content/en/home/extra.md');
-    expect(v[0].message).toContain('teaching, search, viz, learn');
+    expect(v[0].message).toContain('teaching, search, viz, learn, audio');
   });
 
   it('fails on a home section of a language the site does not have', () => {

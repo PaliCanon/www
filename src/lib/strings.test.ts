@@ -28,6 +28,12 @@ describe('the chrome strings', () => {
     expect(LANGUAGE_NAMES.vi).toBe('Tiếng Việt');
   });
 
+  it('name Audio in the navigation, after the map, in each language', () => {
+    expect(STRINGS.en.nav.audio).toBe('Audio');
+    expect(STRINGS.fr.nav.audio).toBe('Audio');
+    expect(STRINGS.vi.nav.audio).toBe('Âm thanh');
+  });
+
   it("name the map in the navigation and each home scene's button (user check 9)", () => {
     for (const lang of LANGS) expect(STRINGS[lang].nav.viz).not.toBe('');
     expect(STRINGS.en.sceneButton).toEqual({
@@ -35,18 +41,21 @@ describe('the chrome strings', () => {
       search: 'Discover the search',
       viz: 'Discover the map',
       learn: 'Discover Learn Pāli',
+      audio: 'Discover the audio',
     });
     expect(STRINGS.fr.sceneButton).toEqual({
       teaching: "Découvrir l'app",
       search: 'Découvrir la recherche',
       viz: 'Découvrir la carte',
       learn: 'Découvrir Apprendre le pāli',
+      audio: "Découvrir l'audio",
     });
     expect(STRINGS.vi.sceneButton).toEqual({
       teaching: 'Khám phá ứng dụng',
       search: 'Khám phá tìm kiếm',
       viz: 'Khám phá bản đồ',
       learn: 'Khám phá Học Pāli',
+      audio: 'Khám phá âm thanh',
     });
   });
 
@@ -80,5 +89,6 @@ describe('the chrome strings', () => {
   it('link the services to https sites', () => {
     for (const href of Object.values(SERVICE_LINKS)) expect(href).toMatch(/^https:\/\//);
     expect(SERVICE_LINKS.viz).toBe('https://map.palicanon.app');
+    expect(SERVICE_LINKS.audio).toBe('https://audio.palicanon.app');
   });
 });

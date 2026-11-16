@@ -35,6 +35,7 @@ export const SECTION_PAGES = {
   search: 'search',
   viz: 'viz',
   learn: 'learn',
+  audio: 'audio',
 } as const satisfies Record<HomeSection, string>;
 
 /** Where a home section's scene leads: its page on this site, in `lang`. */
@@ -62,7 +63,7 @@ export function splitHighlight(title: string, highlight: string | undefined): Ti
 }
 
 /**
- * The ids of the four home sections of `lang` (`fr/home/viz`), in the fixed
+ * The ids of the five home sections of `lang` (`fr/home/viz`), in the fixed
  * order. The completeness rule fails the build first; if a section is still
  * missing here, the error names its file rather than dropping the section.
  */

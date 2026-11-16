@@ -30,16 +30,20 @@ import type { Lang } from '../lib/languages';
  * Tipiṭaka's original images remain from search-front 6d370b4's Support page
  * (`app/public/support/` and the AppBlock alts in `content_{en,fr,vi}.rs`).
  */
-export type ScreensProject = 'search' | 'tipitaka' | 'viz' | 'learn';
+export type ScreensProject = 'search' | 'tipitaka' | 'viz' | 'learn' | 'audio';
 
 export const SCREENS: Record<ScreensProject, ImageMetadata[]> = {
   search: [searchHome, searchResults, searchWords, searchFrench, searchLight],
   tipitaka: [appMain, appReader, appSearch, appGraph, appNotes],
   viz: [vizParallels, vizMeaning, vizCluster, vizPhone],
   learn: [learnHome, learnTerms, learnMeaning, learnAnswer, learnRecall],
+  // No screenshot of Audio exists yet: its scene shows its botanical photograph
+  // alone and its page has no slider (SceneStage, Base).
+  audio: [],
 };
 
 export const CAPTIONS: Record<ScreensProject, Record<Lang, string[]>> = {
+  audio: { en: [], fr: [], vi: [] },
   learn: {
     en: [
       'The home of Learn Pāli',

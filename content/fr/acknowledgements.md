@@ -19,6 +19,10 @@ Quand PaliCanon est utilisé en français ou en vietnamien, les titres des sutta
 
 Le sens des mots pālis provient du **Digital Pāḷi Dictionary** de Bhikkhu Bodhirasa, [digitalpalidictionary.github.io](https://digitalpalidictionary.github.io), sous licence [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). PaliCanon est non commercial et reproduit les entrées sans modification ; toute autre utilisation des données du dictionnaire doit respecter cette licence.
 
+## La voix
+
+L’audio lit la traduction anglaise de Bhikkhu Sujato, publiée par [SuttaCentral](https://suttacentral.net) sous la dédicace Creative Commons CC0 (voir plus haut). La voix est synthétique, produite avec **Chatterbox** de **Resemble AI**, publié sous licence MIT.
+
 ## Avec gratitude
 
 À Bhikkhu Sujato, pour avoir traduit le Sutta Piṭaka et l’avoir offert à tous ; à Bhikkhu Bodhirasa, pour le dictionnaire ; à l’équipe de SuttaCentral, pour la publication et l’entretien des textes ; et au projet Mahāsaṅgīti de la Dhamma Society, pour l’édition pālie.
